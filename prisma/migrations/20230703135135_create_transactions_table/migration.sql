@@ -20,3 +20,4 @@ ALTER TABLE "transactions" ADD CONSTRAINT "transactions_user_id_fkey" FOREIGN KE
 
 -- AddForeignKey
 ALTER TABLE "transactions" ADD CONSTRAINT "transactions_bank_account_id_fkey" FOREIGN KEY ("bank_account_id") REFERENCES "bank_accounts"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+''
