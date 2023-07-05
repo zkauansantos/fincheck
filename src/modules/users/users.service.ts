@@ -1,16 +1,16 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { PrismaService } from 'src/database/prisma.service';
 import { hash } from 'bcryptjs';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UsersRepository } from 'src/shared/database/repositories/users.repostiories';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly usersRepository: UsersRepository) {}
 
   async create(createUserDto: CreateUserDto) {
     const { name, email, password } = createUserDto;
 
-    const emailAlreadyExists = await this.prismaService.user.findUnique({
+    const emailAlreadyExists = await this.usersRepository.findByEmail({
       where: { email },
       select: { id: true },
     });
@@ -21,7 +21,7 @@ export class UsersService {
 
     const hashedPassword = await hash(password, 12);
 
-    const user = await this.prismaService.user.create({
+    const user = await this.usersRepository.create({
       data: {
         name,
         email,
@@ -30,7 +30,7 @@ export class UsersService {
           createMany: {
             data: [
               //INCOME
-              { name: 'Salário', icon: 'travel', type: 'INCOME' },
+              { name: 'Salário', icon: 'salary', type: 'INCOME' },
               { name: 'Freelance', icon: 'freelance', type: 'INCOME' },
               { name: 'Outro', icon: 'other', type: 'INCOME' },
               //EXPENSE
