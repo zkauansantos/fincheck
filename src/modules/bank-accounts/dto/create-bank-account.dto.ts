@@ -1,4 +1,12 @@
-import { IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {
+  IsEnum,
+  IsHexColor,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+} from 'class-validator';
+
+import { BankAccountType } from '../entities/BankAccount';
 
 export class CreateBankAccountDto {
   @IsString()
@@ -7,11 +15,14 @@ export class CreateBankAccountDto {
 
   @IsNumber()
   @IsNotEmpty()
-  initialBalance: string;
+  initialBalance: number;
 
-  // type: '' | '';
+  @IsNotEmpty()
+  @IsEnum(BankAccountType)
+  type: BankAccountType;
 
   @IsString()
   @IsNotEmpty()
+  @IsHexColor()
   color: string;
 }

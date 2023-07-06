@@ -1,4 +1,28 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateBankAccountDto } from './create-bank-account.dto';
+import {
+  IsEnum,
+  IsHexColor,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+} from 'class-validator';
 
-export class UpdateBankAccountDto extends PartialType(CreateBankAccountDto) {}
+import { BankAccountType } from '../entities/BankAccount';
+
+export class UpdateBankAccountDto {
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  initialBalance: number;
+
+  @IsNotEmpty()
+  @IsEnum(BankAccountType)
+  type: BankAccountType;
+
+  @IsString()
+  @IsNotEmpty()
+  @IsHexColor()
+  color: string;
+}
