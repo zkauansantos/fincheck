@@ -1,0 +1,44 @@
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-hot-toast";
+
+import { authService } from "../../../app/services/authService";
+import { SigninParams } from "../../../app/services/authService/signin";
+
+import { FormData, loginSchema } from "./schemas/loginSchema";
+
+export default function useLoginController() {
+  const {
+    register,
+    handleSubmit: hookFormHandleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const { isLoading, mutateAsync } = useMutation({
+    mutationFn: ({ email, password }: SigninParams) => {
+      return authService.signin({ email, password });
+    },
+  });
+
+  const handleSubmit = hookFormHandleSubmit(async (data) => {
+    try {
+      const { email, password } = data;
+
+      const { jwtAcessToken } = await mutateAsync({ email, password });
+
+      console.log(jwtAcessToken);
+    } catch {
+      toast.error("Credenciais inválidas!");
+    }
+  });
+
+  return {
+    register,
+    handleSubmit,
+    errors,
+    isLoading,
+  };
+}
