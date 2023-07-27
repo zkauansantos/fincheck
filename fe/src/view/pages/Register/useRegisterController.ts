@@ -30,8 +30,6 @@ export default function useRegisterController() {
 
       const { jwtAcessToken } = await mutateAsync({ name, email, password });
 
-      console.log("passou daqui");
-
       console.log(jwtAcessToken);
     } catch {
       toast.error("Ocorreu um erro ao criar sua conta");

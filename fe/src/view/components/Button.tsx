@@ -15,8 +15,8 @@ export default function Button({
 }: ButtonProps) {
   return (
     <button
-      disabled={isLoading || disabled}
       {...props}
+      disabled={isLoading || disabled}
       className={cn(
         className,
         "bg-teal-900 hover:bg-teal-800 disabled:bg-gray-100 px-6 h-12",
