@@ -4,6 +4,7 @@ import { queryClient } from "./app/lib/queryClient";
 import Router from "./Router";
 import { Toaster } from "react-hot-toast";
 import AuthContextProvider from "./app/contexts/AuthContext";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 export default function App() {
   return (
@@ -13,6 +14,8 @@ export default function App() {
 
         <Toaster />
       </AuthContextProvider>
+
+      <ReactQueryDevtools />
     </QueryClientProvider>
   );
 }
