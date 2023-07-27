@@ -8,6 +8,8 @@ import { SigninParams } from "../../../app/services/authService/signin";
 
 import { FormData, loginSchema } from "./schemas/loginSchema";
 
+import useAuth from "../../../app/hooks/useAuth";
+
 export default function useLoginController() {
   const {
     register,
@@ -23,13 +25,15 @@ export default function useLoginController() {
     },
   });
 
+  const { signin } = useAuth();
+
   const handleSubmit = hookFormHandleSubmit(async (data) => {
     try {
       const { email, password } = data;
 
       const { jwtAcessToken } = await mutateAsync({ email, password });
 
-      console.log(jwtAcessToken);
+      signin(jwtAcessToken);
     } catch {
       toast.error("Credenciais inválidas!");
     }
