@@ -19,7 +19,7 @@ export default {
           800: '#343A40',
           900: '#212529',
         },
-      
+
         red: {
           50: '#FFF5F5',
           100: '#FFE3E3',
@@ -32,7 +32,7 @@ export default {
           800: '#E03131',
           900: '#C92A2A',
         },
-      
+
         pink: {
           50: '#FFF0F6',
           100: '#FFDEEB',
@@ -45,7 +45,7 @@ export default {
           800: '#C2255C',
           900: '#A61E4D',
         },
-      
+
         grape: {
           50: '#F8F0FC',
           100: '#F3D9FA',
@@ -58,7 +58,7 @@ export default {
           800: '#9C36B5',
           900: '#862E9C',
         },
-      
+
         violet: {
           50: '#F3F0FF',
           100: '#E5DBFF',
@@ -71,7 +71,7 @@ export default {
           800: '#6741D9',
           900: '#5F3DC4',
         },
-      
+
         indigo: {
           50: '#EDF2FF',
           100: '#DBE4FF',
@@ -84,7 +84,7 @@ export default {
           800: '#3B5BDB',
           900: '#364FC7',
         },
-      
+
         blue: {
           50: '#E7F5FF',
           100: '#D0EBFF',
@@ -97,7 +97,7 @@ export default {
           800: '#1971C2',
           900: '#1864AB',
         },
-      
+
         cyan: {
           50: '#E3FAFC',
           100: '#C5F6FA',
@@ -110,7 +110,7 @@ export default {
           800: '#0C8599',
           900: '#0B7285',
         },
-      
+
         teal: {
           50: '#E6FCF5',
           100: '#C3FAE8',
@@ -123,7 +123,7 @@ export default {
           800: '#099268',
           900: '#087F5B',
         },
-      
+
         green: {
           50: '#EBFBEE',
           100: '#D3F9D8',
@@ -136,7 +136,7 @@ export default {
           800: '#2F9E44',
           900: '#2B8A3E',
         },
-      
+
         lime: {
           50: '#F4FCE3',
           100: '#E9FAC8',
@@ -149,7 +149,7 @@ export default {
           800: '#66A80F',
           900: '#5C940D',
         },
-      
+
         yellow: {
           50: '#FFF9DB',
           100: '#FFF3BF',
@@ -162,7 +162,7 @@ export default {
           800: '#F08C00',
           900: '#E67700',
         },
-      
+
         orange: {
           50: '#FFF4E6',
           100: '#FFE8CC',
@@ -175,6 +175,30 @@ export default {
           800: '#E8590C',
           900: '#D9480F',
         },
+      },
+      keyframes: {
+        slideUpAndFade: {
+          from: { opacity: 0, transform: 'translateY(2px)' },
+          to: { opacity: 1, transform: 'translateY(0px)' },
+        },
+        slideDownAndFade: {
+          from: { opacity: 0, transform: 'translateY(-2px)' },
+          to: { opacity: 1, transform: 'translateY(0px)' },
+        },
+        overlayShow: {
+          from: { opacity: 0 },
+          to: { opacity: 1 },
+        },
+        contentShow: {
+          from: { transform: 'scale(0)' },
+          to: { transform: 'scale(1)' },
+        }
+      },
+      animation: {
+        'slide-up-and-fade': 'slideUpAndFade 800ms cubic-bezier(0.16, 1, 0.3, 1)',
+        'slide-down-and-fade': 'slideDownAndFade 800ms cubic-bezier(0.16, 1, 0.3, 1)',
+        'overlay-show': 'overlayShow 500ms ease',
+        'content-show': 'contentShow 500ms ease'
       }
     },
   },

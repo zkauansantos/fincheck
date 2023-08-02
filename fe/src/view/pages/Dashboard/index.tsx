@@ -2,6 +2,7 @@ import DashboardProvider from "../../../app/contexts/DashboardContext";
 import Logo from "../../components/Logo";
 import UserMenu from "../../components/UserMenu";
 import Accounts from "./components/Accounts";
+import Fab from "./components/Fab";
 import Transactions from "./components/Transactions";
 
 export default function Dashboard() {
@@ -22,6 +23,8 @@ export default function Dashboard() {
             <Transactions />
           </div>
         </main>
+
+        <Fab />
       </div>
     </DashboardProvider>
   );
