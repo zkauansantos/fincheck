@@ -2,8 +2,11 @@ import { PlusIcon } from "@radix-ui/react-icons";
 import { DropdownMenu } from "../../../../components/DropdownMenu";
 import { CategoryIcon } from "../../../../components/icons/categories/CategoryIcon";
 import BankAccountIcon from "../../../../components/icons/BankAccountIcon";
+import useDashboard from "../../useDashboard";
 
 export default function Fab() {
+  const { openNewAccountModal, openNewTransactionModal } = useDashboard();
+
   return (
     <div className='fixed right-4 bottom-4'>
       <DropdownMenu.Root>
@@ -13,16 +16,22 @@ export default function Fab() {
           </button>
         </DropdownMenu.Trigger>
 
-        <DropdownMenu.Content className="mr-12">
-          <DropdownMenu.Item className='gap-2'>
-            <CategoryIcon type='expense' />
+        <DropdownMenu.Content className='mr-12'>
+          <DropdownMenu.Item
+            className='gap-2'
+            onSelect={() => openNewTransactionModal("INCOME")}
+          >
+            <CategoryIcon type='income' />
             <span>Nova Receita</span>
           </DropdownMenu.Item>
-          <DropdownMenu.Item className='gap-2'>
-            <CategoryIcon type='income' />
+          <DropdownMenu.Item
+            className='gap-2'
+            onSelect={() => openNewTransactionModal("EXPENSE")}
+          >
+            <CategoryIcon type='expense' />
             <span>Nova Despesa</span>
           </DropdownMenu.Item>
-          <DropdownMenu.Item className='gap-2'>
+          <DropdownMenu.Item className='gap-2' onSelect={openNewAccountModal}>
             <BankAccountIcon />
             <span>Nova Conta</span>
           </DropdownMenu.Item>

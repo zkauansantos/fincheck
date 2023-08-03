@@ -23,7 +23,7 @@ export default function useTransactionsController() {
     isInitialLoading: false,
     isLoading: false,
     isFiltersModalOpen,
-    transactions: [""],
+    transactions: [],
     setSliderState,
     handleCloseFiltersModal,
     handleOpenFiltersModal,

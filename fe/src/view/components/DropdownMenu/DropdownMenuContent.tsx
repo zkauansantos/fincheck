@@ -14,7 +14,7 @@ export default function DropdownMenuContent({
     <RdxDropdownMenu.Portal>
       <RdxDropdownMenu.Content
         className={cn(
-          "z-50",
+          "z-[99]",
           "rounded-2xl p-2 bg-white space-y-2",
           "data-[side=bottom]:animate-slide-up-and-fade",
           "data-[side=top]:animate-slide-down-and-fade",
