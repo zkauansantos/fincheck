@@ -5,24 +5,49 @@ import Input from "../../../../components/Input";
 import InputCurrency from "../../../../components/InputCurrency";
 import Modal from "../../../../components/Modal";
 import Select from "../../../../components/Select";
-import useNewAccountModalController from "./useNewAccountModalController";
+import useEditAccountModalController from "./useEditAccountModalController";
+import ConfirmDeleteModal from "../../../../components/ConfirmDeleteModal";
+import TrashIcon from "../../../../components/icons/TrashIcon";
 
-export default function NewAccountModal() {
+export default function EditAccountModal() {
   const {
-    isNewAccountModalOpen,
+    closeEditAccountModal,
     errors,
     control,
     isLoading,
-    closeNewAccountModal,
+    isEditAccountModalOpen,
+    isDeleteModalOpen,
+    isLoadingDelete,
+    handleOpenDeleteModal,
+    handleCloseDeleteModal,
     handleSubmit,
+    handleDeleteAccount,
     register,
-  } = useNewAccountModalController();
+  } = useEditAccountModalController();
+
+  if (isDeleteModalOpen) {
+    return (
+      <ConfirmDeleteModal
+        isLoading={isLoadingDelete}
+        title='Tem certeza que deseja excluir essa conta?'
+        onConfirm={handleDeleteAccount}
+        onClose={handleCloseDeleteModal}
+        description='Ao excluir a conta, também serão excluídos todos os registros de
+        receita e despesas relacionados.'
+      />
+    );
+  }
 
   return (
     <Modal
-      title='Nova Conta'
-      open={isNewAccountModalOpen}
-      onClose={closeNewAccountModal}
+      title='Editar Conta'
+      open={isEditAccountModalOpen}
+      onClose={closeEditAccountModal}
+      rightAction={
+        <button onClick={handleOpenDeleteModal}>
+          <TrashIcon className='w-6 h-6 text-red-900' />
+        </button>
+      }
     >
       <form onSubmit={handleSubmit}>
         <div>
@@ -36,7 +61,7 @@ export default function NewAccountModal() {
             <Controller
               control={control}
               name='initialBalance'
-              defaultValue='0'
+              defaultValue={0}
               render={({ field: { onChange, value } }) => (
                 <InputCurrency
                   error={errors.initialBalance?.message}
@@ -90,7 +115,7 @@ export default function NewAccountModal() {
         </div>
 
         <Button type='submit' className='w-full mt-6' isLoading={isLoading}>
-          Criar
+          Salvar
         </Button>
       </form>
     </Modal>

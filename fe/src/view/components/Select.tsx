@@ -10,6 +10,8 @@ import { useState } from "react";
 interface SelectProps {
   className?: string;
   error?: string;
+  value?: string;
+  onChange?: (value: string) => void;
   placeholder?: string;
   options: {
     value: string;
@@ -22,11 +24,14 @@ export default function Select({
   error,
   placeholder,
   options,
+  value,
+  onChange,
 }: SelectProps) {
-  const [selectedValue, setSelectedValue] = useState("");
+  const [selectedValue, setSelectedValue] = useState(value);
 
   function handleSelect(value: string) {
     setSelectedValue(value);
+    onChange?.(value);
   }
 
   return (
@@ -42,7 +47,7 @@ export default function Select({
           {placeholder}
         </label>
 
-        <RdxSelect.Root onValueChange={handleSelect}>
+        <RdxSelect.Root onValueChange={handleSelect} value={value}>
           <RdxSelect.Trigger
             className={cn(
               "bg-white w-full pt-4",

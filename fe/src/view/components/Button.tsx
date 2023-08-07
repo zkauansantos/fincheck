@@ -4,6 +4,7 @@ import Spinner from "./Spinner";
 
 interface ButtonProps extends ComponentProps<"button"> {
   isLoading?: boolean;
+  variant?: 'danger' | 'ghost';
 }
 
 export default function Button({
@@ -11,6 +12,7 @@ export default function Button({
   isLoading,
   children,
   disabled,
+  variant,
   ...props
 }: ButtonProps) {
   return (
@@ -18,10 +20,12 @@ export default function Button({
       {...props}
       disabled={isLoading || disabled}
       className={cn(
-        className,
         "bg-teal-900 hover:bg-teal-800 disabled:bg-gray-100 px-6 h-12",
         "rounded-2xl text-white font-medium disabled:text-gray-400",
-        "disabled:cursor-not-allowed flex justify-center items-center"
+        "disabled:cursor-not-allowed flex justify-center items-center",
+        className,
+        variant === 'danger' && "bg-red-900 hover:bg-red-800",
+        variant === 'ghost' && "bg-transparent border border-gray-800 text-gray-800 hover:bg-gray-800/1"
       )}
     >
       {!isLoading && children}
