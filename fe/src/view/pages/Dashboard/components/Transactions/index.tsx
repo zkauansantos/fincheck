@@ -12,6 +12,8 @@ import Spinner from "../../../../components/Spinner";
 import emptyStateImage from "../../../../../assets/empty-state.svg";
 import TransactionTypeDropdown from "./TransactionTypeDropdown";
 import FiltersModal from "./FiltersModal";
+import formatDate from "../../../../../app/utils/formatDate";
+import EditTransactionModal from "../../modals/EditTransactionModal";
 
 export default function Transactions() {
   const {
@@ -20,9 +22,16 @@ export default function Transactions() {
     isInitialLoading,
     transactions,
     isFiltersModalOpen,
+    filters,
     setSliderState,
+    handleChangeFilters,
+    handleApplyFilters,
     handleCloseFiltersModal,
     handleOpenFiltersModal,
+    handleCloseEditModal,
+    handleOpenEditModal,
+    isEditModalOpen,
+    transactionBeingEdited,
   } = useTransactionsController();
 
   const hasTransactions = transactions.length > 0;
@@ -38,13 +47,17 @@ export default function Transactions() {
       {!isInitialLoading && (
         <>
           <FiltersModal
+            onApplyFilters={handleApplyFilters}
             open={isFiltersModalOpen}
             onClose={handleCloseFiltersModal}
           />
 
           <header>
             <div className='flex items-center justify-between'>
-              <TransactionTypeDropdown />
+              <TransactionTypeDropdown
+                onSelect={handleChangeFilters("type")}
+                selectedType={filters.type}
+              />
 
               <button onClick={handleOpenFiltersModal}>
                 <FilterIcon />
@@ -53,15 +66,17 @@ export default function Transactions() {
 
             <div className='mt-6 relative'>
               <Swiper
+                initialSlide={filters.month}
                 slidesPerView={3}
                 centeredSlides
                 grabCursor
-                onSlideChange={(swiper) =>
+                onSlideChange={(swiper) => {
+                  handleChangeFilters("month")(swiper.realIndex);
                   setSliderState({
                     isBeginning: swiper.isBeginning,
                     isEnd: swiper.isEnd,
-                  })
-                }
+                  });
+                }}
               >
                 <SliderNavigation />
                 {MONTHS.map((month, index) => (
@@ -97,226 +112,52 @@ export default function Transactions() {
 
             {hasTransactions && !isLoading && (
               <>
-                <div className='bg-white p-4 rounded-2xl flex items-center justify-between gap-4'>
-                  <div className='flex-1 flex items-center gap-3'>
-                    <CategoryIcon type='expense' />
+                {transactionBeingEdited && (
+                  <EditTransactionModal
+                    open={isEditModalOpen}
+                    onClose={handleCloseEditModal}
+                    transaction={transactionBeingEdited}
+                  />
+                )}
 
-                    <div>
-                      <strong className='tracking-[-0.5px] block font-bold'>
-                        Almoço
-                      </strong>
-                      <span className='text-sm text-gray-600'>04/06/2023</span>
-                    </div>
-                  </div>
-                  <span
-                    className={cn(
-                      "text-red-800 tracking-[-0.5px] font-medium",
-                      !areValuesVisible && "blur-sm"
-                    )}
+                {transactions.map((transaction) => (
+                  <div
+                    key={transaction.id}
+                    className='bg-white p-4 rounded-2xl flex items-center justify-between gap-4'
+                    role='button'
+                    onClick={() => handleOpenEditModal(transaction)}
                   >
-                    -R$ {formatCurrency(123)}
-                  </span>
-                </div>
-                <div className='bg-white p-4 rounded-2xl flex items-center justify-between gap-4'>
-                  <div className='flex-1 flex items-center gap-3'>
-                    <CategoryIcon type='income' />
+                    <div className='flex-1 flex items-center gap-3'>
+                      <CategoryIcon
+                        type={
+                          transaction.type === "EXPENSE" ? "expense" : "income"
+                        }
+                        category={transaction.category?.icon}
+                      />
 
-                    <div>
-                      <strong className='tracking-[-0.5px] block font-bold'>
-                        Almoço
-                      </strong>
-                      <span className='text-sm text-gray-600'>04/06/2023</span>
+                      <div>
+                        <strong className='tracking-[-0.5px] block font-bold'>
+                          {transaction.name}
+                        </strong>
+                        <span className='text-sm text-gray-600'>
+                          {formatDate(new Date(transaction.date))}
+                        </span>
+                      </div>
                     </div>
+                    <span
+                      className={cn(
+                        " tracking-[-0.5px] font-medium",
+                        transaction.type === "EXPENSE"
+                          ? "text-red-800"
+                          : "text-green-800",
+                        !areValuesVisible && "blur-sm"
+                      )}
+                    >
+                      {transaction.type === "EXPENSE" ? "-" : "+"}R${" "}
+                      {formatCurrency(transaction.value)}
+                    </span>
                   </div>
-                  <span
-                    className={cn(
-                      "text-green-800 tracking-[-0.5px] font-medium",
-                      !areValuesVisible && "blur-sm"
-                    )}
-                  >
-                    -R$ {formatCurrency(123)}
-                  </span>
-                </div>
-                <div className='bg-white p-4 rounded-2xl flex items-center justify-between gap-4'>
-                  <div className='flex-1 flex items-center gap-3'>
-                    <CategoryIcon type='income' />
-
-                    <div>
-                      <strong className='tracking-[-0.5px] block font-bold'>
-                        Almoço
-                      </strong>
-                      <span className='text-sm text-gray-600'>04/06/2023</span>
-                    </div>
-                  </div>
-                  <span
-                    className={cn(
-                      "text-green-800 tracking-[-0.5px] font-medium",
-                      !areValuesVisible && "blur-sm"
-                    )}
-                  >
-                    -R$ {formatCurrency(123)}
-                  </span>
-                </div>
-                <div className='bg-white p-4 rounded-2xl flex items-center justify-between gap-4'>
-                  <div className='flex-1 flex items-center gap-3'>
-                    <CategoryIcon type='income' />
-
-                    <div>
-                      <strong className='tracking-[-0.5px] block font-bold'>
-                        Almoço
-                      </strong>
-                      <span className='text-sm text-gray-600'>04/06/2023</span>
-                    </div>
-                  </div>
-                  <span
-                    className={cn(
-                      "text-green-800 tracking-[-0.5px] font-medium",
-                      !areValuesVisible && "blur-sm"
-                    )}
-                  >
-                    -R$ {formatCurrency(123)}
-                  </span>
-                </div>
-                <div className='bg-white p-4 rounded-2xl flex items-center justify-between gap-4'>
-                  <div className='flex-1 flex items-center gap-3'>
-                    <CategoryIcon type='income' />
-
-                    <div>
-                      <strong className='tracking-[-0.5px] block font-bold'>
-                        Almoço
-                      </strong>
-                      <span className='text-sm text-gray-600'>04/06/2023</span>
-                    </div>
-                  </div>
-                  <span
-                    className={cn(
-                      "text-green-800 tracking-[-0.5px] font-medium",
-                      !areValuesVisible && "blur-sm"
-                    )}
-                  >
-                    -R$ {formatCurrency(123)}
-                  </span>
-                </div>
-                <div className='bg-white p-4 rounded-2xl flex items-center justify-between gap-4'>
-                  <div className='flex-1 flex items-center gap-3'>
-                    <CategoryIcon type='income' />
-
-                    <div>
-                      <strong className='tracking-[-0.5px] block font-bold'>
-                        Almoço
-                      </strong>
-                      <span className='text-sm text-gray-600'>04/06/2023</span>
-                    </div>
-                  </div>
-                  <span
-                    className={cn(
-                      "text-green-800 tracking-[-0.5px] font-medium",
-                      !areValuesVisible && "blur-sm"
-                    )}
-                  >
-                    -R$ {formatCurrency(123)}
-                  </span>
-                </div>
-                <div className='bg-white p-4 rounded-2xl flex items-center justify-between gap-4'>
-                  <div className='flex-1 flex items-center gap-3'>
-                    <CategoryIcon type='income' />
-
-                    <div>
-                      <strong className='tracking-[-0.5px] block font-bold'>
-                        Almoço
-                      </strong>
-                      <span className='text-sm text-gray-600'>04/06/2023</span>
-                    </div>
-                  </div>
-                  <span
-                    className={cn(
-                      "text-green-800 tracking-[-0.5px] font-medium",
-                      !areValuesVisible && "blur-sm"
-                    )}
-                  >
-                    -R$ {formatCurrency(123)}
-                  </span>
-                </div>
-                <div className='bg-white p-4 rounded-2xl flex items-center justify-between gap-4'>
-                  <div className='flex-1 flex items-center gap-3'>
-                    <CategoryIcon type='income' />
-
-                    <div>
-                      <strong className='tracking-[-0.5px] block font-bold'>
-                        Almoço
-                      </strong>
-                      <span className='text-sm text-gray-600'>04/06/2023</span>
-                    </div>
-                  </div>
-                  <span
-                    className={cn(
-                      "text-green-800 tracking-[-0.5px] font-medium",
-                      !areValuesVisible && "blur-sm"
-                    )}
-                  >
-                    -R$ {formatCurrency(123)}
-                  </span>
-                </div>
-                <div className='bg-white p-4 rounded-2xl flex items-center justify-between gap-4'>
-                  <div className='flex-1 flex items-center gap-3'>
-                    <CategoryIcon type='income' />
-
-                    <div>
-                      <strong className='tracking-[-0.5px] block font-bold'>
-                        Almoço
-                      </strong>
-                      <span className='text-sm text-gray-600'>04/06/2023</span>
-                    </div>
-                  </div>
-                  <span
-                    className={cn(
-                      "text-green-800 tracking-[-0.5px] font-medium",
-                      !areValuesVisible && "blur-sm"
-                    )}
-                  >
-                    -R$ {formatCurrency(123)}
-                  </span>
-                </div>
-                <div className='bg-white p-4 rounded-2xl flex items-center justify-between gap-4'>
-                  <div className='flex-1 flex items-center gap-3'>
-                    <CategoryIcon type='income' />
-
-                    <div>
-                      <strong className='tracking-[-0.5px] block font-bold'>
-                        Almoço
-                      </strong>
-                      <span className='text-sm text-gray-600'>04/06/2023</span>
-                    </div>
-                  </div>
-                  <span
-                    className={cn(
-                      "text-green-800 tracking-[-0.5px] font-medium",
-                      !areValuesVisible && "blur-sm"
-                    )}
-                  >
-                    -R$ {formatCurrency(123)}
-                  </span>
-                </div>
-                <div className='bg-white p-4 rounded-2xl flex items-center justify-between gap-4'>
-                  <div className='flex-1 flex items-center gap-3'>
-                    <CategoryIcon type='income' />
-
-                    <div>
-                      <strong className='tracking-[-0.5px] block font-bold'>
-                        Almoço
-                      </strong>
-                      <span className='text-sm text-gray-600'>04/06/2023</span>
-                    </div>
-                  </div>
-                  <span
-                    className={cn(
-                      "text-green-800 tracking-[-0.5px] font-medium",
-                      !areValuesVisible && "blur-sm"
-                    )}
-                  >
-                    -R$ {formatCurrency(123)}
-                  </span>
-                </div>
+                ))}
               </>
             )}
           </div>

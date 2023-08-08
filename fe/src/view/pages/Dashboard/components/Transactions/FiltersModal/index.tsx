@@ -1,36 +1,30 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 import Modal from "../../../../../components/Modal";
 import Button from "../../../../../components/Button";
-import useFitlersModal from "./useFiltersModal";
 import cn from "../../../../../../app/utils/cn";
+import useFitlersModalController from "./useFiltersModalController";
 
 interface FiltersModalProps {
   open: boolean;
   onClose: () => void;
+  onApplyFilters: (filters: {
+    bankAccountId: string | undefined;
+    year: number;
+  }) => void;
 }
 
-export default function FiltersModal({ open, onClose }: FiltersModalProps) {
+export default function FiltersModal({
+  open,
+  onClose,
+  onApplyFilters,
+}: FiltersModalProps) {
   const {
     handleSelectBankAccount,
     selectedBankAccountId,
     selectedYear,
+    accounts,
     handleChangeYear,
-  } = useFitlersModal();
-
-  const mockedAccounts = [
-    {
-      id: "123",
-      name: "Nubank",
-    },
-    {
-      id: "1234",
-      name: "XP Investimentos",
-    },
-    {
-      id: "1235",
-      name: "Carteira",
-    },
-  ];
+  } = useFitlersModalController();
 
   return (
     <Modal open={open} onClose={onClose} title='Filtros'>
@@ -40,7 +34,7 @@ export default function FiltersModal({ open, onClose }: FiltersModalProps) {
         </span>
 
         <div className='space-y-2 mt-2 flex flex-col max-h-[165px] overflow-y-auto'>
-          {mockedAccounts.map((account) => (
+          {accounts.map((account) => (
             <button
               key={account.id}
               onClick={() => handleSelectBankAccount(account.id)}
@@ -81,7 +75,17 @@ export default function FiltersModal({ open, onClose }: FiltersModalProps) {
         </div>
       </div>
 
-      <Button className='w-full mt-10'>Aplicar Filtros</Button>
+      <Button
+        className='w-full mt-10'
+        onClick={() =>
+          onApplyFilters({
+            bankAccountId: selectedBankAccountId,
+            year: selectedYear,
+          })
+        }
+      >
+        Aplicar Filtros
+      </Button>
     </Modal>
   );
 }

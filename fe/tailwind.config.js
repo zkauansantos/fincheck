@@ -199,6 +199,9 @@ export default {
         'slide-down-and-fade': 'slideDownAndFade 800ms cubic-bezier(0.16, 1, 0.3, 1)',
         'overlay-show': 'overlayShow 500ms ease',
         'content-show': 'contentShow 500ms ease'
+      },
+      fontFamily: {
+        sans: ['DM Sans', 'sans-serif']
       }
     },
   },

@@ -6,9 +6,11 @@ import { localStorageKeys } from "../config/localStorageKeys";
 import { usersService } from "../services/usersService";
 import { toast } from "react-hot-toast";
 import LaunchScreen from "../../view/components/LaunchScreen";
+import { User } from "../entities/User";
 
 interface AuthContextValue {
   isAuthenticated: boolean;
+  user: User | undefined;
   signin: (jwtAcessToken: string) => void;
   signout: () => void;
 }
@@ -28,7 +30,7 @@ export default function AuthContextProvider({
     return !!storedJwtAccessToken;
   });
 
-  const { isError, isSuccess, isFetching, remove } = useQuery({
+  const { isError, isSuccess, isFetching, remove, data } = useQuery({
     queryKey: ["users", "me"],
     queryFn: () => usersService.me(),
     enabled: isAuthenticated,
@@ -44,7 +46,7 @@ export default function AuthContextProvider({
   const signout = useCallback(() => {
     localStorage.removeItem(localStorageKeys.ACCESS_TOKEN);
     setIsAuthenticated(false);
-    remove()
+    remove();
   }, [remove]);
 
   useEffect(() => {
@@ -53,17 +55,18 @@ export default function AuthContextProvider({
       signout();
     }
   }, [isError, signout]);
- 
+
   return (
     <AuthContext.Provider
       value={{
         isAuthenticated: isSuccess && isAuthenticated,
         signin,
+        user: data,
         signout,
       }}
     >
       <LaunchScreen isLoading={isFetching} />
-      
+
       {!isFetching && children}
     </AuthContext.Provider>
   );
