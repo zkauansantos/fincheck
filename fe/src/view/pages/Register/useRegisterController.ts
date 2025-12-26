@@ -1,6 +1,6 @@
-import { useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 
 import { authService } from "../../../app/services/authService";
@@ -19,7 +19,7 @@ export default function useRegisterController() {
     resolver: zodResolver(registerSchema),
   });
 
-  const { isLoading, mutateAsync } = useMutation({
+  const { isPending, mutateAsync } = useMutation({
     mutationFn: ({ name, email, password }: SignupParams) => {
       return authService.signup({ name, email, password });
     },
@@ -43,6 +43,6 @@ export default function useRegisterController() {
     register,
     handleSubmit,
     errors,
-    isLoading,
+    isLoading: isPending,
   };
 }

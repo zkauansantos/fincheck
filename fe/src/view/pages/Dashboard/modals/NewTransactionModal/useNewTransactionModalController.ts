@@ -1,14 +1,14 @@
-import { z } from "zod";
-import useDashboard from "../../useDashboard";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMemo } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
+import { z } from "zod";
 import useBankAccounts from "../../../../../app/hooks/useBankAccounts";
 import useCategories from "../../../../../app/hooks/useCategories";
-import { useMemo } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { transactionsService } from "../../../../../app/services/transactionsService";
-import { toast } from "react-hot-toast";
 import currencyStringToNumber from "../../../../../app/utils/currencyStringToNumber";
+import useDashboard from "../../useDashboard";
 
 const schema = z.object({
   value: z.string().nonempty("Informe o valor"),
@@ -40,7 +40,9 @@ export default function useNewTransactionModalController() {
   const { accounts } = useBankAccounts();
   const { categories: categoriesList } = useCategories();
   const queryClient = useQueryClient();
-  const { isLoading, mutateAsync } = useMutation(transactionsService.create);
+  const { isPending, mutateAsync } = useMutation({
+    mutationFn: transactionsService.create
+  });
 
   const categories = useMemo(() => {
     return categoriesList.filter(
@@ -66,7 +68,7 @@ export default function useNewTransactionModalController() {
           ? "Despesa cadastrada com sucesso!"
           : "Receita cadastrada com sucesso!"
       );
-      queryClient.invalidateQueries(["transactions"]);
+      queryClient.invalidateQueries({ queryKey: ["transactions"] });
       closeNewTransactionModal();
       reset();
     } catch {
@@ -81,7 +83,7 @@ export default function useNewTransactionModalController() {
 
   return {
     accounts,
-    isLoading,
+    isLoading: isPending,
     register,
     errors,
     control,
