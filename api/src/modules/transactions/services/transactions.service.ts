@@ -68,6 +68,111 @@ export class TransactionsService {
     });
   }
 
+  findAllByYear(
+    userId: string,
+    filters: {
+      year: number;
+      bankAccountId?: string;
+      type?: TransactionType;
+    },
+  ) {
+    return this.transactionsRepository.findMany({
+      where: {
+        userId,
+        bankAccountId: filters.bankAccountId,
+        type: filters.type,
+        date: {
+          gte: new Date(Date.UTC(filters.year, 0)),
+          lt: new Date(Date.UTC(filters.year + 1, 0)),
+        },
+      },
+      include: {
+        category: {
+          select: {
+            id: true,
+            name: true,
+            icon: true,
+          },
+        },
+      },
+    });
+  }
+
+  async getCategoryAnalytics(
+    userId: string,
+    filters: {
+      year: number;
+      bankAccountId?: string;
+    },
+  ) {
+    const transactions = await this.transactionsRepository.findMany({
+      where: {
+        userId,
+        bankAccountId: filters.bankAccountId,
+        date: {
+          gte: new Date(Date.UTC(filters.year, 0)),
+          lt: new Date(Date.UTC(filters.year + 1, 0)),
+        },
+      },
+      include: {
+        category: {
+          select: {
+            id: true,
+            name: true,
+            icon: true,
+          },
+        },
+      },
+    });
+
+    const categoryMap = new Map();
+
+    transactions.forEach((transaction: any) => {
+      const categoryId = transaction.categoryId;
+      const categoryName = transaction.category?.name || 'Sem categoria';
+      const categoryIcon = transaction.category?.icon || '';
+      const month = new Date(transaction.date).getMonth();
+      const isIncome = transaction.type === 'INCOME';
+
+      if (!categoryMap.has(categoryId)) {
+        categoryMap.set(categoryId, {
+          categoryId,
+          categoryName,
+          categoryIcon,
+          months: Array(12).fill(0),
+          totalIncome: 0,
+          totalExpense: 0,
+          averageIncome: 0,
+          averageExpense: 0,
+        });
+      }
+
+      const category = categoryMap.get(categoryId);
+
+      category.months[month] += transaction.value;
+
+      if (isIncome) {
+        category.totalIncome += transaction.value;
+        return;
+      }
+
+      category.totalExpense += transaction.value;
+    });
+
+    const result = Array.from(categoryMap.values()).map((category) => {
+      const monthsWithIncome = category.totalIncome > 0 ? 12 : 0;
+      const monthsWithExpense = category.totalExpense > 0 ? 12 : 0;
+
+      return {
+        ...category,
+        averageIncome: monthsWithIncome > 0 ? category.totalIncome / 12 : 0,
+        averageExpense: monthsWithExpense > 0 ? category.totalExpense / 12 : 0,
+      };
+    });
+
+    return result;
+  }
+
   async update(
     userId: string,
     transactionId: string,

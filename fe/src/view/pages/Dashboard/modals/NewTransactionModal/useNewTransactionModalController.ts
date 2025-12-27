@@ -1,14 +1,15 @@
-import useSubcategories from "@/app/hooks/useSubcategories";
+
+import useBankAccounts from "@/app/services/bankAccounts/hooks/useBankAccounts";
+import useCategories from "@/app/services/categories/hooks/useCategories";
+import useSubcategories from "@/app/services/categories/hooks/useSubcategories";
+import { transactionsService } from "@/app/services/transactions";
+import currencyStringToNumber from "@/app/utils/currencyStringToNumber";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { z } from "zod";
-import useBankAccounts from "../../../../../app/hooks/useBankAccounts";
-import useCategories from "../../../../../app/hooks/useCategories";
-import { transactionsService } from "../../../../../app/services/transactionsService";
-import currencyStringToNumber from "../../../../../app/utils/currencyStringToNumber";
 import useDashboard from "../../useDashboard";
 
 const schema = z.object({

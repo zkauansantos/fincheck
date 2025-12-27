@@ -2,8 +2,8 @@ import React, { createContext, useCallback, useEffect, useState } from 'react';
 
 import { useQuery } from '@tanstack/react-query';
 
+import LaunchScreen from '@/view/components/LaunchScreen';
 import { toast } from 'react-hot-toast';
-import LaunchScreen from '../../view/components/LaunchScreen';
 import { localStorageKeys } from '../config/localStorageKeys';
 import { User } from '../entities/User';
 import { queryClient } from '../lib/queryClient';
@@ -35,7 +35,6 @@ export default function AuthContextProvider({
     queryKey: ['users', 'me'],
     queryFn: () => usersService.me(),
     enabled: isAuthenticated,
-    staleTime: Infinity,
   });
 
   const signin = useCallback((jtwAccessToken: string) => {

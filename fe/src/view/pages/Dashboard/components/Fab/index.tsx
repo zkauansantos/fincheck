@@ -1,7 +1,7 @@
 import { PlusIcon } from "@radix-ui/react-icons";
-import { DropdownMenu } from "../../../../components/DropdownMenu";
-import { CategoryIcon } from "../../../../components/icons/categories/CategoryIcon";
-import BankAccountIcon from "../../../../components/icons/BankAccountIcon";
+import { DropdownMenu } from "@/view/components/DropdownMenu";
+import { CategoryIcon } from "@/view/components/icons/categories/CategoryIcon";
+import BankAccountIcon from "@/view/components/icons/BankAccountIcon";
 import useDashboard from "../../useDashboard";
 
 export default function Fab() {

@@ -1,5 +1,5 @@
 import { formatQueryParams } from "@/app/utils/formatQueryParams";
-import { Category } from "../../entities/Category";
+import { Category } from "@/app/entities/Category";
 import { httpClient } from "../httpClient";
 
 type GetAllCategoriesResponse = Array<Category>;

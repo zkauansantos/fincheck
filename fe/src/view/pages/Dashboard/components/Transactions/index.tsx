@@ -1,19 +1,19 @@
-import { FilterIcon } from "../../../../components/icons/FilterIcon";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { MONTHS } from "../../../../../app/config/constants";
-import SliderOption from "./SliderOption";
+import { MONTHS } from "@/app/config/constants";
+import cn from "@/app/utils/cn";
+import formatCurrency from "@/app/utils/formatCurrency";
+import { CategoryIcon } from "@/view/components/icons/categories/CategoryIcon";
+import { FilterIcon } from "@/view/components/icons/FilterIcon";
+import Spinner from "@/view/components/Spinner";
 import SliderNavigation from "./SliderNavigation";
-import formatCurrency from "../../../../../app/utils/formatCurrency";
-import { CategoryIcon } from "../../../../components/icons/categories/CategoryIcon";
+import SliderOption from "./SliderOption";
 import useTransactionsController from "./useTransactionsController";
-import cn from "../../../../../app/utils/cn";
-import Spinner from "../../../../components/Spinner";
 
-import emptyStateImage from "../../../../../assets/empty-state.svg";
-import TransactionTypeDropdown from "./TransactionTypeDropdown";
-import FiltersModal from "./FiltersModal";
-import formatDate from "../../../../../app/utils/formatDate";
+import formatDate from "@/app/utils/formatDate";
+import emptyStateImage from "@/assets/empty-state.svg";
 import EditTransactionModal from "../../modals/EditTransactionModal";
+import FiltersModal from "./FiltersModal";
+import TransactionTypeDropdown from "./TransactionTypeDropdown";
 
 export default function Transactions() {
   const {
@@ -153,7 +153,7 @@ export default function Transactions() {
                         !areValuesVisible && "blur-sm"
                       )}
                     >
-                      {transaction.type === "EXPENSE" ? "-" : "+"}R${" "}
+                      {transaction.type === "EXPENSE" ? "-" : "+"}
                       {formatCurrency(transaction.value)}
                     </span>
                   </div>

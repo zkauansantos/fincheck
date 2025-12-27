@@ -1,13 +1,13 @@
 import { Controller } from 'react-hook-form';
-import { Transaction } from '../../../../../app/entities/Transaction';
-import Button from '../../../../components/Button';
-import ConfirmDeleteModal from '../../../../components/ConfirmDeleteModal';
-import DatePickerInput from '../../../../components/DatePickerInput';
-import TrashIcon from '../../../../components/icons/TrashIcon';
-import Input from '../../../../components/Input';
-import InputCurrency from '../../../../components/InputCurrency';
-import Modal from '../../../../components/Modal';
-import Select from '../../../../components/Select';
+import { Transaction } from '@/app/entities/Transaction';
+import Button from '@/view/components/Button';
+import ConfirmDeleteModal from '@/view/components/ConfirmDeleteModal';
+import DatePickerInput from '@/view/components/DatePickerInput';
+import TrashIcon from '@/view/components/icons/TrashIcon';
+import Input from '@/view/components/Input';
+import InputCurrency from '@/view/components/InputCurrency';
+import Modal from '@/view/components/Modal';
+import Select from '@/view/components/Select';
 import useEditTransactionModalController from './useEditTransactionModalController';
 
 interface EditTransactionModalProps {

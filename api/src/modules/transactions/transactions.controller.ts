@@ -52,6 +52,33 @@ export class TransactionsController {
     });
   }
 
+  @Get('annual')
+  findAnnual(
+    @ActiveUserId() userId: string,
+    @Query('year', ParseIntPipe) year: number,
+    @Query('bankAccountId', OptinalParseUUIDPipe) bankAccountId?: string,
+    @Query('type', new OptinalParseEnumPipe(TransactionType))
+    type?: TransactionType,
+  ) {
+    return this.transactionsService.findAllByYear(userId, {
+      year,
+      bankAccountId,
+      type,
+    });
+  }
+
+  @Get('analytics')
+  getCategoryAnalytics(
+    @ActiveUserId() userId: string,
+    @Query('year', ParseIntPipe) year: number,
+    @Query('bankAccountId', OptinalParseUUIDPipe) bankAccountId?: string,
+  ) {
+    return this.transactionsService.getCategoryAnalytics(userId, {
+      year,
+      bankAccountId,
+    });
+  }
+
   @Put(':transactionId')
   update(
     @ActiveUserId() userId: string,

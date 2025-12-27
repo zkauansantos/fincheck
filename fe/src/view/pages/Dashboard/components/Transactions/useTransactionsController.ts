@@ -1,8 +1,8 @@
+import { Transaction } from "@/app/entities/Transaction";
+import { GetAllTransactionsParams } from "@/app/services/transactions/getAll";
+import useTransactions from "@/app/services/transactions/hooks/useTransactions";
 import { useEffect, useState } from "react";
 import useDashboard from "../../useDashboard";
-import useTransactions from "../../../../../app/hooks/useTransactions";
-import { TransactionsFilters } from "../../../../../app/services/transactionsService/getAll";
-import { Transaction } from "../../../../../app/entities/Transaction";
 
 export default function useTransactionsController() {
   const { areValuesVisible } = useDashboard();
@@ -14,7 +14,7 @@ export default function useTransactionsController() {
     isBeginning: true,
     isEnd: false,
   });
-  const [filters, setFilters] = useState<TransactionsFilters>({
+  const [filters, setFilters] = useState<GetAllTransactionsParams>({
     month: new Date().getMonth(),
     year: new Date().getFullYear(),
   });
@@ -44,10 +44,10 @@ export default function useTransactionsController() {
     setIsEditModalOpen(false);
   }
 
-  function handleChangeFilters<TFilter extends keyof TransactionsFilters>(
+  function handleChangeFilters<TFilter extends keyof GetAllTransactionsParams>(
     filter: TFilter
   ) {
-    return (value: TransactionsFilters[TFilter]) => {
+    return (value: GetAllTransactionsParams[TFilter]) => {
       if (value === filters[filter]) return;
 
       setFilters((prev) => ({

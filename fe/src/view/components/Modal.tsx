@@ -1,5 +1,5 @@
+import cn from "@/app/utils/cn";
 import * as RdxDialog from "@radix-ui/react-dialog";
-import cn from "../../app/utils/cn";
 import { Cross2Icon } from "@radix-ui/react-icons";
 
 interface ModalProps {

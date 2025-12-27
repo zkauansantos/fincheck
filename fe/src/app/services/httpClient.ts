@@ -12,7 +12,7 @@ httpClient.interceptors.request.use(async (config) => {
   if (jwtAccessToken) {
     config.headers.Authorization = `Bearer ${jwtAccessToken}`;
   }
-  
+
   return config;
 });
 

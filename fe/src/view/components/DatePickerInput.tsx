@@ -1,9 +1,9 @@
+import cn from "@/app/utils/cn";
 import { CrossCircledIcon } from "@radix-ui/react-icons";
-import cn from "../../app/utils/cn";
 import { useState } from "react";
-import formatDate from "../../app/utils/formatDate";
-import { Popover } from "./Popover";
+import formatDate from "@/app/utils/formatDate";
 import DatePicker from "./DatePicker";
+import { Popover } from "./Popover";
 
 interface DatePickerInputProps {
   className?: string;

@@ -1,6 +1,6 @@
-import { NumericFormat } from "react-number-format";
-import cn from "../../app/utils/cn";
+import cn from "@/app/utils/cn";
 import { CrossCircledIcon } from "@radix-ui/react-icons";
+import { NumericFormat } from "react-number-format";
 interface InputCurrencyProps {
   error?: string;
   value?: string | number;

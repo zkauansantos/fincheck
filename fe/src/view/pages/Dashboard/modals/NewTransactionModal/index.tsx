@@ -1,10 +1,10 @@
 import { Controller } from 'react-hook-form';
-import Button from '../../../../components/Button';
-import DatePickerInput from '../../../../components/DatePickerInput';
-import Input from '../../../../components/Input';
-import InputCurrency from '../../../../components/InputCurrency';
-import Modal from '../../../../components/Modal';
-import Select from '../../../../components/Select';
+import Button from '@/view/components/Button';
+import DatePickerInput from '@/view/components/DatePickerInput';
+import Input from '@/view/components/Input';
+import InputCurrency from '@/view/components/InputCurrency';
+import Modal from '@/view/components/Modal';
+import Select from '@/view/components/Select';
 import useNewTransactionModalController from './useNewTransactionModalController';
 
 export default function NewTransactionModal() {

@@ -1,6 +1,6 @@
+import { Category } from "@/app/entities/Category";
 import { useQuery } from "@tanstack/react-query";
-import { Category } from "../entities/Category";
-import { categoriesService } from "../services/categories";
+import { categoriesService } from "..";
 
 interface IUseCategoriesParams {
   type?: Category['type'] | null

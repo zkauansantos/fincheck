@@ -1,12 +1,12 @@
-import useDashboard from "../../useDashboard";
-import { useForm } from "react-hook-form";
+import { bankAccountsService } from "@/app/services/bankAccounts";
+import currencyStringToNumber from "@/app/utils/currencyStringToNumber";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { bankAccountsService } from "../../../../../app/services/bankAccountsService";
-import currencyStringToNumber from "../../../../../app/utils/currencyStringToNumber";
-import { toast } from "react-hot-toast";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
+import { z } from "zod";
+import useDashboard from "../../useDashboard";
 
 const schema = z.object({
   initialBalance: z.union([

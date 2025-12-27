@@ -1,11 +1,11 @@
+import cn from '@/app/utils/cn';
 import {
-  ChevronDownIcon,
-  ChevronUpIcon,
-  CrossCircledIcon,
+    ChevronDownIcon,
+    ChevronUpIcon,
+    CrossCircledIcon,
 } from '@radix-ui/react-icons';
 import * as RdxSelect from '@radix-ui/react-select';
 import { useState } from 'react';
-import cn from '../../app/utils/cn';
 
 interface SelectProps {
   className?: string;

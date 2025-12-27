@@ -3,12 +3,12 @@ import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 
-import { authService } from "../../../app/services/authService";
-import { SignupParams } from "../../../app/services/authService/signup";
+import { authService } from "@/app/services/authService";
+import { SignupParams } from "@/app/services/authService/signup";
 
 import { FormData, registerSchema } from "./schemas/registerSchema";
 
-import useAuth from "../../../app/hooks/useAuth";
+import useAuth from "@/app/hooks/useAuth";
 
 export default function useRegisterController() {
   const {

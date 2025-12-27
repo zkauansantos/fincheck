@@ -1,4 +1,4 @@
-import { User } from "../../entities/User";
+import { User } from "@/app/entities/User";
 import { httpClient } from "../httpClient";
 
 type MeResponse = User;

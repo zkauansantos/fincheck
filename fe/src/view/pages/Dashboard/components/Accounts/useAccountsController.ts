@@ -1,7 +1,7 @@
+import useWidth from "@/app/hooks/useWidth";
+import useBankAccounts from "@/app/services/bankAccounts/hooks/useBankAccounts";
 import { useMemo, useState } from "react";
-import useWidth from "../../../../../app/hooks/useWidth";
 import useDashboard from "../../useDashboard";
-import useBankAccounts from "../../../../../app/hooks/useBankAccounts";
 
 export default function useAccountsController() {
   const width = useWidth();

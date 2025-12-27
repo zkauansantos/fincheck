@@ -1,8 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { subcategoriesService } from "../services/subcategories";
-import { GetAllSubCategoriesParams } from "../services/subcategories/getAll";
-
-
+import { subcategoriesService } from "../../subcategories";
+import { GetAllSubCategoriesParams } from "../../subcategories/getAll";
 
 export default function useSubcategories({ categoryId }: GetAllSubCategoriesParams) {
   const { data, isFetching } = useQuery({
