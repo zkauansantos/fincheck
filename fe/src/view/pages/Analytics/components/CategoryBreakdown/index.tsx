@@ -1,6 +1,7 @@
 import { MONTHS } from '@/app/config/constants';
 import useCategoryAnalytics from '@/app/services/categories/hooks/useCategoryAnalytics';
 import formatCurrency from '@/app/utils/formatCurrency';
+import { DataTable } from '@/view/components/DataTable';
 import { CategoryIcon } from '@/view/components/icons/categories/CategoryIcon';
 import {
   Tabs,
@@ -8,9 +9,23 @@ import {
   TabsList,
   TabsTrigger,
 } from '@/view/components/Tabs';
+import { ColumnDef } from '@tanstack/react-table';
+import { useMemo } from 'react';
 
 interface CategoryBreakdownProps {
   year: number;
+}
+
+interface CategoryAnalyticsRow {
+  categoryId: string;
+  categoryName: string;
+  categoryIcon: string;
+  months: number[];
+  totalExpense: number;
+  totalIncome: number;
+  averageExpense: number;
+  averageIncome: number;
+  type: 'expense' | 'income';
 }
 
 export function CategoryBreakdown({ year }: CategoryBreakdownProps) {
@@ -33,6 +48,109 @@ export function CategoryBreakdown({ year }: CategoryBreakdownProps) {
   );
   const averageMonthlyIncome = totalIncome / 12;
   const averageMonthlyExpense = totalExpense / 12;
+
+  const expenseColumns = useMemo<ColumnDef<CategoryAnalyticsRow>[]>(
+    () => [
+      {
+        accessorKey: 'categoryName',
+        header: 'Categoria',
+        cell: ({ row }) => (
+          <div className='flex items-center gap-2'>
+            <span>
+              <CategoryIcon
+                type='expense'
+                category={row.original.categoryIcon}
+              />
+            </span>
+            <span className='font-medium text-gray-900'>
+              {row.original.categoryName}
+            </span>
+          </div>
+        ),
+      },
+      ...MONTHS.map((month, index) => ({
+        accessorKey: `month_${index}`,
+        header: month,
+        cell: ({ row }: { row: { original: CategoryAnalyticsRow } }) => {
+          const value = row.original.months[index];
+
+          return (
+            <span className='text-gray-700'>{formatCurrency(value ?? 0)}</span>
+          );
+        },
+      })),
+      {
+        accessorKey: 'totalExpense',
+        header: 'Total',
+        cell: ({ row }) => (
+          <span className='font-semibold text-red-800'>
+            {formatCurrency(row.original.totalExpense)}
+          </span>
+        ),
+      },
+      {
+        accessorKey: 'averageExpense',
+        header: 'Média',
+        cell: ({ row }) => (
+          <span className='font-medium text-gray-700'>
+            {formatCurrency(row.original.averageExpense)}
+          </span>
+        ),
+      },
+    ],
+    []
+  );
+
+  const incomeColumns = useMemo<ColumnDef<CategoryAnalyticsRow>[]>(
+    () => [
+      {
+        accessorKey: 'categoryName',
+        header: 'Categoria',
+        cell: ({ row }) => (
+          <div className='flex items-center gap-2'>
+            <span>
+              <CategoryIcon
+                type='income'
+                category={row.original.categoryIcon}
+              />
+            </span>
+            <span className='font-medium text-gray-900'>
+              {row.original.categoryName}
+            </span>
+          </div>
+        ),
+      },
+      ...MONTHS.map((month, index) => ({
+        accessorKey: `month_${index}`,
+        header: month,
+        cell: ({ row }: { row: { original: CategoryAnalyticsRow } }) => {
+          const value = row.original.months[index];
+          return (
+            <span className='text-gray-700'>{formatCurrency(value ?? 0)}</span>
+          );
+        },
+      })),
+      {
+        accessorKey: 'totalIncome',
+        header: 'Total',
+        cell: ({ row }) => (
+          <span className='font-semibold text-teal-800'>
+            {formatCurrency(row.original.totalIncome)}
+          </span>
+        ),
+      },
+      {
+        accessorKey: 'averageIncome',
+        header: 'Média',
+        cell: ({ row }) => (
+          <span className='font-medium text-gray-700'>
+            {formatCurrency(row.original.averageIncome)}
+          </span>
+        ),
+      },
+    ],
+    []
+  );
 
   if (isLoading) {
     return (
@@ -94,76 +212,24 @@ export function CategoryBreakdown({ year }: CategoryBreakdownProps) {
             <h3 className='text-lg font-semibold text-gray-900 mb-4 tracking-[-0.5px]'>
               Detalhamento de Saídas por Categoria
             </h3>
-            <table className='w-full text-sm'>
-              <thead>
-                <tr className='border-b border-gray-200'>
-                  <th className='text-left py-3 px-2 font-semibold text-gray-700'>
-                    Categoria
-                  </th>
-                  {MONTHS.map((month) => (
-                    <th
-                      key={month}
-                      className='text-right py-3 px-2 font-semibold text-gray-700'
-                    >
-                      {month}
-                    </th>
-                  ))}
-                  <th className='text-right py-3 px-2 font-semibold text-gray-700'>
-                    Total
-                  </th>
-                  <th className='text-right py-3 px-2 font-semibold text-gray-700'>
-                    Média
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {expenseCategories.length === 0 ? (
-                  <tr>
-                    <td colSpan={14} className='text-center py-8 text-gray-500'>
+            <DataTable.Root
+              data={expenseCategories.map((cat) => ({
+                ...cat,
+                type: 'expense' as const,
+              }))}
+              columns={expenseColumns}
+              isLoading={isLoading}
+            >
+              <DataTable.Content
+                emptyStateProps={{
+                  emptyState: (
+                    <div className='text-center py-8 text-gray-500'>
                       Nenhuma saída registrada neste ano
-                    </td>
-                  </tr>
-                ) : (
-                  expenseCategories.map((category) => (
-                    <tr
-                      key={category.categoryId}
-                      className='border-b border-gray-100 hover:bg-gray-50'
-                    >
-                      <td className='py-3 px-2'>
-                        <div className='flex items-center gap-2'>
-                          <span>
-                            <CategoryIcon
-                              type='expense'
-                              category={category.categoryIcon}
-                            />
-                          </span>
-                          <span className='font-medium text-gray-900'>
-                            {category.categoryName}
-                          </span>
-                        </div>
-                      </td>
-                      {category.months.map((value, index) => (
-                        <td key={index} className='text-right py-3 px-2'>
-                          {value > 0 ? (
-                            <span className='text-gray-700'>
-                              {formatCurrency(value)}
-                            </span>
-                          ) : (
-                            <span className='text-gray-300'>-</span>
-                          )}
-                        </td>
-                      ))}
-                      <td className='text-right py-3 px-2 font-semibold text-red-800'>
-                        {formatCurrency(category.totalExpense)}
-                      </td>
-                      <td className='text-right py-3 px-2 font-medium text-gray-700'>
-                        {formatCurrency(category.averageExpense)}
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+                    </div>
+                  ),
+                }}
+              />
+            </DataTable.Root>
           </div>
         </TabsContent>
 
@@ -172,76 +238,24 @@ export function CategoryBreakdown({ year }: CategoryBreakdownProps) {
             <h3 className='text-lg font-semibold text-gray-900 mb-4 tracking-[-0.5px]'>
               Detalhamento de Entradas por Categoria
             </h3>
-            <table className='w-full text-sm'>
-              <thead>
-                <tr className='border-b border-gray-200'>
-                  <th className='text-left py-3 px-2 font-semibold text-gray-700'>
-                    Categoria
-                  </th>
-                  {MONTHS.map((month) => (
-                    <th
-                      key={month}
-                      className='text-right py-3 px-2 font-semibold text-gray-700'
-                    >
-                      {month}
-                    </th>
-                  ))}
-                  <th className='text-right py-3 px-2 font-semibold text-gray-700'>
-                    Total
-                  </th>
-                  <th className='text-right py-3 px-2 font-semibold text-gray-700'>
-                    Média
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {incomeCategories.length === 0 ? (
-                  <tr>
-                    <td colSpan={14} className='text-center py-8 text-gray-500'>
+            <DataTable.Root
+              data={incomeCategories.map((cat) => ({
+                ...cat,
+                type: 'income' as const,
+              }))}
+              columns={incomeColumns}
+              isLoading={isLoading}
+            >
+              <DataTable.Content
+                emptyStateProps={{
+                  emptyState: (
+                    <div className='text-center py-8 text-gray-500'>
                       Nenhuma entrada registrada neste ano
-                    </td>
-                  </tr>
-                ) : (
-                  incomeCategories.map((category) => (
-                    <tr
-                      key={category.categoryId}
-                      className='border-b border-gray-100 hover:bg-gray-50'
-                    >
-                      <td className='py-3 px-2'>
-                        <div className='flex items-center gap-2'>
-                          <span>
-                            <CategoryIcon
-                              type='income'
-                              category={category.categoryIcon}
-                            />
-                          </span>
-                          <span className='font-medium text-gray-900'>
-                            {category.categoryName}
-                          </span>
-                        </div>
-                      </td>
-                      {category.months.map((value, index) => (
-                        <td key={index} className='text-right py-3 px-2'>
-                          {value > 0 ? (
-                            <span className='text-gray-700'>
-                              {formatCurrency(value)}
-                            </span>
-                          ) : (
-                            <span className='text-gray-300'>-</span>
-                          )}
-                        </td>
-                      ))}
-                      <td className='text-right py-3 px-2 font-semibold text-teal-800'>
-                        {formatCurrency(category.totalIncome)}
-                      </td>
-                      <td className='text-right py-3 px-2 font-medium text-gray-700'>
-                        {formatCurrency(category.averageIncome)}
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+                    </div>
+                  ),
+                }}
+              />
+            </DataTable.Root>
           </div>
         </TabsContent>
       </Tabs>

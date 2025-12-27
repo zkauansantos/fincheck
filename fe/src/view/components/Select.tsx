@@ -69,7 +69,7 @@ export default function Select({
           </RdxSelect.Trigger>
 
           <RdxSelect.Portal>
-            <RdxSelect.Content className=' z-[99] overflow-hidden bg-white rounded-2xl border border-gray-100 shadow-[0px_11px_20px_0px_rgba(0,0,0,0.10)'>
+            <RdxSelect.Content className=' z-99 overflow-hidden bg-white rounded-2xl border border-gray-100 shadow-[0px_11px_20px_0px_rgba(0,0,0,0.10)'>
               <RdxSelect.ScrollUpButton className='flex items-center justify-center h-[25px] bg-white text-gray-800 cursor-default'>
                 <ChevronUpIcon />
               </RdxSelect.ScrollUpButton>

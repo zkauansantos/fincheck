@@ -23,7 +23,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             "bg-white placeholder-shown:pt-0 focus:pt-4 w-full pt-4",
             "rounded-lg border border-gray-500 px-3 h-[52px] outline-none",
             "text-gray-800 peer focus:border-gray-800 transition-all",
-            error && "!border-red-900",
+            error && "border-red-900!",
             className
           )}
         />

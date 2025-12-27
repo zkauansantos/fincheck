@@ -27,3 +27,5 @@ export const COLORS = [
   { color: "#12B886", bg: "#E6FCF5" },
   { color: "#FAB005", bg: "#FFF9DB" },
 ];
+
+export const LIMIT_PAGINATION = 10;
