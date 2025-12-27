@@ -40,7 +40,7 @@ export default function FiltersModal({
               onClick={() => handleSelectBankAccount(account.id)}
               className={cn(
                 "rounded-2xl p-2 w-full text-left text-gray-800 hover:bg-gray-50",
-                account.id === selectedBankAccountId && "!bg-gray-200"
+                account.id === selectedBankAccountId && "bg-gray-200!"
               )}
             >
               {account.name}
