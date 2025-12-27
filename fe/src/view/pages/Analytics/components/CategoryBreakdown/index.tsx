@@ -42,10 +42,12 @@ export function CategoryBreakdown({ year }: CategoryBreakdownProps) {
     (sum, cat) => sum + cat.totalIncome,
     0
   );
+
   const totalExpense = expenseCategories.reduce(
     (sum, cat) => sum + cat.totalExpense,
     0
   );
+
   const averageMonthlyIncome = totalIncome / 12;
   const averageMonthlyExpense = totalExpense / 12;
 
@@ -210,7 +212,7 @@ export function CategoryBreakdown({ year }: CategoryBreakdownProps) {
         <TabsContent value='expenses'>
           <div className='bg-white p-6 rounded-2xl overflow-x-auto'>
             <h3 className='text-lg font-semibold text-gray-900 mb-4 tracking-[-0.5px]'>
-              Detalhamento de Saídas por Categoria
+              Resumo Despesas
             </h3>
             <DataTable.Root
               data={expenseCategories.map((cat) => ({
@@ -236,7 +238,7 @@ export function CategoryBreakdown({ year }: CategoryBreakdownProps) {
         <TabsContent value='income'>
           <div className='bg-white p-6 rounded-2xl overflow-x-auto'>
             <h3 className='text-lg font-semibold text-gray-900 mb-4 tracking-[-0.5px]'>
-              Detalhamento de Entradas por Categoria
+              Resumo Renda
             </h3>
             <DataTable.Root
               data={incomeCategories.map((cat) => ({

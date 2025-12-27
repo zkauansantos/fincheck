@@ -14,7 +14,7 @@ import useDashboard from "../../useDashboard";
 
 const schema = z.object({
   value: z.string().nonempty("Informe o valor"),
-  name: z.string().nonempty("Inform o nome"),
+  name: z.string().nonempty("Informe o nome"),
   categoryId: z.string().nonempty("Informe a categoria"),
   subCategoryId: z.string().nonempty("Informe a categoria secundária"),
   bankAccountId: z.string().nonempty("Informe a conta bancária"),

@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import { CategoryAnalyticsFilters, transactionsService } from '../../transactions';
+import { transactionsService } from '../../transactions';
+import { GetCategoryAnalyticsParams } from '../../transactions/getCategoryAnalytics';
 
 export default function useCategoryAnalytics(
-  filters: CategoryAnalyticsFilters
+  filters: GetCategoryAnalyticsParams
 ) {
   const { data, isFetching, isLoading, refetch } = useQuery({
     queryKey: ['transactions', 'analytics', filters.year, filters.bankAccountId],

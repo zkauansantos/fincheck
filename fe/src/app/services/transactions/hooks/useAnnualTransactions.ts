@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { transactionsService } from '..';
-import { AnnualTransactionsFilters } from '../getAnnual';
+import { GetAnnualTransactionsParams } from '../getAnnual';
 
 export default function useAnnualTransactions(
-  filters: AnnualTransactionsFilters,
+  filters: GetAnnualTransactionsParams,
 ) {
   const { data, isFetching, isLoading, refetch } = useQuery({
     queryKey: ['transactions', 'annual', filters.year, filters.bankAccountId],

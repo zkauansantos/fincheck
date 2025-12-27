@@ -1,6 +1,7 @@
+import { formatQueryParams } from "@/app/utils/formatQueryParams";
 import { httpClient } from "../httpClient";
 
-export interface CategoryAnalytics {
+export interface GetCategoryAnalyticsResponse {
   categoryId: string;
   categoryName: string;
   categoryIcon: string;
@@ -11,19 +12,19 @@ export interface CategoryAnalytics {
   averageExpense: number;
 }
 
-export type CategoryAnalyticsFilters = {
+export type GetCategoryAnalyticsParams = {
   year: number;
   bankAccountId?: string;
 };
 
 export default async function getCategoryAnalytics(
-  filters: CategoryAnalyticsFilters
+  filters: GetCategoryAnalyticsParams
 ) {
-  const { data } = await httpClient.get<CategoryAnalytics[]>(
-    '/transactions/analytics',
-    {
-      params: filters,
-    }
+  const params = formatQueryParams(filters);
+
+  const { data } = await httpClient.get<GetCategoryAnalyticsResponse[]>(
+    `/transactions/analytics${params}`
   );
+
   return data;
 }
