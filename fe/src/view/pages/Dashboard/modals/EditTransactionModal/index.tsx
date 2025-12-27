@@ -1,4 +1,3 @@
-import { Controller } from 'react-hook-form';
 import { Transaction } from '@/app/entities/Transaction';
 import Button from '@/view/components/Button';
 import ConfirmDeleteModal from '@/view/components/ConfirmDeleteModal';
@@ -8,6 +7,7 @@ import Input from '@/view/components/Input';
 import InputCurrency from '@/view/components/InputCurrency';
 import Modal from '@/view/components/Modal';
 import Select from '@/view/components/Select';
+import { Controller } from 'react-hook-form';
 import useEditTransactionModalController from './useEditTransactionModalController';
 
 interface EditTransactionModalProps {
@@ -73,7 +73,6 @@ export default function EditTransactionModal({
             <Controller
               control={control}
               name='value'
-              defaultValue='0'
               render={({ field: { onChange, value } }) => (
                 <InputCurrency
                   error={errors.value?.message}

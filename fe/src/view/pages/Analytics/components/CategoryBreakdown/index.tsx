@@ -133,7 +133,7 @@ export function CategoryBreakdown({ year }: CategoryBreakdownProps) {
 
   if (isLoading) {
     return (
-      <div className='bg-white p-6 rounded-2xl'>
+      <div className='p-6 rounded-2xl'>
         <div className='h-80 flex items-center justify-center'>
           <div className='animate-pulse text-gray-400'>
             Carregando análise...
@@ -145,7 +145,7 @@ export function CategoryBreakdown({ year }: CategoryBreakdownProps) {
 
   return (
     <div className='space-y-4'>
-       <div className='p-6 rounded-2xl overflow-x-auto'>
+      <div className='p-6 rounded-2xl overflow-x-auto'>
         <h3 className='text-lg font-semibold text-gray-900 mb-4 tracking-[-0.5px]'>
           Resumo Renda
         </h3>
@@ -169,7 +169,7 @@ export function CategoryBreakdown({ year }: CategoryBreakdownProps) {
         </DataTable.Root>
       </div>
 
-      <div className='bg-white p-6 rounded-2xl overflow-x-auto'>
+      <div className=' p-6 rounded-2xl overflow-x-auto'>
         <h3 className='text-lg font-semibold text-gray-900 mb-4 tracking-[-0.5px]'>
           Resumo Despesas
         </h3>
@@ -192,8 +192,6 @@ export function CategoryBreakdown({ year }: CategoryBreakdownProps) {
           />
         </DataTable.Root>
       </div>
-
-     
     </div>
   );
 }

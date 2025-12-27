@@ -136,7 +136,7 @@ export function SummaryTable({ summary, isLoading }: SummaryTableProps) {
   );
 
   return (
-    <div className='bg-white p-6 rounded-2xl h-[400px]'>
+    <div className='p-6 rounded-2xl h-[400px]'>
       <h3 className='text-lg font-semibold text-gray-900 mb-4 tracking-[-0.5px]'>
         Resumo
       </h3>

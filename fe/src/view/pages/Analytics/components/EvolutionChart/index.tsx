@@ -1,4 +1,5 @@
 import { MONTHS } from '@/app/config/constants';
+import { useTheme } from '@/app/contexts/ThemeContext';
 import { AnalyticsSummary } from '@/app/services/transactions/getCategoryAnalytics';
 import formatCurrency from '@/app/utils/formatCurrency';
 import {
@@ -26,7 +27,7 @@ function CustomTooltip({ active, payload }: TooltipProps<number, string>) {
   const label = payload[0].payload.label;
 
   return (
-    <div className='bg-white p-3 rounded-lg shadow-lg border border-gray-200'>
+    <div className='bg-white dark:bg-gray-50 p-3 rounded-lg shadow-lg border border-gray-200'>
       <p className='text-sm font-medium text-gray-900 mb-2'>{label}</p>
       <div className='space-y-1'>
         <div className='flex items-center justify-between gap-4'>
@@ -62,6 +63,8 @@ function CustomTooltip({ active, payload }: TooltipProps<number, string>) {
 }
 
 export function EvolutionChart({ summary, isLoading }: EvolutionChartProps) {
+  const { theme } = useTheme();
+
   const chartData = MONTHS.map((month, index) => ({
     label: month,
     income: summary.monthlyIncome[index],
@@ -71,7 +74,7 @@ export function EvolutionChart({ summary, isLoading }: EvolutionChartProps) {
 
   if (isLoading) {
     return (
-      <div className='bg-white p-6 rounded-2xl'>
+      <div className='p-6 rounded-2xl'>
         <div className='h-60 flex items-center justify-center'>
           <div className='animate-pulse text-gray-400'>
             Carregando gráfico...
@@ -85,7 +88,9 @@ export function EvolutionChart({ summary, isLoading }: EvolutionChartProps) {
     <div>
       <ResponsiveContainer width='100%' height={300}>
         <BarChart data={chartData}>
-          <CartesianGrid strokeDasharray='3 3' stroke='#f0f0f0' />
+          {theme !== 'dark' && (
+            <CartesianGrid strokeDasharray='3 3' stroke='#f0f0f0' />
+          )}
           <XAxis
             dataKey='label'
             tick={{ fontSize: 12 }}
@@ -106,7 +111,10 @@ export function EvolutionChart({ summary, isLoading }: EvolutionChartProps) {
               return value;
             }}
           />
-          <Tooltip content={<CustomTooltip />} cursor={{ fill: '#f9fafb' }} />
+          <Tooltip
+            content={<CustomTooltip />}
+            cursor={{ fill: theme !== 'dark' ? '#f9fafb' : 'rgba(0,0,0,0.09)' }}
+          />
 
           <Bar
             dataKey='income'

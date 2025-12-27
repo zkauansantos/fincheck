@@ -11,7 +11,7 @@ import { toast } from "react-hot-toast";
 import { z } from "zod";
 
 const schema = z.object({
-  value: z.union([z.string().nonempty("Informe um valor"), z.number()]),
+  value: z.union([z.string().nonempty("Informe um valor"), z.number()]).transform(currencyStringToNumber),
   name: z.string().nonempty("Inform o nome"),
   categoryId: z.string().nonempty("Inform a categoria"),
   bankAccountId: z.string().nonempty("Informe a conta bancária"),
@@ -72,7 +72,7 @@ export default function useEditTransactionModalController(
         categoryId,
         type: transaction!.type,
         date: date.toISOString(),
-        value: currencyStringToNumber(value),
+        value: value,
       });
 
       toast.success(

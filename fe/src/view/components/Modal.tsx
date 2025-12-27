@@ -1,6 +1,7 @@
-import cn from "@/app/utils/cn";
-import * as RdxDialog from "@radix-ui/react-dialog";
-import { Cross2Icon } from "@radix-ui/react-icons";
+import { useTheme } from '@/app/contexts/ThemeContext';
+import cn from '@/app/utils/cn';
+import * as RdxDialog from '@radix-ui/react-dialog';
+import { Cross2Icon } from '@radix-ui/react-icons';
 
 interface ModalProps {
   open: boolean;
@@ -17,21 +18,24 @@ export default function Modal({
   rightAction,
   onClose,
 }: ModalProps) {
+  const { theme } = useTheme();
+
   return (
     <RdxDialog.Root open={open} onOpenChange={onClose}>
       <RdxDialog.Portal>
         <RdxDialog.Overlay
           className={cn(
-            "fixed top-0 left-0 h-screen w-screen flex items-center justify-center bg-black/70 backdrop-blur-sm z-50",
-            "data-[state=open]:animate-overlay-show"
+            'fixed top-0 left-0 h-screen w-screen flex items-center justify-center bg-black/70 backdrop-blur-sm z-50',
+            'data-[state=open]:animate-overlay-show'
           )}
         >
           <RdxDialog.Content
             className={cn(
-              "outline-none w-full max-w-[400px]",
-              "p-6 space-y-10 bg-white rounded-2xl z-[51]",
-              "data-[state=open]:animate-content-show",
-              "shadow-[0px_11px_20px_0px_rgba(0,0,0,0.2)]"
+              'outline-none w-full max-w-[400px]',
+              'p-6 space-y-10 bg-white rounded-2xl z-51',
+              'data-[state=open]:animate-content-show',
+              'shadow-[0px_11px_20px_0px_rgba(0,0,0,0.2)]',
+              theme === 'dark' && 'dark:bg-gray-50'
             )}
           >
             <header className='h-12 flex items-center justify-between text-gray-800'>

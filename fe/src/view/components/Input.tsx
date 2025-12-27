@@ -2,6 +2,7 @@ import { ComponentProps, forwardRef } from "react";
 
 import { CrossCircledIcon } from "@radix-ui/react-icons";
 
+import { useTheme } from "@/app/contexts/ThemeContext";
 import cn from "@/app/utils/cn";
 
 interface InputProps extends ComponentProps<"input"> {
@@ -11,6 +12,8 @@ interface InputProps extends ComponentProps<"input"> {
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ placeholder, id, name, error, className, ...props }, ref) => {
+    const {theme} = useTheme();
+
     return (
       <div className='relative'>
         <input
@@ -24,6 +27,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             "rounded-lg border border-gray-500 px-3 h-[52px] outline-none",
             "text-gray-800 peer focus:border-gray-800 transition-all",
             error && "border-red-900!",
+            theme === 'dark'&& 'dark:bg-gray-100 dark:border-gray-300',
             className
           )}
         />
@@ -34,7 +38,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             "absolute text-xs left-[14px] top-2 pointer-events-none",
             "text-gray-700 peer-placeholder-shown:text-base",
             "peer-placeholder-shown:top-3.5 transition-all",
-            "peer-focus:top-2 peer-focus:text-xs"
+            "peer-focus:top-2 peer-focus:text-xs",
+            theme === 'dark' && "dark:text-gray-300"
           )}
         >
           {placeholder}
