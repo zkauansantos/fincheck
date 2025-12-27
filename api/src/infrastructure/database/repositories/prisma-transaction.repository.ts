@@ -13,34 +13,34 @@ export class PrismaTransactionRepository implements TransactionRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async findById(id: string): Promise<Transaction | null> {
-    const prismaTransaction = await this.prisma.transaction.findUnique({
+    const transaction = await this.prisma.transaction.findUnique({
       where: { id },
     });
 
-    if (!prismaTransaction) {
+    if (!transaction) {
       return null;
     }
 
-    return TransactionPrismaMapper.toDomain(prismaTransaction);
+    return TransactionPrismaMapper.toDomain(transaction);
   }
 
   async findByIdAndUserId(
     id: string,
     userId: string,
   ): Promise<Transaction | null> {
-    const prismaTransaction = await this.prisma.transaction.findFirst({
+    const transaction = await this.prisma.transaction.findFirst({
       where: { id, userId },
     });
 
-    if (!prismaTransaction) {
+    if (!transaction) {
       return null;
     }
 
-    return TransactionPrismaMapper.toDomain(prismaTransaction);
+    return TransactionPrismaMapper.toDomain(transaction);
   }
 
   async findAll(filters: TransactionFilters): Promise<Transaction[]> {
-    const prismaTransactions = await this.prisma.transaction.findMany({
+    const transactions = await this.prisma.transaction.findMany({
       where: {
         userId: filters.userId,
         bankAccountId: filters.bankAccountId,
@@ -62,75 +62,34 @@ export class PrismaTransactionRepository implements TransactionRepository {
       },
     });
 
-    return prismaTransactions.map(TransactionPrismaMapper.toDomain);
+    return transactions.map(TransactionPrismaMapper.toDomain);
   }
 
   async findByBankAccountId(bankAccountId: string): Promise<Transaction[]> {
-    const prismaTransactions = await this.prisma.transaction.findMany({
+    const transactions = await this.prisma.transaction.findMany({
       where: { bankAccountId },
       orderBy: { date: 'desc' },
     });
 
-    return prismaTransactions.map(TransactionPrismaMapper.toDomain);
+    return transactions.map(TransactionPrismaMapper.toDomain);
   }
 
   async findByCategoryId(categoryId: string): Promise<Transaction[]> {
-    const prismaTransactions = await this.prisma.transaction.findMany({
+    const transactions = await this.prisma.transaction.findMany({
       where: { categoryId },
       orderBy: { date: 'desc' },
     });
 
-    return prismaTransactions.map(TransactionPrismaMapper.toDomain);
+    return transactions.map(TransactionPrismaMapper.toDomain);
   }
 
   async findBySubcategoryId(subcategoryId: string): Promise<Transaction[]> {
-    const prismaTransactions = await this.prisma.transaction.findMany({
+    const transactions = await this.prisma.transaction.findMany({
       where: { subCategoryId: subcategoryId },
       orderBy: { date: 'desc' },
     });
 
-    return prismaTransactions.map(TransactionPrismaMapper.toDomain);
-  }
-
-  async findByDateRange({
-    endDate,
-    startDate,
-    userId,
-    bankAccountId,
-  }: {
-    userId: string;
-    startDate: Date;
-    endDate: Date;
-    bankAccountId?: string;
-  }): Promise<Transaction[]> {
-    const prismaTransactions = await this.prisma.transaction.findMany({
-      where: {
-        bankAccountId,
-        userId,
-        date: {
-          gte: startDate,
-          lt: endDate,
-        },
-      },
-      orderBy: { date: 'desc' },
-    });
-
-    return prismaTransactions.map(TransactionPrismaMapper.toDomain);
-  }
-
-  async findByMonth(
-    userId: string,
-    year: number,
-    month: number,
-  ): Promise<Transaction[]> {
-    const startDate = new Date(year, month - 1, 1);
-    const endDate = new Date(year, month, 0, 23, 59, 59, 999);
-
-    return this.findByDateRange({
-      userId,
-      startDate,
-      endDate,
-    });
+    return transactions.map(TransactionPrismaMapper.toDomain);
   }
 
   async findByAnalytics({
@@ -154,9 +113,10 @@ export class PrismaTransactionRepository implements TransactionRepository {
       include: {
         category: {
           select: {
-            id: true,
             name: true,
+            id: true,
             icon: true,
+            type: true,
           },
         },
       },

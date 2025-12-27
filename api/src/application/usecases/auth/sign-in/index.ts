@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { BusinessRuleViolationException } from '../../../../domain/exceptions/business-rule-violation.exception';
+import { AuthenticationException } from '../../../../domain/exceptions/authentication.exception';
 import { UserRepository } from '../../../../domain/repositories/user.repository.interface';
 import { InjectRepository } from '../../../../shared/decorators/inject-repository.decorator';
 import { UseCase } from '../../usecase';
@@ -23,13 +23,13 @@ export class SignInUseCase
     const user = await this.usersRepository.findByEmail(email);
 
     if (!user) {
-      throw BusinessRuleViolationException.invalidCredentials();
+      throw AuthenticationException.invalidCredentials();
     }
 
     const isPasswordValid = await user.getPassword().compareWith(password);
 
     if (!isPasswordValid) {
-      throw BusinessRuleViolationException.invalidCredentials();
+      throw AuthenticationException.invalidCredentials();
     }
 
     const accessToken = this.jwtService.sign({

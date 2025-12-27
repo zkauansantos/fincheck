@@ -1,4 +1,5 @@
 import { TransactionType } from '../enums/transaction-type.enum';
+import { CategoryInfo } from '../value-objects/category-info.vo';
 import { Money } from '../value-objects/money.vo';
 
 export interface TransactionProps {
@@ -11,6 +12,7 @@ export interface TransactionProps {
   value: Money;
   date: Date;
   type: TransactionType;
+  categoryInfo?: CategoryInfo;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -25,6 +27,7 @@ export class Transaction {
   private value: Money;
   private date: Date;
   private readonly type: TransactionType;
+  private readonly categoryInfo?: CategoryInfo;
   private readonly createdAt: Date;
   private updatedAt: Date;
 
@@ -38,6 +41,7 @@ export class Transaction {
     this.value = props.value;
     this.date = props.date;
     this.type = props.type;
+    this.categoryInfo = props.categoryInfo;
     this.createdAt = props.createdAt || new Date();
     this.updatedAt = props.updatedAt || new Date();
   }
@@ -209,8 +213,8 @@ export class Transaction {
     return this.name;
   }
 
-  getValue(): Money {
-    return this.value;
+  getValue(): number {
+    return this.value.getValue();
   }
 
   getDate(): Date {
@@ -227,6 +231,14 @@ export class Transaction {
 
   getUpdatedAt(): Date {
     return new Date(this.updatedAt);
+  }
+
+  getCategoryName() {
+    return this.categoryInfo.getName();
+  }
+
+  getCategoryIcon() {
+    return this.categoryInfo.getIcon();
   }
 
   updateName(newName: string): void {

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { randomUUID } from 'crypto';
 import { User } from '../../../../domain/entities/user.entity';
-import { BusinessRuleViolationException } from '../../../../domain/exceptions/business-rule-violation.exception';
+import { ValidationException } from '../../../../domain/exceptions/validation.exception';
 import { UserRepository } from '../../../../domain/repositories/user.repository.interface';
 import { Email } from '../../../../domain/value-objects/email.vo';
 import { Password } from '../../../../domain/value-objects/password.vo';
@@ -27,7 +27,7 @@ export class SignUpUseCase
     const emailExists = await this.usersRepository.existsByEmail(email);
 
     if (emailExists) {
-      throw BusinessRuleViolationException.emailAlreadyExists(email);
+      throw ValidationException.emailAlreadyExists(email);
     }
 
     const hashedPassword = await Password.createFromPlain(password);

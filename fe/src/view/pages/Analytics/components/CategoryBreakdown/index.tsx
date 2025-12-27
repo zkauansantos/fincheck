@@ -1,4 +1,5 @@
 import { MONTHS } from '@/app/config/constants';
+import { TransactionType } from '@/app/entities/Transaction';
 import useCategoryAnalytics from '@/app/services/categories/hooks/useCategoryAnalytics';
 import formatCurrency from '@/app/utils/formatCurrency';
 import { DataTable } from '@/view/components/DataTable';
@@ -19,14 +20,11 @@ interface CategoryAnalyticsRow {
   totalIncome: number;
   averageExpense: number;
   averageIncome: number;
-  type: 'expense' | 'income';
+  type: TransactionType;
 }
 
 export function CategoryBreakdown({ year }: CategoryBreakdownProps) {
-  const { categories, isLoading } = useCategoryAnalytics({ year });
-
-  const incomeCategories = categories.filter((cat) => cat.totalIncome > 0);
-  const expenseCategories = categories.filter((cat) => cat.totalExpense > 0);
+  const { incomingCategories, expenseCategories, isLoading } = useCategoryAnalytics({ year });
 
   const expenseColumns = useMemo<ColumnDef<CategoryAnalyticsRow>[]>(
     () => [
@@ -150,10 +148,7 @@ export function CategoryBreakdown({ year }: CategoryBreakdownProps) {
           Resumo Renda
         </h3>
         <DataTable.Root
-          data={incomeCategories.map((cat) => ({
-            ...cat,
-            type: 'income' as const,
-          }))}
+          data={incomingCategories}
           columns={incomeColumns}
           isLoading={isLoading}
         >
@@ -174,10 +169,7 @@ export function CategoryBreakdown({ year }: CategoryBreakdownProps) {
           Resumo Despesas
         </h3>
         <DataTable.Root
-          data={expenseCategories.map((cat) => ({
-            ...cat,
-            type: 'expense' as const,
-          }))}
+          data={expenseCategories}
           columns={expenseColumns}
           isLoading={isLoading}
         >

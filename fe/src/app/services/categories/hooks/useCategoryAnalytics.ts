@@ -11,7 +11,8 @@ export default function useCategoryAnalytics(
   });
 
   return {
-    categories: data?.categories ?? [],
+    expenseCategories: data?.expenseCategories ?? [],
+    incomingCategories: data?.incomingCategories ?? [],
     summary: data?.summary ?? {
       monthlyIncome: Array(12).fill(0),
       monthlyExpenses: Array(12).fill(0),

@@ -5,16 +5,6 @@ export class BusinessRuleViolationException extends DomainException {
     super(message);
   }
 
-  static emailAlreadyExists(email: string): BusinessRuleViolationException {
-    return new BusinessRuleViolationException(
-      `Email '${email}' is already registered`,
-    );
-  }
-
-  static invalidCredentials(): BusinessRuleViolationException {
-    return new BusinessRuleViolationException('Invalid credentials');
-  }
-
   static subcategoryRequiresCategory(): BusinessRuleViolationException {
     return new BusinessRuleViolationException(
       'Cannot assign subcategory without a category',

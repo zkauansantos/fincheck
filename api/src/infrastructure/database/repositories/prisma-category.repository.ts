@@ -57,24 +57,6 @@ export class PrismaCategoryRepository implements CategoryRepository {
     return prismaCategories.map(CategoryPrismaMapper.toDomain);
   }
 
-  async findAllDefault(): Promise<Category[]> {
-    const prismaCategories = await this.prisma.category.findMany({
-      where: { userId: null },
-      orderBy: { name: 'asc' },
-    });
-
-    return prismaCategories.map(CategoryPrismaMapper.toDomain);
-  }
-
-  async findAllDefaultByType(type: TransactionType): Promise<Category[]> {
-    const prismaCategories = await this.prisma.category.findMany({
-      where: { userId: null, type },
-      orderBy: { name: 'asc' },
-    });
-
-    return prismaCategories.map(CategoryPrismaMapper.toDomain);
-  }
-
   async findAllAccessibleByUser(userId: string): Promise<Category[]> {
     const prismaCategories = await this.prisma.category.findMany({
       where: {

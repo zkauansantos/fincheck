@@ -26,20 +26,6 @@ export interface TransactionRepository {
 
   findBySubcategoryId(subcategoryId: string): Promise<Transaction[]>;
 
-  findByDateRange(filters: {
-    userId: string;
-    startDate: Date;
-    endDate: Date;
-    bankAccountId?: string;
-  }): Promise<Transaction[]>;
-
-  findByMonth(
-    userId: string,
-    year: number,
-    month: number,
-    bankAccountId?: string,
-  ): Promise<Transaction[]>;
-
   findByAnalytics(params: {
     userId: string;
     year: number;

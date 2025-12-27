@@ -64,13 +64,6 @@ export class Money {
     return Money.create(result);
   }
 
-  multiply(factor: number): Money {
-    if (factor < 0) {
-      throw new Error('Factor cannot be negative');
-    }
-    return Money.create(this.amount * factor);
-  }
-
   isGreaterThan(other: Money): boolean {
     return this.amount > other.amount;
   }

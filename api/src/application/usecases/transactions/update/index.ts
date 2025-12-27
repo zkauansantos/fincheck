@@ -121,7 +121,7 @@ export class UpdateTransactionUseCase
       categoryId: transaction.getCategoryId(),
       subcategoryId: transaction.getSubcategoryId(),
       name: transaction.getName(),
-      value: transaction.getValue().getValue(),
+      value: transaction.getValue(),
       date: transaction.getDate(),
       type: transaction.getType(),
     };

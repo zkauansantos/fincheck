@@ -36,4 +36,8 @@ export class ValidationException extends DomainException {
   static negativeValue(field: string): ValidationException {
     return new ValidationException(`${field} cannot be negative`);
   }
+
+  static emailAlreadyExists(email: string): ValidationException {
+    return new ValidationException(`Email '${email}' is already registered`);
+  }
 }
