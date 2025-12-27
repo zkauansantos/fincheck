@@ -136,7 +136,7 @@ export function CategoryBreakdown({ year }: CategoryBreakdownProps) {
       <div className='p-6 rounded-2xl'>
         <div className='h-80 flex items-center justify-center'>
           <div className='animate-pulse text-gray-400'>
-            Carregando análise...
+            Carregando Resumo...
           </div>
         </div>
       </div>

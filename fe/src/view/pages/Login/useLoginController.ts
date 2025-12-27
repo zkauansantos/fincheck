@@ -35,9 +35,9 @@ export default function useLoginController() {
     try {
       const { email, password } = data;
 
-      const { jwtAcessToken } = await mutateAsync({ email, password });
+      const { accessToken } = await mutateAsync({ email, password });
 
-      signin(jwtAcessToken);
+      signin(accessToken);
     } catch {
       toast.error("Credenciais inválidas!");
     }

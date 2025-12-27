@@ -1,11 +1,14 @@
-import { ExitIcon } from "@radix-ui/react-icons";
+import { ExitIcon } from '@radix-ui/react-icons';
 
-import { DropdownMenu } from "./DropdownMenu";
+import { DropdownMenu } from './DropdownMenu';
 
-import useAuth from "@/app/hooks/useAuth";
+import { useTheme } from '@/app/contexts/ThemeContext';
+import useAuth from '@/app/hooks/useAuth';
+import { Moon, Sun } from 'lucide-react';
 
 export default function UserMenu() {
   const { signout, user } = useAuth();
+  const { toggleTheme, theme } = useTheme();
 
   return (
     <DropdownMenu.Root>
@@ -21,6 +24,20 @@ export default function UserMenu() {
         <DropdownMenu.Item className='justify-between gap-2' onSelect={signout}>
           <span>Sair</span>
           <ExitIcon className='w-4 h-4' />
+        </DropdownMenu.Item>
+
+        <DropdownMenu.Item
+          className='justify-between gap-2'
+          onSelect={toggleTheme}
+        >
+          <span>
+            {theme === 'light' ? 'Escuro' : 'Claro'}
+          </span>
+          {theme === 'light' ? (
+            <Moon className='h-5 w-5 text-gray-700 dark:text-gray-700' />
+          ) : (
+            <Sun className='h-5 w-5 text-gray-700 dark:text-gray-700' />
+          )}
         </DropdownMenu.Item>
       </DropdownMenu.Content>
     </DropdownMenu.Root>

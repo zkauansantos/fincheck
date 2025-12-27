@@ -92,7 +92,6 @@ export default function useNewTransactionModalController() {
           ? "Erro ao cadastrar Despesa!"
           : "Erro ao cadastrar Receita!"
       );
-      reset();
     }
   });
 
