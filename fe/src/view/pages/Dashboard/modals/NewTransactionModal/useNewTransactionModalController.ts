@@ -1,3 +1,4 @@
+import useSubcategories from "@/app/hooks/useSubcategories";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
@@ -13,7 +14,8 @@ import useDashboard from "../../useDashboard";
 const schema = z.object({
   value: z.string().nonempty("Informe o valor"),
   name: z.string().nonempty("Inform o nome"),
-  categoryId: z.string().nonempty("Inform a categoria"),
+  categoryId: z.string().nonempty("Informe a categoria"),
+  subCategoryId: z.string().nonempty("Informe a categoria secundária"),
   bankAccountId: z.string().nonempty("Informe a conta bancária"),
   date: z.date(),
 });
@@ -31,16 +33,28 @@ export default function useNewTransactionModalController() {
     register,
     control,
     reset,
+    watch,
     handleSubmit: hookFormHandleSubmit,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   });
 
+  const categoryId = watch('categoryId');
+
   const { accounts } = useBankAccounts();
-  const { categories: categoriesList } = useCategories();
+
+  const { categories: categoriesList } = useCategories({
+    type: newTransactionType
+  });
+
+  const { subCategories } = useSubcategories({
+    categoryId,
+  });
+
   const queryClient = useQueryClient();
-  const { isPending, mutateAsync } = useMutation({
+
+  const { isPending, mutateAsync: createTransaction } = useMutation({
     mutationFn: transactionsService.create
   });
 
@@ -54,7 +68,7 @@ export default function useNewTransactionModalController() {
     const { bankAccountId, categoryId, date, name, value } = data;
 
     try {
-      await mutateAsync({
+      await createTransaction({
         name,
         bankAccountId,
         categoryId,
@@ -88,6 +102,7 @@ export default function useNewTransactionModalController() {
     errors,
     control,
     categories,
+    subCategories,
     handleSubmit,
     newTransactionType,
     isNewTransactionModalOpen,

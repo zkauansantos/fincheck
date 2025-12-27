@@ -1,11 +1,11 @@
-import { Controller } from "react-hook-form";
-import Button from "../../../../components/Button";
-import DatePickerInput from "../../../../components/DatePickerInput";
-import Input from "../../../../components/Input";
-import InputCurrency from "../../../../components/InputCurrency";
-import Modal from "../../../../components/Modal";
-import Select from "../../../../components/Select";
-import useNewTransactionModalController from "./useNewTransactionModalController";
+import { Controller } from 'react-hook-form';
+import Button from '../../../../components/Button';
+import DatePickerInput from '../../../../components/DatePickerInput';
+import Input from '../../../../components/Input';
+import InputCurrency from '../../../../components/InputCurrency';
+import Modal from '../../../../components/Modal';
+import Select from '../../../../components/Select';
+import useNewTransactionModalController from './useNewTransactionModalController';
 
 export default function NewTransactionModal() {
   const {
@@ -16,23 +16,24 @@ export default function NewTransactionModal() {
     errors,
     isLoading,
     categories,
+    subCategories,
     handleSubmit,
     accounts,
     register,
   } = useNewTransactionModalController();
 
-  const isExpense = newTransactionType === "EXPENSE";
+  const isExpense = newTransactionType === 'EXPENSE';
 
   return (
     <Modal
-      title={isExpense ? "Nova Despesa" : "Nova Receita"}
+      title={isExpense ? 'Nova Despesa' : 'Nova Receita'}
       open={isNewTransactionModalOpen}
       onClose={closeNewTransactionModal}
     >
       <form onSubmit={handleSubmit}>
         <div>
           <span className='text-gray-800 text-xs tracking-[0.5px]'>
-            Valor {isExpense ? "da despesa" : "da receita"}
+            Valor {isExpense ? 'da despesa' : 'da receita'}
           </span>
           <div className='flex items-center gap-2'>
             <span className='text-gray-800 text-lg tracking-[0.5px]'>R$</span>
@@ -55,8 +56,8 @@ export default function NewTransactionModal() {
         <div className='mt-10 flex flex-col gap-4'>
           <Input
             type='text'
-            placeholder={isExpense ? "Nome da Despesa" : "Nome da Receita"}
-            {...register("name")}
+            placeholder={isExpense ? 'Nome da Despesa' : 'Nome da Receita'}
+            {...register('name')}
             error={errors.name?.message}
           />
 
@@ -80,6 +81,25 @@ export default function NewTransactionModal() {
 
           <Controller
             control={control}
+            name='subCategoryId'
+            defaultValue=''
+            render={({ field: { onChange, value } }) => (
+              <Select
+                error={errors.categoryId?.message}
+                onChange={onChange}
+                disabled={!subCategories.length}
+                value={value}
+                options={subCategories.map((category) => ({
+                  value: category.id,
+                  label: category.name,
+                }))}
+                placeholder='Sub Categoria'
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
             name='bankAccountId'
             defaultValue=''
             render={({ field: { onChange, value } }) => (
@@ -91,7 +111,7 @@ export default function NewTransactionModal() {
                   value: account.id,
                   label: account.name,
                 }))}
-                placeholder={isExpense ? "Pagar com" : "Receber com"}
+                placeholder={isExpense ? 'Pagar com' : 'Receber com'}
               />
             )}
           />

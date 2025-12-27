@@ -1,21 +1,24 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Param,
+  Controller,
   Delete,
-  Put,
-  ParseUUIDPipe,
+  Get,
   HttpCode,
   HttpStatus,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Put,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
-import { BankAccountsService } from './services/bank-accounts.service';
+import { ActiveUserId } from 'src/shared/decorators/activeUserId.decorator';
 import { CreateBankAccountDto } from './dto/create-bank-account.dto';
 import { UpdateBankAccountDto } from './dto/update-bank-account.dto';
-import { ActiveUserId } from 'src/shared/decorators/activeUserId.decorator';
+import { BankAccountsService } from './services/bank-accounts.service';
 
+@ApiTags('Bank Accounts')
+@ApiBearerAuth('swagger-auth')
 @Controller('bank-accounts')
 export class BankAccountsController {
   constructor(private readonly bankAccountsService: BankAccountsService) {}

@@ -1,14 +1,14 @@
-import { Controller } from "react-hook-form";
-import Button from "../../../../components/Button";
-import DatePickerInput from "../../../../components/DatePickerInput";
-import Input from "../../../../components/Input";
-import InputCurrency from "../../../../components/InputCurrency";
-import Modal from "../../../../components/Modal";
-import Select from "../../../../components/Select";
-import useEditTransactionModalController from "./useEditTransactionModalController";
-import { Transaction } from "../../../../../app/entities/Transaction";
-import ConfirmDeleteModal from "../../../../components/ConfirmDeleteModal";
-import TrashIcon from "../../../../components/icons/TrashIcon";
+import { Controller } from 'react-hook-form';
+import { Transaction } from '../../../../../app/entities/Transaction';
+import Button from '../../../../components/Button';
+import ConfirmDeleteModal from '../../../../components/ConfirmDeleteModal';
+import DatePickerInput from '../../../../components/DatePickerInput';
+import TrashIcon from '../../../../components/icons/TrashIcon';
+import Input from '../../../../components/Input';
+import InputCurrency from '../../../../components/InputCurrency';
+import Modal from '../../../../components/Modal';
+import Select from '../../../../components/Select';
+import useEditTransactionModalController from './useEditTransactionModalController';
 
 interface EditTransactionModalProps {
   transaction: Transaction | null;
@@ -36,15 +36,15 @@ export default function EditTransactionModal({
     register,
   } = useEditTransactionModalController(transaction, onClose);
 
-  const isExpense = transaction?.type === "EXPENSE";
+  const isExpense = transaction?.type === 'EXPENSE';
 
   if (isDeleteModalOpen) {
+    const expenseType = isExpense ? 'despesa' : 'receita';
+
     return (
       <ConfirmDeleteModal
         isLoading={isLoadingDelete}
-        title={`Tem certeza que deseja excluir essa ${
-          isExpense ? "despesa" : "receita"
-        }?`}
+        title={`Tem certeza que deseja excluir essa ${expenseType}?`}
         onConfirm={handleDeleteTransaction}
         onClose={handleCloseDeleteModal}
       />
@@ -53,7 +53,7 @@ export default function EditTransactionModal({
 
   return (
     <Modal
-      title={isExpense ? "Editar Despesa" : "Editar Receita"}
+      title={isExpense ? 'Editar Despesa' : 'Editar Receita'}
       open={open}
       onClose={onClose}
       rightAction={
@@ -65,7 +65,7 @@ export default function EditTransactionModal({
       <form onSubmit={handleSubmit}>
         <div>
           <span className='text-gray-800 text-xs tracking-[0.5px]'>
-            Valor {isExpense ? "da despesa" : "da receita"}
+            Valor {isExpense ? 'da despesa' : 'da receita'}
           </span>
           <div className='flex items-center gap-2'>
             <span className='text-gray-800 text-lg tracking-[0.5px]'>R$</span>
@@ -88,8 +88,8 @@ export default function EditTransactionModal({
         <div className='mt-10 flex flex-col gap-4'>
           <Input
             type='text'
-            placeholder={isExpense ? "Nome da Despesa" : "Nome da Receita"}
-            {...register("name")}
+            placeholder={isExpense ? 'Nome da Despesa' : 'Nome da Receita'}
+            {...register('name')}
             error={errors.name?.message}
           />
 
@@ -124,7 +124,25 @@ export default function EditTransactionModal({
                   value: account.id,
                   label: account.name,
                 }))}
-                placeholder={isExpense ? "Pagar com" : "Receber com"}
+                placeholder={isExpense ? 'Pagar com' : 'Receber com'}
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name='bankAccountId'
+            defaultValue=''
+            render={({ field: { onChange, value } }) => (
+              <Select
+                error={errors.bankAccountId?.message}
+                onChange={onChange}
+                value={value}
+                options={accounts.map((account) => ({
+                  value: account.id,
+                  label: account.name,
+                }))}
+                placeholder={isExpense ? 'Pagar com' : 'Receber com'}
               />
             )}
           />

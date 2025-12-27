@@ -1,11 +1,11 @@
-import * as RdxSelect from "@radix-ui/react-select";
 import {
   ChevronDownIcon,
   ChevronUpIcon,
   CrossCircledIcon,
-} from "@radix-ui/react-icons";
-import cn from "../../app/utils/cn";
-import { useState } from "react";
+} from '@radix-ui/react-icons';
+import * as RdxSelect from '@radix-ui/react-select';
+import { useState } from 'react';
+import cn from '../../app/utils/cn';
 
 interface SelectProps {
   className?: string;
@@ -17,6 +17,7 @@ interface SelectProps {
     value: string;
     label: string;
   }[];
+  disabled?: boolean;
 }
 
 export default function Select({
@@ -25,6 +26,7 @@ export default function Select({
   placeholder,
   options,
   value,
+  disabled,
   onChange,
 }: SelectProps) {
   const [selectedValue, setSelectedValue] = useState(value);
@@ -39,9 +41,10 @@ export default function Select({
       <div className='relative'>
         <label
           className={cn(
-            "absolute top-1/2 -translate-y-1/2 left-3 z-10 text-gray-700 pointer-events-none",
+            'absolute top-1/2 -translate-y-1/2 left-3 z-10 text-gray-700 pointer-events-none',
             selectedValue &&
-              "text-xs transition all top-2 left-[13px] translate-y-0"
+              'text-xs transition all top-2 left-[13px] translate-y-0',
+            disabled && 'opacity-50'
           )}
         >
           {placeholder}
@@ -50,11 +53,12 @@ export default function Select({
         <RdxSelect.Root onValueChange={handleSelect} value={value}>
           <RdxSelect.Trigger
             className={cn(
-              "bg-white w-full pt-4",
-              "rounded-lg border border-gray-500 px-3 h-[52px] outline-none",
-              "text-gray-800  focus:border-gray-800 transition-all text-left relative",
-              error && "!border-red-900",
-              className
+              'bg-white w-full pt-4',
+              'rounded-lg border border-gray-500 px-3 h-[52px] outline-none',
+              'text-gray-800  focus:border-gray-800 transition-all text-left relative',
+              error && 'border-red-900!',
+              className,
+              disabled && 'opacity-50 pointer-events-none'
             )}
           >
             <RdxSelect.Value />

@@ -17,6 +17,10 @@ export default function useLoginController() {
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(loginSchema),
+    defaultValues: {
+      "email": "user@example.com",
+      "password": "password123"
+    }
   });
 
   const { isPending, mutateAsync } = useMutation({

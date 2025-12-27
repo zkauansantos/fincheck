@@ -42,7 +42,9 @@ export default function useEditTransactionModalController(
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const { accounts } = useBankAccounts();
-  const { categories: categoriesList } = useCategories();
+  const { categories: categoriesList } = useCategories({
+    type: transaction?.type,
+  });
   const queryClient = useQueryClient();
   const { isPending, mutateAsync: updateTransaction } = useMutation(
     {
