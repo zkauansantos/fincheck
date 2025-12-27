@@ -18,7 +18,7 @@ export default function DropdownMenuItem({
       className={cn(
         "transition-colors bg-white min-h-[48px] outline-none flex",
         "items-center py-2 px-4 text-sm text-gray-800",
-        "data-[highlighted]:bg-gray-50 rounded-2xl cursor-pointer",
+        "data-highlighted:bg-gray-50 rounded-2xl cursor-pointer",
         className
       )}
     >

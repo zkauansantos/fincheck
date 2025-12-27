@@ -4,7 +4,6 @@ import DashboardProvider, {
 import { Header } from '@/view/components/Header';
 import Accounts from './components/Accounts';
 import Fab from './components/Fab';
-import { FinancialResults } from './components/FinancialResults';
 import Transactions from './components/Transactions';
 import EditAccountModal from './modals/EditAccountModal';
 import NewAccountModal from './modals/NewAccountModal';
@@ -16,12 +15,10 @@ export default function Dashboard() {
       <DashBoardContext.Consumer>
         {({ accountBeingEdited }) => (
           <div className='h-full w-full p-4 md:pt-6 md:px-8 md:pb-8 flex flex-col gap-4'>
-          <Header />
+            <Header />
 
-            <main className='flex-1 flex flex-col gap-4 overflow-y-auto'>
-              <FinancialResults />
-
-              <div className='flex flex-col md:flex-row gap-4'>
+            <main className='flex-1 flex flex-col gap-4 overflow-y-auto '>
+              <div className='flex flex-col md:flex-row gap-4 max-h-full min-h-full'>
                 <div className='w-full md:w-1/2'>
                   <Accounts />
                 </div>

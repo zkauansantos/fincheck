@@ -1,37 +1,51 @@
+import useCategoryAnalytics from '@/app/services/categories/hooks/useCategoryAnalytics';
+import Button from '@/view/components/Button';
 import { Header } from '@/view/components/Header';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { CategoryBreakdown } from './components/CategoryBreakdown';
+import { EvolutionChart } from './components/EvolutionChart';
+import { SummaryTable } from './components/SummaryTable';
 import { useAnalyticsController } from './useAnalyticsController';
 
 export default function Analytics() {
   const { selectedYear, setSelectedYear } = useAnalyticsController();
+  const { summary, isLoading } = useCategoryAnalytics({ year: selectedYear });
 
   return (
     <div className='h-full w-full p-4 md:p-8 md:pt-6 flex flex-col gap-4'>
       <Header />
 
-      <div className='flex items-center justify-between'>
-        <h2 className='text-xl font-bold text-gray-900 tracking-[-1px]'>
-          Análise Financeira
-        </h2>
+      <div className='flex items-center justify-between px-4'>
+        <h3 className='text-lg font-semibold text-gray-900 mb-4 tracking-[-0.5px]'>
+          Evolução
+        </h3>
 
         <div className='flex items-center gap-2'>
-          <button
+          <Button
             onClick={() => setSelectedYear(selectedYear - 1)}
-            className='p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-700'
+            variant='ghost'
+            className='cursor-pointer px-0 border-0! shadow-0'
           >
-            ←
-          </button>
+            <ChevronLeft />
+          </Button>
+
           <span className='text-sm font-medium text-gray-800 min-w-[80px] text-center tracking-[-0.5px]'>
             {selectedYear}
           </span>
-          <button
+
+          <Button
             onClick={() => setSelectedYear(selectedYear + 1)}
-            className='p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-700'
+            variant='ghost'
+            className='cursor-pointer px-0 border-0! shadow-0'
           >
-            →
-          </button>
+            <ChevronRight />
+          </Button>
         </div>
       </div>
+
+      <EvolutionChart summary={summary} isLoading={isLoading} />
+
+      <SummaryTable summary={summary} isLoading={isLoading} />
 
       <CategoryBreakdown year={selectedYear} />
     </div>

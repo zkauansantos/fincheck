@@ -126,6 +126,8 @@ export class TransactionsService {
     });
 
     const categoryMap = new Map();
+    const monthlyIncome = Array(12).fill(0);
+    const monthlyExpenses = Array(12).fill(0);
 
     transactions.forEach((transaction: any) => {
       const categoryId = transaction.categoryId;
@@ -148,29 +150,51 @@ export class TransactionsService {
       }
 
       const category = categoryMap.get(categoryId);
-
       category.months[month] += transaction.value;
 
       if (isIncome) {
         category.totalIncome += transaction.value;
-        return;
+        monthlyIncome[month] += transaction.value;
+      } else {
+        category.totalExpense += transaction.value;
+        monthlyExpenses[month] += transaction.value;
       }
-
-      category.totalExpense += transaction.value;
     });
 
-    const result = Array.from(categoryMap.values()).map((category) => {
-      const monthsWithIncome = category.totalIncome > 0 ? 12 : 0;
-      const monthsWithExpense = category.totalExpense > 0 ? 12 : 0;
+    const categories = Array.from(categoryMap.values()).map((category) => ({
+      ...category,
+      averageIncome: category.totalIncome > 0 ? category.totalIncome / 12 : 0,
+      averageExpense:
+        category.totalExpense > 0 ? category.totalExpense / 12 : 0,
+    }));
 
-      return {
-        ...category,
-        averageIncome: monthsWithIncome > 0 ? category.totalIncome / 12 : 0,
-        averageExpense: monthsWithExpense > 0 ? category.totalExpense / 12 : 0,
-      };
+    const totalIncome = monthlyIncome.reduce((sum, val) => sum + val, 0);
+    const totalExpenses = monthlyExpenses.reduce((sum, val) => sum + val, 0);
+
+    const monthlyNetSavings = monthlyIncome.map(
+      (income, i) => income - monthlyExpenses[i],
+    );
+
+    let cumulativeBalance = 0;
+    const monthlyFinalBalance = monthlyNetSavings.map((netSaving) => {
+      cumulativeBalance += netSaving;
+      return cumulativeBalance;
     });
 
-    return result;
+    return {
+      categories,
+      summary: {
+        monthlyIncome,
+        monthlyExpenses,
+        monthlyNetSavings,
+        monthlyFinalBalance,
+        totalIncome,
+        totalExpenses,
+        totalNetSavings: totalIncome - totalExpenses,
+        averageIncome: totalIncome / 12,
+        averageExpenses: totalExpenses / 12,
+      },
+    };
   }
 
   async update(

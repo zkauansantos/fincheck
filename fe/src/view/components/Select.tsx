@@ -79,7 +79,7 @@ export default function Select({
                   <RdxSelect.Item
                     key={opt.value}
                     value={opt.value}
-                    className='data-[state=checked]:font-bold data-[highlighted]:bg-gray-50 rounded-lg outline-none p-2 text-sm text-gray-800'
+                    className='data-[state=checked]:font-bold data-highlighted:bg-gray-50 rounded-lg outline-none p-2 text-sm text-gray-800'
                   >
                     <RdxSelect.ItemText>{opt.label}</RdxSelect.ItemText>
                   </RdxSelect.Item>

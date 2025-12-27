@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any  */
 import { Table } from '@tanstack/react-table';
 import { createContext, useContext } from 'react';
 
@@ -11,6 +11,7 @@ interface IDataTableContextValue {
 
 export const DataTableContext = createContext({} as IDataTableContextValue);
 
+// eslint-disable-next-line
 export function useDataTable() {
   const context = useContext(DataTableContext);
 

@@ -1,8 +1,9 @@
-import { PlusIcon } from "@radix-ui/react-icons";
-import { DropdownMenu } from "@/view/components/DropdownMenu";
-import { CategoryIcon } from "@/view/components/icons/categories/CategoryIcon";
-import BankAccountIcon from "@/view/components/icons/BankAccountIcon";
-import useDashboard from "../../useDashboard";
+import { TransactionType } from '@/app/entities/Transaction';
+import { DropdownMenu } from '@/view/components/DropdownMenu';
+import BankAccountIcon from '@/view/components/icons/BankAccountIcon';
+import { CategoryIcon } from '@/view/components/icons/categories/CategoryIcon';
+import { PlusIcon } from '@radix-ui/react-icons';
+import useDashboard from '../../useDashboard';
 
 export default function Fab() {
   const { openNewAccountModal, openNewTransactionModal } = useDashboard();
@@ -19,14 +20,14 @@ export default function Fab() {
         <DropdownMenu.Content className='mr-12'>
           <DropdownMenu.Item
             className='gap-2'
-            onSelect={() => openNewTransactionModal("INCOME")}
+            onSelect={() => openNewTransactionModal(TransactionType.INCOME)}
           >
             <CategoryIcon type='income' />
             <span>Nova Receita</span>
           </DropdownMenu.Item>
           <DropdownMenu.Item
             className='gap-2'
-            onSelect={() => openNewTransactionModal("EXPENSE")}
+            onSelect={() => openNewTransactionModal(TransactionType.EXPENSE)}
           >
             <CategoryIcon type='expense' />
             <span>Nova Despesa</span>

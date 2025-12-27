@@ -3,12 +3,6 @@ import useCategoryAnalytics from '@/app/services/categories/hooks/useCategoryAna
 import formatCurrency from '@/app/utils/formatCurrency';
 import { DataTable } from '@/view/components/DataTable';
 import { CategoryIcon } from '@/view/components/icons/categories/CategoryIcon';
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from '@/view/components/Tabs';
 import { ColumnDef } from '@tanstack/react-table';
 import { useMemo } from 'react';
 
@@ -29,27 +23,10 @@ interface CategoryAnalyticsRow {
 }
 
 export function CategoryBreakdown({ year }: CategoryBreakdownProps) {
-  const { categoryAnalytics, isLoading } = useCategoryAnalytics({ year });
+  const { categories, isLoading } = useCategoryAnalytics({ year });
 
-  const incomeCategories = categoryAnalytics.filter(
-    (cat) => cat.totalIncome > 0
-  );
-  const expenseCategories = categoryAnalytics.filter(
-    (cat) => cat.totalExpense > 0
-  );
-
-  const totalIncome = incomeCategories.reduce(
-    (sum, cat) => sum + cat.totalIncome,
-    0
-  );
-
-  const totalExpense = expenseCategories.reduce(
-    (sum, cat) => sum + cat.totalExpense,
-    0
-  );
-
-  const averageMonthlyIncome = totalIncome / 12;
-  const averageMonthlyExpense = totalExpense / 12;
+  const incomeCategories = categories.filter((cat) => cat.totalIncome > 0);
+  const expenseCategories = categories.filter((cat) => cat.totalExpense > 0);
 
   const expenseColumns = useMemo<ColumnDef<CategoryAnalyticsRow>[]>(
     () => [
@@ -168,99 +145,55 @@ export function CategoryBreakdown({ year }: CategoryBreakdownProps) {
 
   return (
     <div className='space-y-4'>
-      <div className='grid grid-cols-1 md:grid-cols-4 gap-4'>
-        <div className='bg-teal-50 p-6 rounded-2xl'>
-          <span className='text-teal-800 text-sm font-medium tracking-[-0.5px]'>
-            Total Anual - Entradas
-          </span>
-          <p className='text-2xl font-bold text-teal-800 mt-1 tracking-[-1px]'>
-            {formatCurrency(totalIncome)}
-          </p>
-        </div>
-        <div className='bg-teal-50 p-6 rounded-2xl'>
-          <span className='text-teal-800 text-sm font-medium tracking-[-0.5px]'>
-            Média Mensal - Entradas
-          </span>
-          <p className='text-2xl font-bold text-teal-800 mt-1 tracking-[-1px]'>
-            {formatCurrency(averageMonthlyIncome)}
-          </p>
-        </div>
-        <div className='bg-red-50 p-6 rounded-2xl'>
-          <span className='text-red-800 text-sm font-medium tracking-[-0.5px]'>
-            Total Anual - Saídas
-          </span>
-          <p className='text-2xl font-bold text-red-800 mt-1 tracking-[-1px]'>
-            {formatCurrency(totalExpense)}
-          </p>
-        </div>
-        <div className='bg-red-50 p-6 rounded-2xl'>
-          <span className='text-red-800 text-sm font-medium tracking-[-0.5px]'>
-            Média Mensal - Saídas
-          </span>
-          <p className='text-2xl font-bold text-red-800 mt-1 tracking-[-1px]'>
-            {formatCurrency(averageMonthlyExpense)}
-          </p>
-        </div>
+       <div className='p-6 rounded-2xl overflow-x-auto'>
+        <h3 className='text-lg font-semibold text-gray-900 mb-4 tracking-[-0.5px]'>
+          Resumo Renda
+        </h3>
+        <DataTable.Root
+          data={incomeCategories.map((cat) => ({
+            ...cat,
+            type: 'income' as const,
+          }))}
+          columns={incomeColumns}
+          isLoading={isLoading}
+        >
+          <DataTable.Content
+            emptyStateProps={{
+              emptyState: (
+                <div className='text-center py-8 text-gray-500'>
+                  Nenhuma entrada registrada neste ano
+                </div>
+              ),
+            }}
+          />
+        </DataTable.Root>
       </div>
 
-      <Tabs defaultValue='expenses'>
-        <TabsList>
-          <TabsTrigger value='expenses'>Saídas por Categoria</TabsTrigger>
-          <TabsTrigger value='income'>Entradas por Categoria</TabsTrigger>
-        </TabsList>
+      <div className='bg-white p-6 rounded-2xl overflow-x-auto'>
+        <h3 className='text-lg font-semibold text-gray-900 mb-4 tracking-[-0.5px]'>
+          Resumo Despesas
+        </h3>
+        <DataTable.Root
+          data={expenseCategories.map((cat) => ({
+            ...cat,
+            type: 'expense' as const,
+          }))}
+          columns={expenseColumns}
+          isLoading={isLoading}
+        >
+          <DataTable.Content
+            emptyStateProps={{
+              emptyState: (
+                <div className='text-center py-8 text-gray-500'>
+                  Nenhuma saída registrada neste ano
+                </div>
+              ),
+            }}
+          />
+        </DataTable.Root>
+      </div>
 
-        <TabsContent value='expenses'>
-          <div className='bg-white p-6 rounded-2xl overflow-x-auto'>
-            <h3 className='text-lg font-semibold text-gray-900 mb-4 tracking-[-0.5px]'>
-              Resumo Despesas
-            </h3>
-            <DataTable.Root
-              data={expenseCategories.map((cat) => ({
-                ...cat,
-                type: 'expense' as const,
-              }))}
-              columns={expenseColumns}
-              isLoading={isLoading}
-            >
-              <DataTable.Content
-                emptyStateProps={{
-                  emptyState: (
-                    <div className='text-center py-8 text-gray-500'>
-                      Nenhuma saída registrada neste ano
-                    </div>
-                  ),
-                }}
-              />
-            </DataTable.Root>
-          </div>
-        </TabsContent>
-
-        <TabsContent value='income'>
-          <div className='bg-white p-6 rounded-2xl overflow-x-auto'>
-            <h3 className='text-lg font-semibold text-gray-900 mb-4 tracking-[-0.5px]'>
-              Resumo Renda
-            </h3>
-            <DataTable.Root
-              data={incomeCategories.map((cat) => ({
-                ...cat,
-                type: 'income' as const,
-              }))}
-              columns={incomeColumns}
-              isLoading={isLoading}
-            >
-              <DataTable.Content
-                emptyStateProps={{
-                  emptyState: (
-                    <div className='text-center py-8 text-gray-500'>
-                      Nenhuma entrada registrada neste ano
-                    </div>
-                  ),
-                }}
-              />
-            </DataTable.Root>
-          </div>
-        </TabsContent>
-      </Tabs>
+     
     </div>
   );
 }
