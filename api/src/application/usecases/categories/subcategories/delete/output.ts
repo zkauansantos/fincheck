@@ -1,0 +1,1 @@
+export type DeleteSubcategoryUseCaseOutput = void;
