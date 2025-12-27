@@ -1,25 +1,28 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Param,
+  Controller,
   Delete,
-  Put,
+  Get,
   HttpCode,
   HttpStatus,
-  ParseUUIDPipe,
-  Query,
+  Param,
   ParseIntPipe,
+  ParseUUIDPipe,
+  Post,
+  Put,
+  Query,
 } from '@nestjs/common';
-import { TransactionsService } from './services/transactions.service';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ActiveUserId } from 'src/shared/decorators/activeUserId.decorator';
+import { OptinalParseEnumPipe } from 'src/shared/pipes/OptionalParseEnumPipe.pipe';
+import { OptinalParseUUIDPipe } from 'src/shared/pipes/OptionalParseUUIDPipe.pipe';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
-import { ActiveUserId } from 'src/shared/decorators/activeUserId.decorator';
-import { OptinalParseUUIDPipe } from 'src/shared/pipes/OptionalParseUUIDPipe.pipe';
 import { TransactionType } from './entities/Transaction';
-import { OptinalParseEnumPipe } from 'src/shared/pipes/OptionalParseEnumPipe.pipe';
+import { TransactionsService } from './services/transactions.service';
 
+@ApiTags('Transactions')
+@ApiBearerAuth('swagger-auth')
 @Controller('transactions')
 export class TransactionsController {
   constructor(private readonly transactionsService: TransactionsService) {}
@@ -46,6 +49,33 @@ export class TransactionsController {
       year,
       bankAccountId,
       type,
+    });
+  }
+
+  @Get('annual')
+  findAnnual(
+    @ActiveUserId() userId: string,
+    @Query('year', ParseIntPipe) year: number,
+    @Query('bankAccountId', OptinalParseUUIDPipe) bankAccountId?: string,
+    @Query('type', new OptinalParseEnumPipe(TransactionType))
+    type?: TransactionType,
+  ) {
+    return this.transactionsService.findAllByYear(userId, {
+      year,
+      bankAccountId,
+      type,
+    });
+  }
+
+  @Get('analytics')
+  getCategoryAnalytics(
+    @ActiveUserId() userId: string,
+    @Query('year', ParseIntPipe) year: number,
+    @Query('bankAccountId', OptinalParseUUIDPipe) bankAccountId?: string,
+  ) {
+    return this.transactionsService.getCategoryAnalytics(userId, {
+      year,
+      bankAccountId,
     });
   }
 

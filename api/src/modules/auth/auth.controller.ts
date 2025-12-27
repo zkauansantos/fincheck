@@ -1,4 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/signIn.dto';
@@ -6,6 +7,7 @@ import { SignUpDto } from './dto/signUp.dto';
 
 import isPublic from 'src/shared/decorators/isPublic.decorator';
 
+@ApiTags('Auth')
 @isPublic()
 @Controller('auth')
 export class AuthController {

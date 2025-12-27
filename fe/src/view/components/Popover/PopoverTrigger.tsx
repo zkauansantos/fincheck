@@ -1,5 +1,5 @@
 import * as RdxPopover from "@radix-ui/react-popover";
-import cn from "../../../app/utils/cn";
+import cn from "@/app/utils/cn";
 
 interface PopoverTriggerProps {
   children: React.ReactNode;

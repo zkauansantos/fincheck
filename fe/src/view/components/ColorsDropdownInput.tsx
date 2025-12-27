@@ -1,9 +1,10 @@
-import { ChevronDownIcon, CrossCircledIcon } from "@radix-ui/react-icons";
-import cn from "../../app/utils/cn";
-import { DropdownMenu } from "./DropdownMenu";
-import { COLORS } from "../../app/config/constants";
-import { ColorIcon } from "./icons/ColorIcon";
-import { useState } from "react";
+import { COLORS } from '@/app/config/constants';
+import { useTheme } from '@/app/contexts/ThemeContext';
+import cn from '@/app/utils/cn';
+import { ChevronDownIcon, CrossCircledIcon } from '@radix-ui/react-icons';
+import { useState } from 'react';
+import { DropdownMenu } from './DropdownMenu';
+import { ColorIcon } from './icons/ColorIcon';
 
 interface ColorsDropdownInputProps {
   className?: string;
@@ -23,6 +24,7 @@ export default function ColorsDropdownInput({
   value,
   onChange,
 }: ColorsDropdownInputProps) {
+  const { theme } = useTheme();
   const [selectedColor, setSelectedColor] = useState<null | Color>(() => {
     if (!value) return null;
 
@@ -40,10 +42,11 @@ export default function ColorsDropdownInput({
         <DropdownMenu.Trigger>
           <button
             className={cn(
-              "bg-white w-full ",
-              "rounded-lg border border-gray-500 px-3 h-[52px] outline-none",
-              "text-gray-800  focus:border-gray-700 transition-all text-left relative",
-              error && "!border-red-900",
+              'bg-white w-full ',
+              'rounded-lg border border-gray-500 px-3 h-[52px] outline-none',
+              'text-gray-800  focus:border-gray-700 transition-all text-left relative',
+              error && 'border-red-900!',
+              theme === 'dark' && 'dark:bg-gray-100 dark:border-gray-300',
               className
             )}
           >

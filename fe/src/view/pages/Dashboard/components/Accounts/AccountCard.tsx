@@ -1,7 +1,7 @@
-import { BankAccount } from "../../../../../app/entities/BankAccount";
-import cn from "../../../../../app/utils/cn";
-import formatCurrency from "../../../../../app/utils/formatCurrency";
-import BankAccountTypeIcon from "../../../../components/icons/BankAccountTypeIcon";
+import { BankAccount } from "@/app/entities/BankAccount";
+import cn from "@/app/utils/cn";
+import formatCurrency from "@/app/utils/formatCurrency";
+import BankAccountTypeIcon from "@/view/components/icons/BankAccountTypeIcon";
 import useDashboard from "../../useDashboard";
 
 interface AccountCardProps {
@@ -14,7 +14,7 @@ export default function AccountCard({ data }: AccountCardProps) {
 
   return (
     <div
-      className='p-4 bg-white rounded-2xl h-[200px] flex flex-col justify-between border-b-teal-950 border-b-4'
+      className='p-4 bg-white dark:bg-gray-50 rounded-2xl h-[200px] flex flex-col justify-between border-b-teal-950 border-b-4'
       style={{ borderBottomColor: color }}
       role='button'
       onClick={() => openEditAccountModal(data)}

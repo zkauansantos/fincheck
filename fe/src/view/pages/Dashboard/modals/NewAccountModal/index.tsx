@@ -1,10 +1,10 @@
 import { Controller } from "react-hook-form";
-import Button from "../../../../components/Button";
-import ColorsDropdownInput from "../../../../components/ColorsDropdownInput";
-import Input from "../../../../components/Input";
-import InputCurrency from "../../../../components/InputCurrency";
-import Modal from "../../../../components/Modal";
-import Select from "../../../../components/Select";
+import Button from "@/view/components/Button";
+import ColorsDropdownInput from "@/view/components/ColorsDropdownInput";
+import Input from "@/view/components/Input";
+import InputCurrency from "@/view/components/InputCurrency";
+import Modal from "@/view/components/Modal";
+import Select from "@/view/components/Select";
 import useNewAccountModalController from "./useNewAccountModalController";
 
 export default function NewAccountModal() {

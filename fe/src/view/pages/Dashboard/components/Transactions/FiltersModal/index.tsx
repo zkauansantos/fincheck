@@ -1,7 +1,7 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons";
-import Modal from "../../../../../components/Modal";
-import Button from "../../../../../components/Button";
-import cn from "../../../../../../app/utils/cn";
+import Modal from "@/view/components/Modal";
+import Button from "@/view/components/Button";
+import cn from "@/app/utils/cn";
 import useFitlersModalController from "./useFiltersModalController";
 
 interface FiltersModalProps {
@@ -40,7 +40,7 @@ export default function FiltersModal({
               onClick={() => handleSelectBankAccount(account.id)}
               className={cn(
                 "rounded-2xl p-2 w-full text-left text-gray-800 hover:bg-gray-50",
-                account.id === selectedBankAccountId && "!bg-gray-200"
+                account.id === selectedBankAccountId && "bg-gray-200!"
               )}
             >
               {account.name}

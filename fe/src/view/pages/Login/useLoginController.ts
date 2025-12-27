@@ -1,14 +1,14 @@
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 
-import { authService } from "../../../app/services/authService";
-import { SigninParams } from "../../../app/services/authService/signin";
+import { authService } from "@/app/services/authService";
+import { SigninParams } from "@/app/services/authService/signin";
 
 import { FormData, loginSchema } from "./schemas/loginSchema";
 
-import useAuth from "../../../app/hooks/useAuth";
+import useAuth from "@/app/hooks/useAuth";
 
 export default function useLoginController() {
   const {
@@ -17,9 +17,13 @@ export default function useLoginController() {
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(loginSchema),
+    defaultValues: {
+      "email": "user@example.com",
+      "password": "password123"
+    }
   });
 
-  const { isLoading, mutateAsync } = useMutation({
+  const { isPending, mutateAsync } = useMutation({
     mutationFn: ({ email, password }: SigninParams) => {
       return authService.signin({ email, password });
     },
@@ -43,6 +47,6 @@ export default function useLoginController() {
     register,
     handleSubmit,
     errors,
-    isLoading,
+    isLoading: isPending,
   };
 }

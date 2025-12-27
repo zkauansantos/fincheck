@@ -1,18 +1,16 @@
 import { Injectable } from '@nestjs/common';
+import { TransactionsRepository } from 'src/shared/database/repositories/transactions.respositories';
 import { ValidateBankAccountOwnerService } from '../../bank-accounts/services/validate-bank-account-owner.service';
 import { CreateTransactionDto } from '../dto/create-transaction.dto';
-import { TransactionsRepository } from 'src/shared/database/repositories/transactions.respositories';
 import { UpdateTransactionDto } from '../dto/update-transaction.dto';
-import { ValidateCategoryOwnerService } from '../../categories/services/validate-category-owner.service';
-import { ValidateTransactionOwnerService } from './validate-transaction-owner.service';
 import { TransactionType } from '../entities/Transaction';
+import { ValidateTransactionOwnerService } from './validate-transaction-owner.service';
 
 @Injectable()
 export class TransactionsService {
   constructor(
     private readonly transactionsRepository: TransactionsRepository,
     private readonly validateBankAccountOwnerService: ValidateBankAccountOwnerService,
-    private readonly validateCategoryOwnerService: ValidateCategoryOwnerService,
     private readonly validateTransactionOwnerService: ValidateTransactionOwnerService,
   ) {}
 
@@ -22,7 +20,6 @@ export class TransactionsService {
     await this.validateEntitiesOwnership({
       userId,
       bankAccountId,
-      categoryId,
     });
 
     const { name, value, date, type } = createTransactionDto;
@@ -71,6 +68,135 @@ export class TransactionsService {
     });
   }
 
+  findAllByYear(
+    userId: string,
+    filters: {
+      year: number;
+      bankAccountId?: string;
+      type?: TransactionType;
+    },
+  ) {
+    return this.transactionsRepository.findMany({
+      where: {
+        userId,
+        bankAccountId: filters.bankAccountId,
+        type: filters.type,
+        date: {
+          gte: new Date(Date.UTC(filters.year, 0)),
+          lt: new Date(Date.UTC(filters.year + 1, 0)),
+        },
+      },
+      include: {
+        category: {
+          select: {
+            id: true,
+            name: true,
+            icon: true,
+          },
+        },
+      },
+    });
+  }
+
+  async getCategoryAnalytics(
+    userId: string,
+    filters: {
+      year: number;
+      bankAccountId?: string;
+    },
+  ) {
+    const transactions = await this.transactionsRepository.findMany({
+      where: {
+        userId,
+        bankAccountId: filters.bankAccountId,
+        date: {
+          gte: new Date(Date.UTC(filters.year, 0)),
+          lt: new Date(Date.UTC(filters.year + 1, 0)),
+        },
+      },
+      include: {
+        category: {
+          select: {
+            id: true,
+            name: true,
+            icon: true,
+          },
+        },
+      },
+    });
+
+    const categoryMap = new Map();
+    const monthlyIncome = Array(12).fill(0);
+    const monthlyExpenses = Array(12).fill(0);
+
+    transactions.forEach((transaction: any) => {
+      const categoryId = transaction.categoryId;
+      const categoryName = transaction.category?.name || 'Sem categoria';
+      const categoryIcon = transaction.category?.icon || '';
+      const month = new Date(transaction.date).getMonth();
+      const isIncome = transaction.type === 'INCOME';
+
+      if (!categoryMap.has(categoryId)) {
+        categoryMap.set(categoryId, {
+          categoryId,
+          categoryName,
+          categoryIcon,
+          months: Array(12).fill(0),
+          totalIncome: 0,
+          totalExpense: 0,
+          averageIncome: 0,
+          averageExpense: 0,
+        });
+      }
+
+      const category = categoryMap.get(categoryId);
+      category.months[month] += transaction.value;
+
+      if (isIncome) {
+        category.totalIncome += transaction.value;
+        monthlyIncome[month] += transaction.value;
+      } else {
+        category.totalExpense += transaction.value;
+        monthlyExpenses[month] += transaction.value;
+      }
+    });
+
+    const categories = Array.from(categoryMap.values()).map((category) => ({
+      ...category,
+      averageIncome: category.totalIncome > 0 ? category.totalIncome / 12 : 0,
+      averageExpense:
+        category.totalExpense > 0 ? category.totalExpense / 12 : 0,
+    }));
+
+    const totalIncome = monthlyIncome.reduce((sum, val) => sum + val, 0);
+    const totalExpenses = monthlyExpenses.reduce((sum, val) => sum + val, 0);
+
+    const monthlyNetSavings = monthlyIncome.map(
+      (income, i) => income - monthlyExpenses[i],
+    );
+
+    let cumulativeBalance = 0;
+    const monthlyFinalBalance = monthlyNetSavings.map((netSaving) => {
+      cumulativeBalance += netSaving;
+      return cumulativeBalance;
+    });
+
+    return {
+      categories,
+      summary: {
+        monthlyIncome,
+        monthlyExpenses,
+        monthlyNetSavings,
+        monthlyFinalBalance,
+        totalIncome,
+        totalExpenses,
+        totalNetSavings: totalIncome - totalExpenses,
+        averageIncome: totalIncome / 12,
+        averageExpenses: totalExpenses / 12,
+      },
+    };
+  }
+
   async update(
     userId: string,
     transactionId: string,
@@ -80,7 +206,6 @@ export class TransactionsService {
 
     await this.validateEntitiesOwnership({
       userId,
-      categoryId,
       bankAccountId,
       transactionId,
     });
@@ -111,19 +236,16 @@ export class TransactionsService {
   private async validateEntitiesOwnership({
     userId,
     bankAccountId,
-    categoryId,
     transactionId,
   }: {
     userId: string;
     bankAccountId: string;
-    categoryId: string;
     transactionId?: string;
   }) {
     await Promise.all([
       transactionId &&
         this.validateTransactionOwnerService.validate(transactionId, userId),
       this.validateBankAccountOwnerService.validate(bankAccountId, userId),
-      this.validateCategoryOwnerService.validate(categoryId, userId),
     ]);
   }
 }

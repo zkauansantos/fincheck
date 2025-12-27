@@ -5,10 +5,15 @@ export interface Transaction {
   name: string;
   value: number;
   date: string;
-  type: "INCOME" | "EXPENSE";
+  type: TransactionType;
   category?: {
     id: string;
     name: string;
     icon: string;
   };
+}
+
+export enum TransactionType {
+  INCOME = 'INCOME',
+  EXPENSE = 'EXPENSE',
 }

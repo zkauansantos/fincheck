@@ -1,5 +1,5 @@
+import useBankAccounts from "@/app/services/bankAccounts/hooks/useBankAccounts";
 import { useState } from "react";
-import useBankAccounts from "../../../../../../app/hooks/useBankAccounts";
 
 export default function useFitlersModalController() {
   const [selectedBankAccountId, setSelectedBankAccountId] = useState<

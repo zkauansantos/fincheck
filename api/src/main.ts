@@ -1,7 +1,10 @@
-import 'dotenv/config';
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
+import 'dotenv/config';
+import { AppModule } from './app.module';
+import { buildSwaggerConfig } from './docs/swaggerConfig';
+
+const APP_PORT = 3000;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,6 +16,15 @@ async function bootstrap() {
     origin: '*',
   });
 
-  await app.listen(3000);
+  const isSwaggerBuilded = buildSwaggerConfig(app);
+
+  await app.listen(APP_PORT);
+
+  if (isSwaggerBuilded) {
+    console.log(`🚀 Application is running on: http://localhost:${APP_PORT}`);
+    console.log(
+      '📚 Application documentation is running on: http://localhost:3000/docs',
+    );
+  }
 }
 bootstrap();

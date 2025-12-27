@@ -1,11 +1,12 @@
-import * as RdxSelect from "@radix-ui/react-select";
+import { useTheme } from '@/app/contexts/ThemeContext';
+import cn from '@/app/utils/cn';
 import {
   ChevronDownIcon,
   ChevronUpIcon,
   CrossCircledIcon,
-} from "@radix-ui/react-icons";
-import cn from "../../app/utils/cn";
-import { useState } from "react";
+} from '@radix-ui/react-icons';
+import * as RdxSelect from '@radix-ui/react-select';
+import { useState } from 'react';
 
 interface SelectProps {
   className?: string;
@@ -17,6 +18,7 @@ interface SelectProps {
     value: string;
     label: string;
   }[];
+  disabled?: boolean;
 }
 
 export default function Select({
@@ -25,8 +27,10 @@ export default function Select({
   placeholder,
   options,
   value,
+  disabled,
   onChange,
 }: SelectProps) {
+  const { theme } = useTheme();
   const [selectedValue, setSelectedValue] = useState(value);
 
   function handleSelect(value: string) {
@@ -39,9 +43,11 @@ export default function Select({
       <div className='relative'>
         <label
           className={cn(
-            "absolute top-1/2 -translate-y-1/2 left-3 z-10 text-gray-700 pointer-events-none",
+            'absolute top-[45%] -translate-y-1/2 left-3 z-10 text-gray-700 pointer-events-none',
             selectedValue &&
-              "text-xs transition all top-2 left-[13px] translate-y-0"
+              'text-xs transition all top-2 left-[13px] translate-y-0',
+            disabled && 'opacity-50',
+            theme === 'dark' && 'dark:text-gray-300'
           )}
         >
           {placeholder}
@@ -50,11 +56,16 @@ export default function Select({
         <RdxSelect.Root onValueChange={handleSelect} value={value}>
           <RdxSelect.Trigger
             className={cn(
-              "bg-white w-full pt-4",
-              "rounded-lg border border-gray-500 px-3 h-[52px] outline-none",
-              "text-gray-800  focus:border-gray-800 transition-all text-left relative",
-              error && "!border-red-900",
-              className
+              'bg-white w-full pt-4',
+              'rounded-lg border border-gray-500 px-3 h-[52px] outline-none',
+              'text-gray-800  focus:border-gray-800 transition-all text-left relative',
+              error && 'border-red-900!',
+              className,
+              disabled && 'opacity-50 pointer-events-none',
+              theme === 'dark' && 'dark:bg-gray-100 dark:border-gray-300',
+              disabled &&
+                theme === 'dark' &&
+                'dark:opacity-40 dark:cursor-not-allowed!'
             )}
           >
             <RdxSelect.Value />
@@ -65,7 +76,12 @@ export default function Select({
           </RdxSelect.Trigger>
 
           <RdxSelect.Portal>
-            <RdxSelect.Content className=' z-[99] overflow-hidden bg-white rounded-2xl border border-gray-100 shadow-[0px_11px_20px_0px_rgba(0,0,0,0.10)'>
+            <RdxSelect.Content
+              className={cn(
+                'z-99 overflow-hidden bg-white rounded-2xl border border-gray-100 shadow-[0px_11px_20px_0px_rgba(0,0,0,0.10)',
+                theme === 'dark' && 'dark:bg-gray-50'
+              )}
+            >
               <RdxSelect.ScrollUpButton className='flex items-center justify-center h-[25px] bg-white text-gray-800 cursor-default'>
                 <ChevronUpIcon />
               </RdxSelect.ScrollUpButton>
@@ -75,7 +91,10 @@ export default function Select({
                   <RdxSelect.Item
                     key={opt.value}
                     value={opt.value}
-                    className='data-[state=checked]:font-bold data-[highlighted]:bg-gray-50 rounded-lg outline-none p-2 text-sm text-gray-800'
+                    className={cn(
+                      'data-[state=checked]:font-bold data-highlighted:bg-gray-50 rounded-lg outline-none p-2 text-sm text-gray-800',
+                       'hover:bg-gray-200!'
+                    )}
                   >
                     <RdxSelect.ItemText>{opt.label}</RdxSelect.ItemText>
                   </RdxSelect.Item>

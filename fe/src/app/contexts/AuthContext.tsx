@@ -1,12 +1,13 @@
-import React, { createContext, useCallback, useEffect, useState } from "react";
+import React, { createContext, useCallback, useEffect, useState } from 'react';
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from '@tanstack/react-query';
 
-import { localStorageKeys } from "../config/localStorageKeys";
-import { usersService } from "../services/usersService";
-import { toast } from "react-hot-toast";
-import LaunchScreen from "../../view/components/LaunchScreen";
-import { User } from "../entities/User";
+import LaunchScreen from '@/view/components/LaunchScreen';
+import { toast } from 'react-hot-toast';
+import { localStorageKeys } from '../config/localStorageKeys';
+import { User } from '../entities/User';
+import { queryClient } from '../lib/queryClient';
+import { usersService } from '../services/usersService';
 
 interface AuthContextValue {
   isAuthenticated: boolean;
@@ -30,11 +31,10 @@ export default function AuthContextProvider({
     return !!storedJwtAccessToken;
   });
 
-  const { isError, isSuccess, isFetching, remove, data } = useQuery({
-    queryKey: ["users", "me"],
+  const { isError, isSuccess, isFetching, data } = useQuery({
+    queryKey: ['users', 'me'],
     queryFn: () => usersService.me(),
     enabled: isAuthenticated,
-    staleTime: Infinity,
   });
 
   const signin = useCallback((jtwAccessToken: string) => {
@@ -46,12 +46,12 @@ export default function AuthContextProvider({
   const signout = useCallback(() => {
     localStorage.removeItem(localStorageKeys.ACCESS_TOKEN);
     setIsAuthenticated(false);
-    remove();
-  }, [remove]);
+    queryClient.removeQueries({ queryKey: ['users', 'me'] });
+  }, []);
 
   useEffect(() => {
     if (isError) {
-      toast.error("Sua sessão expirou!");
+      toast.error('Sua sessão expirou!');
       signout();
     }
   }, [isError, signout]);

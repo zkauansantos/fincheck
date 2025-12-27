@@ -1,13 +1,13 @@
 import { Controller } from "react-hook-form";
-import Button from "../../../../components/Button";
-import ColorsDropdownInput from "../../../../components/ColorsDropdownInput";
-import Input from "../../../../components/Input";
-import InputCurrency from "../../../../components/InputCurrency";
-import Modal from "../../../../components/Modal";
-import Select from "../../../../components/Select";
+import Button from "@/view/components/Button";
+import ColorsDropdownInput from "@/view/components/ColorsDropdownInput";
+import Input from "@/view/components/Input";
+import InputCurrency from "@/view/components/InputCurrency";
+import Modal from "@/view/components/Modal";
+import Select from "@/view/components/Select";
 import useEditAccountModalController from "./useEditAccountModalController";
-import ConfirmDeleteModal from "../../../../components/ConfirmDeleteModal";
-import TrashIcon from "../../../../components/icons/TrashIcon";
+import ConfirmDeleteModal from "@/view/components/ConfirmDeleteModal";
+import TrashIcon from "@/view/components/icons/TrashIcon";
 
 export default function EditAccountModal() {
   const {

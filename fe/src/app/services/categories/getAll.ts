@@ -1,10 +1,17 @@
-import { Category } from "../../entities/Category";
+import { formatQueryParams } from "@/app/utils/formatQueryParams";
+import { Category } from "@/app/entities/Category";
 import { httpClient } from "../httpClient";
 
-type CategoriesResponse = Array<Category>;
+type GetAllCategoriesResponse = Array<Category>;
 
-export default async function getAll() {
-  const { data } = await httpClient.get<CategoriesResponse>("/categories");
+type GetAllCategoriesParams = {
+  type: Category['type']
+}
+
+export default async function getAll(filters?: GetAllCategoriesParams) {
+  const params = formatQueryParams(filters);
+
+  const { data } = await httpClient.get<GetAllCategoriesResponse>(`/categories${params}`);
 
   return data;
 }
