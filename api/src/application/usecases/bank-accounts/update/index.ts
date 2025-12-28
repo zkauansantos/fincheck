@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { ResourceNotFoundException } from '../../../exceptions/resource-not-found.exception';
-import { ForbiddenException } from '../../../exceptions/forbidden.exception';
 import { BankAccountRepository } from '../../../../domain/repositories/bank-account.repository.interface';
 import { InjectRepository } from '../../../../shared/decorators/inject-repository.decorator';
+import { ForbiddenException } from '../../../exceptions/forbidden.exception';
+import { ResourceNotFoundException } from '../../../exceptions/resource-not-found.exception';
 import { UseCase } from '../../usecase';
 import { UpdateBankAccountUseCaseInput } from './input';
 import { UpdateBankAccountUseCaseOutput } from './output';
@@ -34,7 +34,7 @@ export class UpdateBankAccountUseCase
     }
 
     if (!bankAccount.belongsToUser(userId)) {
-      throw ForbiddenException.invalidOwnership("conta bancária");
+      throw ForbiddenException.invalidOwnership('conta bancária');
     }
 
     bankAccount.updateName(name);

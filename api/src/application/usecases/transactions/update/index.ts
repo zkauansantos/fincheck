@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { ResourceNotFoundException } from '../../../exceptions/resource-not-found.exception';
-import { ForbiddenException } from '../../../exceptions/forbidden.exception';
+import { SubcategoryRepository } from 'src/domain/repositories/subcategory.repository.interface';
 import { BankAccountRepository } from '../../../../domain/repositories/bank-account.repository.interface';
 import { CategoryRepository } from '../../../../domain/repositories/category.repository.interface';
 import { TransactionRepository } from '../../../../domain/repositories/transaction.repository.interface';
 import { InjectRepository } from '../../../../shared/decorators/inject-repository.decorator';
+import { ForbiddenException } from '../../../exceptions/forbidden.exception';
+import { ResourceNotFoundException } from '../../../exceptions/resource-not-found.exception';
 import { UseCase } from '../../usecase';
 import { UpdateTransactionUseCaseInput } from './input';
 import { UpdateTransactionUseCaseOutput } from './output';
@@ -24,6 +25,8 @@ export class UpdateTransactionUseCase
     private readonly bankAccountRepository: BankAccountRepository,
     @InjectRepository('CATEGORIES')
     private readonly categoryRepository: CategoryRepository,
+    @InjectRepository('SUBCATEGORIES')
+    private readonly subcategoryRepository: SubcategoryRepository,
   ) {}
 
   async execute(
@@ -49,26 +52,10 @@ export class UpdateTransactionUseCase
     }
 
     if (!transaction.belongsToUser(userId)) {
-      throw ForbiddenException.invalidOwnership("transação");
+      throw ForbiddenException.invalidOwnership('transação');
     }
 
-    // Update name if provided
-    if (name !== undefined) {
-      transaction.updateName(name);
-    }
-
-    // Update value if provided
-    if (value !== undefined) {
-      transaction.updateValue(value);
-    }
-
-    // Update date if provided
-    if (date !== undefined) {
-      transaction.updateDate(date);
-    }
-
-    // Update bank account if provided
-    if (bankAccountId !== undefined) {
+    if (bankAccountId !== transaction.getBankAccountId()) {
       const bankAccount = await this.bankAccountRepository.findById(
         bankAccountId,
       );
@@ -78,39 +65,45 @@ export class UpdateTransactionUseCase
       }
 
       if (!bankAccount.belongsToUser(userId)) {
-        throw ForbiddenException.invalidOwnership("conta bancária");
+        throw ForbiddenException.invalidOwnership('conta bancária');
       }
 
       transaction.updateBankAccount(bankAccountId);
     }
 
-    // Update category if provided
-    if (categoryId !== undefined) {
-      if (categoryId === null || categoryId === '') {
-        transaction.removeCategory();
-      } else {
-        const category = await this.categoryRepository.findById(categoryId);
+    if (categoryId !== transaction.getCategoryId()) {
+      const category = await this.categoryRepository.findById(categoryId);
 
-        if (!category) {
-          throw ResourceNotFoundException.category(categoryId);
-        }
-
-        if (!category.belongsToUser(userId)) {
-          throw ForbiddenException.invalidOwnership("categoria");
-        }
-
-        transaction.assignCategory(categoryId);
+      if (!category) {
+        throw ResourceNotFoundException.category(categoryId);
       }
+
+      if (!category.isAccessibleByUser(userId)) {
+        throw ForbiddenException.invalidOwnership('categoria');
+      }
+
+      transaction.assignCategory(categoryId);
     }
 
-    // Update subcategory if provided
-    if (subcategoryId !== undefined) {
-      if (subcategoryId === null || subcategoryId === '') {
-        transaction.removeSubcategory();
-      } else {
-        transaction.assignSubcategory(subcategoryId);
+    if (subcategoryId !== transaction.getSubcategoryId()) {
+      const subcategory = await this.subcategoryRepository.findById(
+        subcategoryId,
+      );
+
+      if (!subcategory) {
+        throw ResourceNotFoundException.subcategory(subcategoryId);
       }
+
+      if (!subcategory.belongsToCategory(categoryId)) {
+        throw ForbiddenException.invalidOwnership('subcategoria');
+      }
+
+      transaction.assignSubcategory(subcategoryId);
     }
+
+    transaction.updateName(name);
+    transaction.updateValue(value);
+    transaction.updateDate(date);
 
     await this.transactionRepository.update(transaction);
 

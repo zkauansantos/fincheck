@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { ResourceNotFoundException } from '../../../exceptions/resource-not-found.exception';
-import { ForbiddenException } from '../../../exceptions/forbidden.exception';
 import { CategoryRepository } from '../../../../domain/repositories/category.repository.interface';
 import { InjectRepository } from '../../../../shared/decorators/inject-repository.decorator';
+import { ForbiddenException } from '../../../exceptions/forbidden.exception';
+import { ResourceNotFoundException } from '../../../exceptions/resource-not-found.exception';
 import { UseCase } from '../../usecase';
 import { GetCategoryByIdUseCaseInput } from './input';
 import { GetCategoryByIdUseCaseOutput } from './output';
@@ -22,15 +22,17 @@ export class GetCategoryByIdUseCase
   ): Promise<GetCategoryByIdUseCaseOutput> {
     const { userId, categoryId } = input;
 
-    const category = await this.categoryRepository.findById(categoryId);
+    const category = await this.categoryRepository.findByIdAndUserId(
+      categoryId,
+      userId,
+    );
 
     if (!category) {
       throw ResourceNotFoundException.category(categoryId);
     }
 
-    // Allow access if it's a default category (userId is null) or if it belongs to the user
-    if (category.getUserId() !== null && !category.belongsToUser(userId)) {
-      throw ForbiddenException.invalidOwnership("categoria");
+    if (category.hasUser() && !category.belongsToUser(userId)) {
+      throw ForbiddenException.invalidOwnership('categoria');
     }
 
     return {

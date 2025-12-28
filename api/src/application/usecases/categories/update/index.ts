@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { ResourceNotFoundException } from '../../../exceptions/resource-not-found.exception';
-import { ForbiddenException } from '../../../exceptions/forbidden.exception';
 import { CategoryRepository } from '../../../../domain/repositories/category.repository.interface';
 import { InjectRepository } from '../../../../shared/decorators/inject-repository.decorator';
+import { ForbiddenException } from '../../../exceptions/forbidden.exception';
+import { ResourceNotFoundException } from '../../../exceptions/resource-not-found.exception';
 import { UseCase } from '../../usecase';
 import { UpdateCategoryUseCaseInput } from './input';
 import { UpdateCategoryUseCaseOutput } from './output';
@@ -28,17 +28,12 @@ export class UpdateCategoryUseCase
       throw ResourceNotFoundException.category(categoryId);
     }
 
-    if (!category.belongsToUser(userId)) {
-      throw ForbiddenException.invalidOwnership("categoria");
+    if (!category.isAccessibleByUser(userId)) {
+      throw ForbiddenException.invalidOwnership('categoria');
     }
 
-    if (name) {
-      category.updateName(name);
-    }
-
-    if (icon) {
-      category.updateIcon(icon);
-    }
+    category.updateName(name);
+    category.updateIcon(icon);
 
     await this.categoryRepository.update(category);
 

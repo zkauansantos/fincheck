@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { ResourceNotFoundException } from '../../../exceptions/resource-not-found.exception';
-import { ForbiddenException } from '../../../exceptions/forbidden.exception';
 import { TransactionRepository } from '../../../../domain/repositories/transaction.repository.interface';
 import { InjectRepository } from '../../../../shared/decorators/inject-repository.decorator';
+import { ForbiddenException } from '../../../exceptions/forbidden.exception';
+import { ResourceNotFoundException } from '../../../exceptions/resource-not-found.exception';
 import { UseCase } from '../../usecase';
 import { DeleteTransactionUseCaseInput } from './input';
 import { DeleteTransactionUseCaseOutput } from './output';
@@ -34,7 +34,7 @@ export class DeleteTransactionUseCase
     }
 
     if (!transaction.belongsToUser(userId)) {
-      throw ForbiddenException.invalidOwnership("transação");
+      throw ForbiddenException.invalidOwnership('transação');
     }
 
     await this.transactionRepository.delete(transactionId);

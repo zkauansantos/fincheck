@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { randomUUID } from 'crypto';
 import { BankAccount } from '../../../../domain/entities/bank-account.entity';
 import { BankAccountRepository } from '../../../../domain/repositories/bank-account.repository.interface';
-import { Money } from '../../../../domain/value-objects/money.vo';
 import { InjectRepository } from '../../../../shared/decorators/inject-repository.decorator';
 import { UseCase } from '../../usecase';
 import { CreateBankAccountUseCaseInput } from './input';
@@ -27,10 +25,9 @@ export class CreateBankAccountUseCase
     const { userId, name, initialBalance, type, color } = input;
 
     const bankAccount = BankAccount.create({
-      id: randomUUID(),
       userId,
       name,
-      initialBalance: Money.create(initialBalance),
+      initialBalance,
       type,
       color,
     });

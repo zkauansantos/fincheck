@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { ResourceNotFoundException } from '../../../exceptions/resource-not-found.exception';
-import { ForbiddenException } from '../../../exceptions/forbidden.exception';
 import { CategoryRepository } from '../../../../domain/repositories/category.repository.interface';
 import { InjectRepository } from '../../../../shared/decorators/inject-repository.decorator';
+import { ForbiddenException } from '../../../exceptions/forbidden.exception';
+import { ResourceNotFoundException } from '../../../exceptions/resource-not-found.exception';
 import { UseCase } from '../../usecase';
 import { DeleteCategoryUseCaseInput } from './input';
 import { DeleteCategoryUseCaseOutput } from './output';
@@ -28,8 +28,8 @@ export class DeleteCategoryUseCase
       throw ResourceNotFoundException.category(categoryId);
     }
 
-    if (!category.belongsToUser(userId)) {
-      throw ForbiddenException.invalidOwnership("categoria");
+    if (!category.isAccessibleByUser(userId)) {
+      throw ForbiddenException.invalidOwnership('categoria');
     }
 
     await this.categoryRepository.delete(categoryId);

@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { randomUUID } from 'crypto';
 import { Category } from '../../../../domain/entities/category.entity';
 import { CategoryRepository } from '../../../../domain/repositories/category.repository.interface';
 import { InjectRepository } from '../../../../shared/decorators/inject-repository.decorator';
@@ -22,13 +21,12 @@ export class CreateCategoryUseCase
   ): Promise<CreateCategoryUseCaseOutput> {
     const { userId, name, icon, type } = input;
 
-    const category = Category.createCustom(
-      randomUUID(),
+    const category = Category.create({
       userId,
       name,
       icon,
       type,
-    );
+    });
 
     await this.categoryRepository.save(category);
 

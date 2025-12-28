@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { randomUUID } from 'crypto';
 import { User } from '../../../../domain/entities/user.entity';
-import { ValidationException } from '../../../exceptions/validation.exception';
 import { UserRepository } from '../../../../domain/repositories/user.repository.interface';
 import { Email } from '../../../../domain/value-objects/email.vo';
 import { Password } from '../../../../domain/value-objects/password.vo';
 import { InjectRepository } from '../../../../shared/decorators/inject-repository.decorator';
+import { ValidationException } from '../../../exceptions/validation.exception';
 import { UseCase } from '../../usecase';
 import { SignUpUseCaseInput } from './input';
 import { SignUpUseCaseOutput } from './output';
@@ -33,7 +32,6 @@ export class SignUpUseCase
     const hashedPassword = await Password.createFromPlain(password);
 
     const user = User.create({
-      id: randomUUID(),
       name,
       email: Email.create(email),
       password: hashedPassword,

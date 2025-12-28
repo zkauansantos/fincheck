@@ -1,13 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { randomUUID } from 'crypto';
 import { Transaction } from '../../../../domain/entities/transaction.entity';
-import { ResourceNotFoundException } from '../../../exceptions/resource-not-found.exception';
-import { ForbiddenException } from '../../../exceptions/forbidden.exception';
 import { BankAccountRepository } from '../../../../domain/repositories/bank-account.repository.interface';
 import { CategoryRepository } from '../../../../domain/repositories/category.repository.interface';
 import { TransactionRepository } from '../../../../domain/repositories/transaction.repository.interface';
-import { Money } from '../../../../domain/value-objects/money.vo';
 import { InjectRepository } from '../../../../shared/decorators/inject-repository.decorator';
+import { ForbiddenException } from '../../../exceptions/forbidden.exception';
+import { ResourceNotFoundException } from '../../../exceptions/resource-not-found.exception';
 import { UseCase } from '../../usecase';
 import { CreateTransactionUseCaseInput } from './input';
 import { CreateTransactionUseCaseOutput } from './output';
@@ -52,29 +50,26 @@ export class CreateTransactionUseCase
     }
 
     if (!bankAccount.belongsToUser(userId)) {
-      throw ForbiddenException.invalidOwnership("conta bancária");
+      throw ForbiddenException.invalidOwnership('conta bancária');
     }
 
-    if (categoryId) {
-      const category = await this.categoryRepository.findById(categoryId);
+    const category = await this.categoryRepository.findById(categoryId);
 
-      if (!category) {
-        throw ResourceNotFoundException.category(categoryId);
-      }
+    if (!category) {
+      throw ResourceNotFoundException.category(categoryId);
+    }
 
-      if (!!category.getUserId() && !category.belongsToUser(userId)) {
-        throw ForbiddenException.invalidOwnership("categoria");
-      }
+    if (category.hasUser() && !category.belongsToUser(userId)) {
+      throw ForbiddenException.invalidOwnership('categoria');
     }
 
     const transaction = Transaction.create({
-      id: randomUUID(),
       userId,
       bankAccountId,
       categoryId,
       subcategoryId,
       name,
-      value: Money.create(value),
+      value,
       date,
       type,
     });

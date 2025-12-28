@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { randomUUID } from 'crypto';
 import { Subcategory } from '../../../../../domain/entities/subcategory.entity';
-import { ResourceNotFoundException } from '../../../../exceptions/resource-not-found.exception';
 import { CategoryRepository } from '../../../../../domain/repositories/category.repository.interface';
 import { SubcategoryRepository } from '../../../../../domain/repositories/subcategory.repository.interface';
 import { InjectRepository } from '../../../../../shared/decorators/inject-repository.decorator';
+import { ResourceNotFoundException } from '../../../../exceptions/resource-not-found.exception';
 import { UseCase } from '../../../usecase';
 import { CreateSubcategoryUseCaseInput } from './input';
 import { CreateSubcategoryUseCaseOutput } from './output';
@@ -36,7 +35,6 @@ export class CreateSubcategoryUseCase
     }
 
     const subcategory = Subcategory.create({
-      id: randomUUID(),
       categoryId,
       name,
     });

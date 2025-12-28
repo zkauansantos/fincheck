@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { AuthenticationException } from '../../../exceptions/authentication.exception';
 import { UserRepository } from '../../../../domain/repositories/user.repository.interface';
 import { InjectRepository } from '../../../../shared/decorators/inject-repository.decorator';
+import { AuthenticationException } from '../../../exceptions/authentication.exception';
 import { UseCase } from '../../usecase';
 import { SignInUseCaseInput } from './input';
 import { SignInUseCaseOutput } from './output';
