@@ -30,9 +30,7 @@ export default function UserMenu() {
           className='justify-between gap-2'
           onSelect={toggleTheme}
         >
-          <span>
-            {theme === 'light' ? 'Escuro' : 'Claro'}
-          </span>
+          <span>{theme === 'light' ? 'Escuro' : 'Claro'}</span>
           {theme === 'light' ? (
             <Moon className='h-5 w-5 text-gray-700 dark:text-gray-700' />
           ) : (

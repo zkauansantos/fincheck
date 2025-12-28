@@ -1,3 +1,4 @@
+import { useErrorHandler } from "@/app/hooks/useErrorHandler";
 import { bankAccountsService } from "@/app/services/bankAccounts";
 import currencyStringToNumber from "@/app/utils/currencyStringToNumber";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -7,7 +8,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { z } from "zod";
 import useDashboard from "../../useDashboard";
-import { useErrorHandler } from "@/app/hooks/useErrorHandler";
 
 const schema = z.object({
   initialBalance: z.union([

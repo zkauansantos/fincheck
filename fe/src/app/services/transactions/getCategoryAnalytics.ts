@@ -1,6 +1,6 @@
+import { TransactionType } from "@/app/entities/Transaction";
 import { formatQueryParams } from "@/app/utils/formatQueryParams";
 import { httpClient } from "../httpClient";
-import { TransactionType } from "@/app/entities/Transaction";
 
 export interface CategoryAnalytics {
   categoryId: string;

@@ -5,6 +5,13 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('Seeding default budget categories...');
 
+  const categories = await prisma.category.findMany();
+
+  if (categories.length > 0) {
+    console.log('✅ Skipping creating default categories ');
+    return;
+  }
+
   // Delete all existing default categories to avoid duplicates
   await prisma.subCategory.deleteMany({
     where: {

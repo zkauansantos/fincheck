@@ -24,7 +24,8 @@ interface CategoryAnalyticsRow {
 }
 
 export function CategoryBreakdown({ year }: CategoryBreakdownProps) {
-  const { incomingCategories, expenseCategories, isLoading } = useCategoryAnalytics({ year });
+  const { incomingCategories, expenseCategories, isLoading } =
+    useCategoryAnalytics({ year });
 
   const expenseColumns = useMemo<ColumnDef<CategoryAnalyticsRow>[]>(
     () => [

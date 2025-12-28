@@ -1,4 +1,5 @@
 import { Transaction } from "@/app/entities/Transaction";
+import { useErrorHandler } from "@/app/hooks/useErrorHandler";
 import useBankAccounts from "@/app/services/bankAccounts/hooks/useBankAccounts";
 import useCategories from "@/app/services/categories/hooks/useCategories";
 import { transactionsService } from "@/app/services/transactions";
@@ -9,7 +10,6 @@ import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { z } from "zod";
-import { useErrorHandler } from "@/app/hooks/useErrorHandler";
 
 const schema = z.object({
   value: z.union([z.string().nonempty("Informe um valor"), z.number()]).transform(currencyStringToNumber),

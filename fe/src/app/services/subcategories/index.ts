@@ -1,7 +1,7 @@
-import getAll from './getAll';
 import { create } from './create';
-import { update } from './update';
 import { remove } from './delete';
+import getAll from './getAll';
+import { update } from './update';
 
 export const subcategoriesService = {
   getAll,
