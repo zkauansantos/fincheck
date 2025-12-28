@@ -20,11 +20,12 @@ export class ListCategoriesUseCase
   ): Promise<ListCategoriesUseCaseOutput> {
     const { userId, type } = input;
 
-    const findAll = type
-      ? this.categoryRepository.findAllAccessibleByUserAndType
-      : this.categoryRepository.findAllAccessibleByUser;
-
-    const categories = await findAll(userId, type);
+    const categories = type
+      ? await this.categoryRepository.findAllAccessibleByUserAndType(
+          userId,
+          type,
+        )
+      : await this.categoryRepository.findAllAccessibleByUser(userId);
 
     return categories.map((category) => ({
       id: category.getId(),
