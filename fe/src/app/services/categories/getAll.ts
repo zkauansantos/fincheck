@@ -5,7 +5,7 @@ import { httpClient } from "../httpClient";
 type GetAllCategoriesResponse = Array<Category>;
 
 type GetAllCategoriesParams = {
-  type: Category['type']
+  type?: Category['type'] | null
 }
 
 export default async function getAll(filters?: GetAllCategoriesParams) {

@@ -43,6 +43,7 @@ export default function EditTransactionModal({
 
     return (
       <ConfirmDeleteModal
+        isOpen={isDeleteModalOpen}
         isLoading={isLoadingDelete}
         title={`Tem certeza que deseja excluir essa ${expenseType}?`}
         onConfirm={handleDeleteTransaction}

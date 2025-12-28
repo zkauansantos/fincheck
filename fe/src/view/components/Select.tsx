@@ -1,4 +1,3 @@
-import { useTheme } from '@/app/contexts/ThemeContext';
 import cn from '@/app/utils/cn';
 import {
   ChevronDownIcon,
@@ -30,7 +29,6 @@ export default function Select({
   disabled,
   onChange,
 }: SelectProps) {
-  const { theme } = useTheme();
   const [selectedValue, setSelectedValue] = useState(value);
 
   function handleSelect(value: string) {
@@ -47,7 +45,7 @@ export default function Select({
             selectedValue &&
               'text-xs transition all top-2 left-[13px] translate-y-0',
             disabled && 'opacity-50',
-            theme === 'dark' && 'dark:text-gray-300'
+            'dark:text-gray-300'
           )}
         >
           {placeholder}
@@ -62,10 +60,8 @@ export default function Select({
               error && 'border-red-900!',
               className,
               disabled && 'opacity-50 pointer-events-none',
-              theme === 'dark' && 'dark:bg-gray-100 dark:border-gray-300',
-              disabled &&
-                theme === 'dark' &&
-                'dark:opacity-40 dark:cursor-not-allowed!'
+              'dark:bg-gray-100 dark:border-gray-300',
+              disabled && 'dark:opacity-40 dark:cursor-not-allowed!'
             )}
           >
             <RdxSelect.Value />
@@ -79,7 +75,7 @@ export default function Select({
             <RdxSelect.Content
               className={cn(
                 'z-99 overflow-hidden bg-white rounded-2xl border border-gray-100 shadow-[0px_11px_20px_0px_rgba(0,0,0,0.10)',
-                theme === 'dark' && 'dark:bg-gray-50'
+                'dark:bg-gray-50'
               )}
             >
               <RdxSelect.ScrollUpButton className='flex items-center justify-center h-[25px] bg-white text-gray-800 cursor-default'>
@@ -93,7 +89,7 @@ export default function Select({
                     value={opt.value}
                     className={cn(
                       'data-[state=checked]:font-bold data-highlighted:bg-gray-50 rounded-lg outline-none p-2 text-sm text-gray-800',
-                       'hover:bg-gray-200!'
+                      'hover:bg-gray-200!'
                     )}
                   >
                     <RdxSelect.ItemText>{opt.label}</RdxSelect.ItemText>

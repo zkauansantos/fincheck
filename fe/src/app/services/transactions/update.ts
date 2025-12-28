@@ -1,3 +1,4 @@
+import { TransactionType } from "@/app/entities/Transaction";
 import { httpClient } from "../httpClient";
 
 export interface UpdateTransactionParams {
@@ -7,7 +8,7 @@ export interface UpdateTransactionParams {
   name: string;
   value: number;
   date: string;
-  type: "INCOME" | "EXPENSE";
+  type: TransactionType;
 }
 
 export default async function update({

@@ -28,6 +28,7 @@ export default function EditAccountModal() {
   if (isDeleteModalOpen) {
     return (
       <ConfirmDeleteModal
+        isOpen={isDeleteModalOpen}
         isLoading={isLoadingDelete}
         title='Tem certeza que deseja excluir essa conta?'
         onConfirm={handleDeleteAccount}

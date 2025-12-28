@@ -6,6 +6,7 @@ import Login from "../view/pages/Login";
 import Register from "../view/pages/Register";
 import Dashboard from "../view/pages/Dashboard";
 import Analytics from "../view/pages/Analytics";
+import Categories from "../view/pages/Categories";
 
 export default function Router() {
   return (
@@ -21,6 +22,7 @@ export default function Router() {
         <Route element={<AuthGuard isPrivate />}>
           <Route path='/' element={<Dashboard />} />
           <Route path='/analytics' element={<Analytics />} />
+          <Route path='/categories' element={<Categories />} />
         </Route>
       </Routes>
     </BrowserRouter>

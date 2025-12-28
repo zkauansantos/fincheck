@@ -81,7 +81,7 @@ export default function NewTransactionModal() {
 
           <Controller
             control={control}
-            name='subCategoryId'
+            name='subcategoryId'
             defaultValue=''
             render={({ field: { onChange, value } }) => (
               <Select

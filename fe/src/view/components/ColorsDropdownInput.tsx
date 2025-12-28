@@ -1,5 +1,4 @@
 import { COLORS } from '@/app/config/constants';
-import { useTheme } from '@/app/contexts/ThemeContext';
 import cn from '@/app/utils/cn';
 import { ChevronDownIcon, CrossCircledIcon } from '@radix-ui/react-icons';
 import { useState } from 'react';
@@ -24,7 +23,6 @@ export default function ColorsDropdownInput({
   value,
   onChange,
 }: ColorsDropdownInputProps) {
-  const { theme } = useTheme();
   const [selectedColor, setSelectedColor] = useState<null | Color>(() => {
     if (!value) return null;
 
@@ -46,7 +44,7 @@ export default function ColorsDropdownInput({
               'rounded-lg border border-gray-500 px-3 h-[52px] outline-none',
               'text-gray-800  focus:border-gray-700 transition-all text-left relative',
               error && 'border-red-900!',
-              theme === 'dark' && 'dark:bg-gray-100 dark:border-gray-300',
+              'dark:bg-gray-100 dark:border-gray-300',
               className
             )}
           >

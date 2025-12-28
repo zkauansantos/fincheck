@@ -1,6 +1,8 @@
 @import 'tailwindcss';
 @plugin "tailwindcss-animate";
 
+@variant dark (.dark &);
+
 @theme {
   --font-family-sans: 'DM Sans', sans-serif;
 
