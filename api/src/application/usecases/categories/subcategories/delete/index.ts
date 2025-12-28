@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { EntityNotFoundException } from '../../../../../domain/exceptions/entity-not-found.exception';
+import { ResourceNotFoundException } from '../../../../exceptions/resource-not-found.exception';
 import { SubcategoryRepository } from '../../../../../domain/repositories/subcategory.repository.interface';
 import { InjectRepository } from '../../../../../shared/decorators/inject-repository.decorator';
 import { UseCase } from '../../../usecase';
@@ -29,7 +29,7 @@ export class DeleteSubcategoryUseCase
     );
 
     if (!subcategory) {
-      throw EntityNotFoundException.subcategory(subcategoryId);
+      throw ResourceNotFoundException.subcategory(subcategoryId);
     }
 
     await this.subcategoryRepository.delete(subcategoryId);

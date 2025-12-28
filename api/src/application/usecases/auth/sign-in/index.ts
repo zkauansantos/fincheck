@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { AuthenticationException } from '../../../../domain/exceptions/authentication.exception';
+import { AuthenticationException } from '../../../exceptions/authentication.exception';
 import { UserRepository } from '../../../../domain/repositories/user.repository.interface';
 import { InjectRepository } from '../../../../shared/decorators/inject-repository.decorator';
 import { UseCase } from '../../usecase';

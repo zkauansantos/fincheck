@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { Subcategory } from '../../../../../domain/entities/subcategory.entity';
-import { EntityNotFoundException } from '../../../../../domain/exceptions/entity-not-found.exception';
+import { ResourceNotFoundException } from '../../../../exceptions/resource-not-found.exception';
 import { CategoryRepository } from '../../../../../domain/repositories/category.repository.interface';
 import { SubcategoryRepository } from '../../../../../domain/repositories/subcategory.repository.interface';
 import { InjectRepository } from '../../../../../shared/decorators/inject-repository.decorator';
@@ -32,7 +32,7 @@ export class CreateSubcategoryUseCase
     const category = await this.categoryRepository.findById(categoryId);
 
     if (!category) {
-      throw EntityNotFoundException.category(categoryId);
+      throw ResourceNotFoundException.category(categoryId);
     }
 
     const subcategory = Subcategory.create({

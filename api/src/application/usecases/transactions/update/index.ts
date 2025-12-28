@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { EntityNotFoundException } from '../../../../domain/exceptions/entity-not-found.exception';
-import { InvalidOwnershipException } from '../../../../domain/exceptions/invalid-ownership.exception';
+import { ResourceNotFoundException } from '../../../exceptions/resource-not-found.exception';
+import { ForbiddenException } from '../../../exceptions/forbidden.exception';
 import { BankAccountRepository } from '../../../../domain/repositories/bank-account.repository.interface';
 import { CategoryRepository } from '../../../../domain/repositories/category.repository.interface';
 import { TransactionRepository } from '../../../../domain/repositories/transaction.repository.interface';
@@ -45,11 +45,11 @@ export class UpdateTransactionUseCase
     );
 
     if (!transaction) {
-      throw EntityNotFoundException.transaction(transactionId);
+      throw ResourceNotFoundException.transaction(transactionId);
     }
 
     if (!transaction.belongsToUser(userId)) {
-      throw InvalidOwnershipException.transaction(transactionId);
+      throw ForbiddenException.invalidOwnership("transação");
     }
 
     // Update name if provided
@@ -74,11 +74,11 @@ export class UpdateTransactionUseCase
       );
 
       if (!bankAccount) {
-        throw EntityNotFoundException.bankAccount(bankAccountId);
+        throw ResourceNotFoundException.bankAccount(bankAccountId);
       }
 
       if (!bankAccount.belongsToUser(userId)) {
-        throw InvalidOwnershipException.bankAccount(bankAccountId);
+        throw ForbiddenException.invalidOwnership("conta bancária");
       }
 
       transaction.updateBankAccount(bankAccountId);
@@ -92,11 +92,11 @@ export class UpdateTransactionUseCase
         const category = await this.categoryRepository.findById(categoryId);
 
         if (!category) {
-          throw EntityNotFoundException.category(categoryId);
+          throw ResourceNotFoundException.category(categoryId);
         }
 
         if (!category.belongsToUser(userId)) {
-          throw InvalidOwnershipException.category(categoryId);
+          throw ForbiddenException.invalidOwnership("categoria");
         }
 
         transaction.assignCategory(categoryId);

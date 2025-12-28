@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { randomUUID } from 'crypto';
 import { User } from '../../../../domain/entities/user.entity';
-import { ValidationException } from '../../../../domain/exceptions/validation.exception';
+import { ValidationException } from '../../../exceptions/validation.exception';
 import { UserRepository } from '../../../../domain/repositories/user.repository.interface';
 import { Email } from '../../../../domain/value-objects/email.vo';
 import { Password } from '../../../../domain/value-objects/password.vo';

@@ -42,6 +42,7 @@ export class TransactionsController {
   ) {}
 
   @Get()
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'List all transactions for the authenticated user' })
   @ApiQuery({
     name: 'month',
@@ -221,6 +222,7 @@ export class TransactionsController {
   }
 
   @Get('analytics')
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Get category analytics for transactions in a given month',
   })

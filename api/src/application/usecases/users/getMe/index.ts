@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { EntityNotFoundException } from 'src/domain/exceptions/entity-not-found.exception';
+import { ResourceNotFoundException } from '../../../exceptions/resource-not-found.exception';
 import { UserRepository } from 'src/domain/repositories/user.repository.interface';
 import { InjectRepository } from '../../../../shared/decorators/inject-repository.decorator';
 import { UseCase } from '../../usecase';
@@ -21,7 +21,7 @@ export class GetMeUseCase
     const user = await this.userRepository.findById(userId);
 
     if (!user) {
-      throw EntityNotFoundException.user(userId);
+      throw ResourceNotFoundException.user(userId);
     }
 
     return {

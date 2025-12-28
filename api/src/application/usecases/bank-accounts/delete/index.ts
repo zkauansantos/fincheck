@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { EntityNotFoundException } from '../../../../domain/exceptions/entity-not-found.exception';
-import { InvalidOwnershipException } from '../../../../domain/exceptions/invalid-ownership.exception';
+import { ResourceNotFoundException } from '../../../exceptions/resource-not-found.exception';
+import { ForbiddenException } from '../../../exceptions/forbidden.exception';
 import { BankAccountRepository } from '../../../../domain/repositories/bank-account.repository.interface';
 import { TransactionRepository } from '../../../../domain/repositories/transaction.repository.interface';
 import { InjectRepository } from '../../../../shared/decorators/inject-repository.decorator';
@@ -33,11 +33,11 @@ export class DeleteBankAccountUseCase
     );
 
     if (!bankAccount) {
-      throw EntityNotFoundException.bankAccount(bankAccountId);
+      throw ResourceNotFoundException.bankAccount(bankAccountId);
     }
 
     if (!bankAccount.belongsToUser(userId)) {
-      throw InvalidOwnershipException.bankAccount(bankAccountId);
+      throw ForbiddenException.invalidOwnership("conta bancária");
     }
 
     await this.bankAccountRepository.delete(bankAccountId);

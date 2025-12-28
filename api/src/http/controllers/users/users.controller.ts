@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, HttpCode, HttpStatus } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -15,6 +15,7 @@ export class UsersController {
   constructor(private readonly getMeUseCase: GetMeUseCase) {}
 
   @Get('me')
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Get current authenticated user profile' })
   @ApiResponse({
     status: 200,

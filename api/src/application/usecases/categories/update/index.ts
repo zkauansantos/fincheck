@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { EntityNotFoundException } from '../../../../domain/exceptions/entity-not-found.exception';
-import { InvalidOwnershipException } from '../../../../domain/exceptions/invalid-ownership.exception';
+import { ResourceNotFoundException } from '../../../exceptions/resource-not-found.exception';
+import { ForbiddenException } from '../../../exceptions/forbidden.exception';
 import { CategoryRepository } from '../../../../domain/repositories/category.repository.interface';
 import { InjectRepository } from '../../../../shared/decorators/inject-repository.decorator';
 import { UseCase } from '../../usecase';
@@ -25,11 +25,11 @@ export class UpdateCategoryUseCase
     const category = await this.categoryRepository.findById(categoryId);
 
     if (!category) {
-      throw EntityNotFoundException.category(categoryId);
+      throw ResourceNotFoundException.category(categoryId);
     }
 
     if (!category.belongsToUser(userId)) {
-      throw InvalidOwnershipException.category(categoryId);
+      throw ForbiddenException.invalidOwnership("categoria");
     }
 
     if (name) {

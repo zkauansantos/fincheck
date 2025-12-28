@@ -1,7 +1,12 @@
-export abstract class DomainException extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = this.constructor.name;
-    Error.captureStackTrace(this, this.constructor);
+import {
+  BaseException,
+  BaseExceptionProps,
+} from '../../shared/exceptions/base.exception';
+
+export type DomainExceptionProps = Omit<BaseExceptionProps, 'statusCode'>;
+
+export abstract class DomainException extends BaseException {
+  constructor(props: DomainExceptionProps) {
+    super({ ...props, statusCode: 422 });
   }
 }
