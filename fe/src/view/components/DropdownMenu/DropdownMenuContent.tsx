@@ -1,4 +1,3 @@
-import { useTheme } from '@/app/contexts/ThemeContext';
 import cn from '@/app/utils/cn';
 import * as RdxDropdownMenu from '@radix-ui/react-dropdown-menu';
 
@@ -11,8 +10,6 @@ export default function DropdownMenuContent({
   children,
   className,
 }: DropdownMenuContentProps) {
-  const { theme } = useTheme();
-
   return (
     <RdxDropdownMenu.Portal>
       <RdxDropdownMenu.Content
@@ -22,7 +19,7 @@ export default function DropdownMenuContent({
           'data-[side=bottom]:animate-slide-up-and-fade',
           'data-[side=top]:animate-slide-down-and-fade',
           'shadow-[0px_11px_20px_0px_rgba(0,0,0,0.2)]',
-          theme === 'dark' && 'dark:bg-gray-50',
+          'dark:bg-gray-50',
 
           className
         )}

@@ -9,8 +9,7 @@ interface IUseCategoriesParams {
 export default function useCategories(filters?: IUseCategoriesParams) {
   const { data, isFetching } = useQuery({
     queryKey: ["categories", filters],
-    queryFn: () => categoriesService.getAll(),
-    enabled: !!filters?.type
+    queryFn: () => categoriesService.getAll(filters),
   });
 
   return {

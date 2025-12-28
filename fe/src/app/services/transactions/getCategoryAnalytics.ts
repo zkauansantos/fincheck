@@ -1,3 +1,4 @@
+import { TransactionType } from "@/app/entities/Transaction";
 import { formatQueryParams } from "@/app/utils/formatQueryParams";
 import { httpClient } from "../httpClient";
 
@@ -6,6 +7,7 @@ export interface CategoryAnalytics {
   categoryName: string;
   categoryIcon: string;
   months: number[];
+  type: TransactionType;
   totalIncome: number;
   totalExpense: number;
   averageIncome: number;
@@ -25,7 +27,8 @@ export interface AnalyticsSummary {
 }
 
 export interface GetCategoryAnalyticsResponse {
-  categories: CategoryAnalytics[];
+  incomingCategories: CategoryAnalytics[];
+  expenseCategories: CategoryAnalytics[];
   summary: AnalyticsSummary;
 }
 

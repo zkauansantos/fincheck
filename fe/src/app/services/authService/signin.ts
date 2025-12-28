@@ -6,7 +6,7 @@ export interface SigninParams {
 }
 
 interface SigninResponse {
-  jwtAcessToken: string;
+  accessToken: string;
 }
 
 export async function signin({ email, password }: SigninParams) {

@@ -1,3 +1,4 @@
+import { useErrorHandler } from "@/app/hooks/useErrorHandler";
 import { bankAccountsService } from "@/app/services/bankAccounts";
 import currencyStringToNumber from "@/app/utils/currencyStringToNumber";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -52,6 +53,8 @@ export default function useEditAccountModalController() {
       mutationFn: bankAccountsService.delete,
     });
 
+  const { handleError } = useErrorHandler();
+
   const handleSubmit = hookFormHandleSubmit(async (data) => {
     const { color, initialBalance, name, type } = data;
 
@@ -67,8 +70,8 @@ export default function useEditAccountModalController() {
       queryClient.invalidateQueries({ queryKey: ["bank-accounts"] });
       toast.success("A Conta foi editada com sucesso!");
       closeEditAccountModal();
-    } catch {
-      toast.error("Erro ao salvar as informações!");
+    } catch (error) {
+      handleError(error);
     }
   });
 
@@ -86,8 +89,8 @@ export default function useEditAccountModalController() {
       toast.success("A Conta foi deletada com sucesso!");
       queryClient.invalidateQueries({ queryKey: ["bank-accounts"] });
       closeEditAccountModal();
-    } catch {
-      toast.error("Erro ao deletar a conta!");
+    } catch (error) {
+      handleError(error);
     }
   }
 

@@ -1,19 +1,16 @@
-import { ComponentProps, forwardRef } from "react";
+import { ComponentProps, forwardRef } from 'react';
 
-import { CrossCircledIcon } from "@radix-ui/react-icons";
+import { CrossCircledIcon } from '@radix-ui/react-icons';
 
-import { useTheme } from "@/app/contexts/ThemeContext";
-import cn from "@/app/utils/cn";
+import cn from '@/app/utils/cn';
 
-interface InputProps extends ComponentProps<"input"> {
+interface InputProps extends ComponentProps<'input'> {
   name: string;
   error?: string;
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ placeholder, id, name, error, className, ...props }, ref) => {
-    const {theme} = useTheme();
-
     return (
       <div className='relative'>
         <input
@@ -23,11 +20,11 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           placeholder=' '
           ref={ref}
           className={cn(
-            "bg-white placeholder-shown:pt-0 focus:pt-4 w-full pt-4",
-            "rounded-lg border border-gray-500 px-3 h-[52px] outline-none",
-            "text-gray-800 peer focus:border-gray-800 transition-all",
-            error && "border-red-900!",
-            theme === 'dark'&& 'dark:bg-gray-100 dark:border-gray-300',
+            'bg-white placeholder-shown:pt-0 focus:pt-4 w-full pt-4',
+            'rounded-lg border border-gray-500 px-3 h-[52px] outline-none',
+            'text-gray-800 peer focus:border-gray-800 transition-all',
+            error && 'border-red-900!',
+            'dark:bg-gray-100 dark:border-gray-300',
             className
           )}
         />
@@ -35,11 +32,11 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         <label
           htmlFor={id ?? name}
           className={cn(
-            "absolute text-xs left-[14px] top-2 pointer-events-none",
-            "text-gray-700 peer-placeholder-shown:text-base",
-            "peer-placeholder-shown:top-3.5 transition-all",
-            "peer-focus:top-2 peer-focus:text-xs",
-            theme === 'dark' && "dark:text-gray-300"
+            'absolute text-xs left-[14px] top-2 pointer-events-none',
+            'text-gray-700 peer-placeholder-shown:text-base',
+            'peer-placeholder-shown:top-3.5 transition-all',
+            'peer-focus:top-2 peer-focus:text-xs',
+            'dark:text-gray-300'
           )}
         >
           {placeholder}
@@ -56,6 +53,6 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
   }
 );
 
-Input.displayName = "Input";
+Input.displayName = 'Input';
 
 export default Input;

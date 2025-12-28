@@ -7,7 +7,7 @@ export interface SignupParams {
 }
 
 interface SignupResponse {
-  jwtAcessToken: string;
+  accessToken: string;
 }
 
 export async function signup({ name, email, password }: SignupParams) {

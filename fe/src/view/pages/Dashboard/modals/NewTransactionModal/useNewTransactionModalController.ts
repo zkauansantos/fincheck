@@ -1,4 +1,5 @@
 
+import { useErrorHandler } from "@/app/hooks/useErrorHandler";
 import useBankAccounts from "@/app/services/bankAccounts/hooks/useBankAccounts";
 import useCategories from "@/app/services/categories/hooks/useCategories";
 import useSubcategories from "@/app/services/categories/hooks/useSubcategories";
@@ -16,7 +17,7 @@ const schema = z.object({
   value: z.string().nonempty("Informe o valor"),
   name: z.string().nonempty("Informe o nome"),
   categoryId: z.string().nonempty("Informe a categoria"),
-  subCategoryId: z.string().nonempty("Informe a categoria secundária"),
+  subcategoryId: z.string().nonempty("Informe a categoria secundária"),
   bankAccountId: z.string().nonempty("Informe a conta bancária"),
   date: z.date(),
 });
@@ -65,13 +66,16 @@ export default function useNewTransactionModalController() {
     );
   }, [categoriesList, newTransactionType]);
 
+  const { handleError } = useErrorHandler();
+
   const handleSubmit = hookFormHandleSubmit(async (data) => {
-    const { bankAccountId, categoryId, date, name, value } = data;
+    const { bankAccountId, categoryId, date, name, value, subcategoryId } = data;
 
     try {
       await createTransaction({
         name,
         bankAccountId,
+        subcategoryId,
         categoryId,
         date: date.toISOString(),
         type: newTransactionType!,
@@ -84,15 +88,11 @@ export default function useNewTransactionModalController() {
           : "Receita cadastrada com sucesso!"
       );
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      queryClient.invalidateQueries({ queryKey: ["bank-accounts"] });
       closeNewTransactionModal();
       reset();
-    } catch {
-      toast.error(
-        newTransactionType === "EXPENSE"
-          ? "Erro ao cadastrar Despesa!"
-          : "Erro ao cadastrar Receita!"
-      );
-      reset();
+    } catch (error) {
+      handleError(error);
     }
   });
 

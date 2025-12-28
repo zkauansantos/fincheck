@@ -8,6 +8,7 @@ interface ConfirmDeleteModalProps {
   title: string;
   description?: string;
   isLoading: boolean;
+  isOpen: boolean;
 }
 
 export default function ConfirmDeleteModal({
@@ -16,9 +17,10 @@ export default function ConfirmDeleteModal({
   description,
   title,
   isLoading,
+  isOpen,
 }: ConfirmDeleteModalProps) {
   return (
-    <Modal open title='Excluir' onClose={onClose}>
+    <Modal open={isOpen} title='Excluir' onClose={onClose}>
       <div className='flex flex-col items-center text-center gap-6'>
         <div className='h-[52px] w-[52px] rounded-full bg-red-50 flex items-center justify-center'>
           <TrashIcon className='w-6 h-6 text-red-900' />

@@ -5,12 +5,34 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('Seeding default budget categories...');
 
+  const categories = await prisma.category.findMany();
+
+  if (categories.length > 0) {
+    console.log('✅ Skipping creating default categories ');
+    return;
+  }
+
+  // Delete all existing default categories to avoid duplicates
+  await prisma.subCategory.deleteMany({
+    where: {
+      category: {
+        userId: null,
+      },
+    },
+  });
+  await prisma.category.deleteMany({
+    where: {
+      userId: null,
+    },
+  });
+
   // Income Categories (Renda)
   const incomeCategories = [
     {
       name: 'Salários',
       icon: 'salary',
       type: TransactionType.INCOME,
+      userId: null, // Global default category
       subcategories: [
         { name: 'Pagamento' },
         { name: 'Gorjetas' },
@@ -23,6 +45,7 @@ async function main() {
       name: 'Outros',
       icon: 'other',
       type: TransactionType.INCOME,
+      userId: null, // Global default category
       subcategories: [
         { name: 'Transferência de poupança' },
         { name: 'Renda de juros' },
@@ -40,6 +63,7 @@ async function main() {
       name: 'Vestuário',
       icon: 'clothing',
       type: TransactionType.EXPENSE,
+      userId: null, // Global default category
       subcategories: [
         { name: 'Roupas' },
         { name: 'Tenis' },
@@ -51,6 +75,7 @@ async function main() {
       name: 'Débito',
       icon: 'expense',
       type: TransactionType.EXPENSE,
+      userId: null,
       subcategories: [
         { name: 'Cartões de crédito' },
         { name: 'Financiamento estudantil' },
@@ -64,6 +89,7 @@ async function main() {
       name: 'Educação',
       icon: 'education',
       type: TransactionType.EXPENSE,
+      userId: null,
       subcategories: [
         { name: 'Cursos Investimentos' },
         { name: 'Cursos Programação' },
@@ -76,6 +102,7 @@ async function main() {
       name: 'Entretenimento',
       icon: 'fun',
       type: TransactionType.EXPENSE,
+      userId: null,
       subcategories: [
         { name: 'Shows/espetáculos' },
         { name: 'Jogos' },
@@ -94,6 +121,7 @@ async function main() {
       name: 'Despesas diárias',
       icon: 'food',
       type: TransactionType.EXPENSE,
+      userId: null,
       subcategories: [
         { name: 'Padaria' },
         { name: 'Supermercado' },
@@ -107,6 +135,7 @@ async function main() {
       name: 'Presentes',
       icon: 'gift',
       type: TransactionType.EXPENSE,
+      userId: null,
       subcategories: [
         { name: 'Presentes' },
         { name: 'Doações (caridade)' },
@@ -117,6 +146,7 @@ async function main() {
       name: 'Saúde',
       icon: 'health',
       type: TransactionType.EXPENSE,
+      userId: null,
       subcategories: [
         { name: 'Médico/dentista/óculos' },
         { name: 'Cuidados especiais' },
@@ -129,6 +159,7 @@ async function main() {
       name: 'Casa',
       icon: 'home',
       type: TransactionType.EXPENSE,
+      userId: null,
       subcategories: [
         { name: 'Aluguel/financiamento imobiliário' },
         { name: 'Impostos residenciais' },
@@ -145,6 +176,7 @@ async function main() {
       name: 'Seguro',
       icon: 'expense',
       type: TransactionType.EXPENSE,
+      userId: null,
       subcategories: [
         { name: 'Veículo' },
         { name: 'Saúde' },
@@ -157,6 +189,7 @@ async function main() {
       name: 'Animais de estimação',
       icon: 'expense',
       type: TransactionType.EXPENSE,
+      userId: null,
       subcategories: [
         { name: 'Alimentação' },
         { name: 'Veterinário' },
@@ -169,6 +202,7 @@ async function main() {
       name: 'Tecnologia',
       icon: 'expense',
       type: TransactionType.EXPENSE,
+      userId: null,
       subcategories: [
         { name: 'Domínios e hospedagem' },
         { name: 'Serviços on-line' },
@@ -182,6 +216,7 @@ async function main() {
       name: 'Transporte',
       icon: 'transport',
       type: TransactionType.EXPENSE,
+      userId: null,
       subcategories: [
         { name: 'Combustível' },
         { name: 'Prestações do carro' },
@@ -197,6 +232,7 @@ async function main() {
       name: 'Viagens',
       icon: 'travel',
       type: TransactionType.EXPENSE,
+      userId: null,
       subcategories: [
         { name: 'Passagem aérea' },
         { name: 'Hotéis' },
@@ -210,6 +246,7 @@ async function main() {
       name: 'Contas Fixas',
       icon: 'expense',
       type: TransactionType.EXPENSE,
+      userId: null,
       subcategories: [
         { name: 'Internet' },
         { name: 'Luz' },
@@ -222,6 +259,7 @@ async function main() {
       name: 'Outros',
       icon: 'other',
       type: TransactionType.EXPENSE,
+      userId: null,
       subcategories: [{ name: 'Dívida' }, { name: 'Extra' }],
     },
   ];

@@ -1,4 +1,3 @@
-import { useTheme } from '@/app/contexts/ThemeContext';
 import cn from '@/app/utils/cn';
 import formatDate from '@/app/utils/formatDate';
 import { CrossCircledIcon } from '@radix-ui/react-icons';
@@ -19,7 +18,6 @@ export default function DatePickerInput({
   value,
   onChange,
 }: DatePickerInputProps) {
-  const { theme } = useTheme();
   const [selectedDate, setSelectedDate] = useState(value ?? new Date());
 
   function handleChangeDate(date: Date) {
@@ -38,7 +36,7 @@ export default function DatePickerInput({
               'rounded-lg border border-gray-500 px-3 h-[52px] outline-none',
               'text-gray-700 pt-4  focus:border-gray-800 transition-all text-left relative',
               error && 'border-red-900!',
-              theme === 'dark' && 'dark:border-gray-300 dark:bg-gray-100',
+              'dark:border-gray-300 dark:bg-gray-100',
               className
             )}
           >

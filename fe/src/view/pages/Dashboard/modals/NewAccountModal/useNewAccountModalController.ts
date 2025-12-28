@@ -1,3 +1,4 @@
+import { useErrorHandler } from "@/app/hooks/useErrorHandler";
 import { bankAccountsService } from "@/app/services/bankAccounts";
 import currencyStringToNumber from "@/app/utils/currencyStringToNumber";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -33,6 +34,7 @@ export default function useNewAccountModalController() {
   const { isPending, mutateAsync } = useMutation({
     mutationFn: bankAccountsService.create,
   });
+  const { handleError } = useErrorHandler();
 
   const handleSubmit = hookFormHandleSubmit(async (data) => {
     const { color, initialBalance, name, type } = data;
@@ -48,8 +50,8 @@ export default function useNewAccountModalController() {
       queryClient.invalidateQueries({ queryKey: ["bank-accounts"] });
       closeNewAccountModal();
       reset();
-    } catch {
-      toast.error("Erro ao cadastrar a conta!");
+    } catch (error) {
+      handleError(error);
       reset();
     }
   });

@@ -1,4 +1,3 @@
-import { useTheme } from '@/app/contexts/ThemeContext';
 import cn from '@/app/utils/cn';
 import * as RdxDialog from '@radix-ui/react-dialog';
 import { Cross2Icon } from '@radix-ui/react-icons';
@@ -18,8 +17,6 @@ export default function Modal({
   rightAction,
   onClose,
 }: ModalProps) {
-  const { theme } = useTheme();
-
   return (
     <RdxDialog.Root open={open} onOpenChange={onClose}>
       <RdxDialog.Portal>
@@ -35,7 +32,7 @@ export default function Modal({
               'p-6 space-y-10 bg-white rounded-2xl z-51',
               'data-[state=open]:animate-content-show',
               'shadow-[0px_11px_20px_0px_rgba(0,0,0,0.2)]',
-              theme === 'dark' && 'dark:bg-gray-50'
+              'dark:bg-gray-50'
             )}
           >
             <header className='h-12 flex items-center justify-between text-gray-800'>

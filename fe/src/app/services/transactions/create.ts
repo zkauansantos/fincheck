@@ -1,12 +1,14 @@
+import { TransactionType } from "@/app/entities/Transaction";
 import { httpClient } from "../httpClient";
 
 export interface CreateTransactionParams {
   bankAccountId: string;
   categoryId: string;
+  subcategoryId: string;
   name: string;
   value: number;
   date: string;
-  type: "INCOME" | "EXPENSE";
+  type: TransactionType;
 }
 
 export default async function create({
@@ -14,12 +16,14 @@ export default async function create({
   bankAccountId,
   categoryId,
   date,
+  subcategoryId,
   value,
   type,
 }: CreateTransactionParams) {
   const { data } = await httpClient.post("/transactions", {
     name,
     bankAccountId,
+    subcategoryId,
     categoryId,
     date,
     value,

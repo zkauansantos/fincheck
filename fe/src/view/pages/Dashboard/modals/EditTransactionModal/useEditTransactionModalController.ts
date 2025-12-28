@@ -1,4 +1,5 @@
 import { Transaction } from "@/app/entities/Transaction";
+import { useErrorHandler } from "@/app/hooks/useErrorHandler";
 import useBankAccounts from "@/app/services/bankAccounts/hooks/useBankAccounts";
 import useCategories from "@/app/services/categories/hooks/useCategories";
 import { transactionsService } from "@/app/services/transactions";
@@ -62,6 +63,8 @@ export default function useEditTransactionModalController(
     );
   }, [categoriesList, transaction]);
 
+  const { handleError } = useErrorHandler();
+
   const handleSubmit = hookFormHandleSubmit(async (data) => {
     const { bankAccountId, categoryId, date, name, value } = data;
     try {
@@ -83,12 +86,8 @@ export default function useEditTransactionModalController(
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
       queryClient.invalidateQueries({ queryKey: ["bank-accounts"] });
       onClose();
-    } catch {
-      toast.error(
-        transaction!.type === "EXPENSE"
-          ? "Erro ao salvar despesa!"
-          : "Erro ao salvar receita!"
-      );
+    } catch (error) {
+      handleError(error);
     }
   });
 
@@ -111,12 +110,8 @@ export default function useEditTransactionModalController(
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
       queryClient.invalidateQueries({ queryKey: ["bank-accounts"] });
       onClose();
-    } catch {
-      toast.error(
-        transaction!.type === "EXPENSE"
-          ? "Erro ao deletar a despesa!"
-          : "Erro ao deltar a receita!"
-      );
+    } catch (error) {
+      handleError(error);
     }
   }
 
