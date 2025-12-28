@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { z } from "zod";
 import useDashboard from "../../useDashboard";
+import { useErrorHandler } from "@/app/hooks/useErrorHandler";
 
 const schema = z.object({
   value: z.string().nonempty("Informe o valor"),
@@ -65,6 +66,8 @@ export default function useNewTransactionModalController() {
     );
   }, [categoriesList, newTransactionType]);
 
+  const { handleError } = useErrorHandler();
+
   const handleSubmit = hookFormHandleSubmit(async (data) => {
     const { bankAccountId, categoryId, date, name, value } = data;
 
@@ -86,12 +89,8 @@ export default function useNewTransactionModalController() {
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
       closeNewTransactionModal();
       reset();
-    } catch {
-      toast.error(
-        newTransactionType === "EXPENSE"
-          ? "Erro ao cadastrar Despesa!"
-          : "Erro ao cadastrar Receita!"
-      );
+    } catch (error) {
+      handleError(error);
     }
   });
 

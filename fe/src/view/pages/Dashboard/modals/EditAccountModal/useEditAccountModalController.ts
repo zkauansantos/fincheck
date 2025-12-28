@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { z } from "zod";
 import useDashboard from "../../useDashboard";
+import { useErrorHandler } from "@/app/hooks/useErrorHandler";
 
 const schema = z.object({
   initialBalance: z.union([
@@ -52,6 +53,8 @@ export default function useEditAccountModalController() {
       mutationFn: bankAccountsService.delete,
     });
 
+  const { handleError } = useErrorHandler();
+
   const handleSubmit = hookFormHandleSubmit(async (data) => {
     const { color, initialBalance, name, type } = data;
 
@@ -67,8 +70,8 @@ export default function useEditAccountModalController() {
       queryClient.invalidateQueries({ queryKey: ["bank-accounts"] });
       toast.success("A Conta foi editada com sucesso!");
       closeEditAccountModal();
-    } catch {
-      toast.error("Erro ao salvar as informações!");
+    } catch (error) {
+      handleError(error);
     }
   });
 
@@ -86,8 +89,8 @@ export default function useEditAccountModalController() {
       toast.success("A Conta foi deletada com sucesso!");
       queryClient.invalidateQueries({ queryKey: ["bank-accounts"] });
       closeEditAccountModal();
-    } catch {
-      toast.error("Erro ao deletar a conta!");
+    } catch (error) {
+      handleError(error);
     }
   }
 

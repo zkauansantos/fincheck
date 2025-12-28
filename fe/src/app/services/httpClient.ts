@@ -1,6 +1,8 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { localStorageKeys } from "../config/localStorageKeys";
 import { sleep } from "../utils/sleep";
+import { ApiError } from "../errors/api-error";
+import { ErrorResponse } from "../errors/error-response.interface";
 
 export const httpClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -16,8 +18,19 @@ httpClient.interceptors.request.use(async (config) => {
   return config;
 });
 
-httpClient.interceptors.response.use(async (config) => {
-  await sleep(500)
+httpClient.interceptors.response.use(
+  async (response) => {
+    await sleep(500);
+    return response;
+  },
+  async (error: AxiosError<ErrorResponse>) => {
+    await sleep(500);
 
-  return config;
-});
+    if (error.response?.data) {
+      const errorResponse = error.response.data;
+      throw new ApiError(errorResponse);
+    }
+
+    throw error;
+  }
+);

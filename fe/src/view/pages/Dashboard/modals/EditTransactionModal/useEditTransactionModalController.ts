@@ -9,6 +9,7 @@ import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { z } from "zod";
+import { useErrorHandler } from "@/app/hooks/useErrorHandler";
 
 const schema = z.object({
   value: z.union([z.string().nonempty("Informe um valor"), z.number()]).transform(currencyStringToNumber),
@@ -62,6 +63,8 @@ export default function useEditTransactionModalController(
     );
   }, [categoriesList, transaction]);
 
+  const { handleError } = useErrorHandler();
+
   const handleSubmit = hookFormHandleSubmit(async (data) => {
     const { bankAccountId, categoryId, date, name, value } = data;
     try {
@@ -83,12 +86,8 @@ export default function useEditTransactionModalController(
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
       queryClient.invalidateQueries({ queryKey: ["bank-accounts"] });
       onClose();
-    } catch {
-      toast.error(
-        transaction!.type === "EXPENSE"
-          ? "Erro ao salvar despesa!"
-          : "Erro ao salvar receita!"
-      );
+    } catch (error) {
+      handleError(error);
     }
   });
 
@@ -111,12 +110,8 @@ export default function useEditTransactionModalController(
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
       queryClient.invalidateQueries({ queryKey: ["bank-accounts"] });
       onClose();
-    } catch {
-      toast.error(
-        transaction!.type === "EXPENSE"
-          ? "Erro ao deletar a despesa!"
-          : "Erro ao deltar a receita!"
-      );
+    } catch (error) {
+      handleError(error);
     }
   }
 

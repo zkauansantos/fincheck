@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { z } from "zod";
 import useDashboard from "../../useDashboard";
+import { useErrorHandler } from "@/app/hooks/useErrorHandler";
 
 const schema = z.object({
   initialBalance: z.string().nonempty("Saldo inicial é obrigatório"),
@@ -33,6 +34,7 @@ export default function useNewAccountModalController() {
   const { isPending, mutateAsync } = useMutation({
     mutationFn: bankAccountsService.create,
   });
+  const { handleError } = useErrorHandler();
 
   const handleSubmit = hookFormHandleSubmit(async (data) => {
     const { color, initialBalance, name, type } = data;
@@ -48,8 +50,8 @@ export default function useNewAccountModalController() {
       queryClient.invalidateQueries({ queryKey: ["bank-accounts"] });
       closeNewAccountModal();
       reset();
-    } catch {
-      toast.error("Erro ao cadastrar a conta!");
+    } catch (error) {
+      handleError(error);
       reset();
     }
   });
