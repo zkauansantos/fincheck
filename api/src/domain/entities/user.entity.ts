@@ -1,8 +1,9 @@
 import { Email } from '../value-objects/email.vo';
 import { Password } from '../value-objects/password.vo';
+import { Entity } from './entity';
 
 export interface UserProps {
-  id: string;
+  id?: string;
   name: string;
   email: Email;
   password: Password;
@@ -10,21 +11,17 @@ export interface UserProps {
   updatedAt?: Date;
 }
 
-export class User {
-  private readonly id: string;
+export class User extends Entity {
   private name: string;
   private email: Email;
   private password: Password;
-  private readonly createdAt: Date;
-  private updatedAt: Date;
 
   private constructor(props: UserProps) {
-    this.id = props.id;
+    super(props.id, props.createdAt, props.updatedAt);
+
     this.name = props.name;
     this.email = props.email;
     this.password = props.password;
-    this.createdAt = props.createdAt || new Date();
-    this.updatedAt = props.updatedAt || new Date();
   }
 
   static create(props: UserProps): User {
@@ -32,30 +29,12 @@ export class User {
     return new User(props);
   }
 
-  static register(
-    id: string,
-    name: string,
-    email: string,
-    password: string,
-  ): User {
-    return this.create({
-      id,
-      name,
-      email: Email.create(email),
-      password: Password.create(password),
-    });
-  }
-
   static reconstitute(props: UserProps): User {
     return new User(props);
   }
 
   private static validateProps(props: UserProps): void {
-    if (!props.id) {
-      throw new Error('User ID is required');
-    }
-
-    if (this.isInvalidId(props.id)) {
+    if (props.id && this.isInvalidId(props.id)) {
       throw new Error('Invalid user ID format');
     }
 
@@ -63,16 +42,8 @@ export class User {
       throw new Error('User name is required');
     }
 
-    if (this.isNameEmpty(props.name)) {
+    if (this.isEmpty(props.name)) {
       throw new Error('User name cannot be empty');
-    }
-
-    if (this.isNameTooShort(props.name)) {
-      throw new Error('User name must be at least 2 characters long');
-    }
-
-    if (this.isNameTooLong(props.name)) {
-      throw new Error('User name is too long (max 100 characters)');
     }
 
     if (!props.email) {
@@ -82,28 +53,6 @@ export class User {
     if (!props.password) {
       throw new Error('User password is required');
     }
-  }
-
-  private static isInvalidId(id: string): boolean {
-    const uuidRegex =
-      /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-    return !uuidRegex.test(id);
-  }
-
-  private static isNameEmpty(name: string): boolean {
-    return name.trim().length === 0;
-  }
-
-  private static isNameTooShort(name: string): boolean {
-    return name.trim().length < 2;
-  }
-
-  private static isNameTooLong(name: string): boolean {
-    return name.length > 100;
-  }
-
-  getId(): string {
-    return this.id;
   }
 
   getName(): string {
@@ -118,58 +67,16 @@ export class User {
     return this.password;
   }
 
-  getCreatedAt(): Date {
-    return new Date(this.createdAt);
-  }
-
-  getUpdatedAt(): Date {
-    return new Date(this.updatedAt);
-  }
-
   updateName(newName: string): void {
     if (!newName) {
       throw new Error('User name is required');
     }
 
-    if (User.isNameEmpty(newName)) {
+    if (User.isEmpty(newName)) {
       throw new Error('User name cannot be empty');
-    }
-
-    if (User.isNameTooShort(newName)) {
-      throw new Error('User name must be at least 2 characters long');
-    }
-
-    if (User.isNameTooLong(newName)) {
-      throw new Error('User name is too long (max 100 characters)');
     }
 
     this.name = newName;
     this.touch();
-  }
-
-  updateEmail(newEmail: string): void {
-    const emailVO = Email.create(newEmail);
-    this.email = emailVO;
-    this.touch();
-  }
-
-  updatePassword(newPassword: string): void {
-    const passwordVO = Password.create(newPassword);
-    this.password = passwordVO;
-    this.touch();
-  }
-
-  updatePasswordHashed(hashedPassword: string): void {
-    this.password = Password.createHashed(hashedPassword);
-    this.touch();
-  }
-
-  hasEmail(emailToCompare: string): boolean {
-    const emailVO = Email.create(emailToCompare);
-    return this.email.equals(emailVO);
-  }
-
-  private touch(): void {
-    this.updatedAt = new Date();
   }
 }

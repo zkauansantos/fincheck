@@ -1,4 +1,4 @@
-import { hash, compare } from 'bcryptjs';
+import { compare, hash } from 'bcryptjs';
 
 export class Password {
   private readonly value: string;
@@ -72,9 +72,5 @@ export class Password {
 
   getIsHashed(): boolean {
     return this.isHashed;
-  }
-
-  toString(): string {
-    return '********';
   }
 }

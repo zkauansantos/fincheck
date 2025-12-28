@@ -2,7 +2,6 @@ import { Transaction as PrismaTransaction } from '@prisma/client';
 import { Transaction } from '../../../../domain/entities/transaction.entity';
 import { TransactionType } from '../../../../domain/enums/transaction-type.enum';
 import { CategoryInfo } from '../../../../domain/value-objects/category-info.vo';
-import { Money } from '../../../../domain/value-objects/money.vo';
 
 type PrismaTransactionWithCategory = PrismaTransaction & {
   category?: {
@@ -24,7 +23,7 @@ export class TransactionPrismaMapper {
       categoryId: prismaTransaction.categoryId,
       subcategoryId: prismaTransaction.subCategoryId,
       name: prismaTransaction.name,
-      value: Money.create(prismaTransaction.value),
+      value: prismaTransaction.value,
       date: prismaTransaction.date,
       type: prismaTransaction.type as TransactionType,
       categoryInfo: prismaTransaction.category
@@ -38,20 +37,6 @@ export class TransactionPrismaMapper {
       createdAt: new Date(),
       updatedAt: new Date(),
     });
-  }
-
-  static toPrisma(transaction: Transaction): PrismaTransaction {
-    return {
-      id: transaction.getId(),
-      userId: transaction.getUserId(),
-      bankAccountId: transaction.getBankAccountId(),
-      categoryId: transaction.getCategoryId(),
-      subCategoryId: transaction.getSubcategoryId(),
-      name: transaction.getName(),
-      value: transaction.getValue(),
-      date: transaction.getDate(),
-      type: transaction.getType(),
-    };
   }
 
   static toPrismaCreate(transaction: Transaction) {

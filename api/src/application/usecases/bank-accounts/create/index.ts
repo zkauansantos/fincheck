@@ -38,7 +38,7 @@ export class CreateBankAccountUseCase
       id: bankAccount.getId(),
       userId: bankAccount.getUserId(),
       name: bankAccount.getName(),
-      initialBalance: bankAccount.getInitialBalance().getValue(),
+      initialBalance: bankAccount.getInitialBalance(),
       type: bankAccount.getType(),
       color: bankAccount.getColor(),
     };

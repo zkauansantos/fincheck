@@ -4,8 +4,7 @@ import { SignInUseCase } from 'src/application/usecases/auth/sign-in';
 import { SignUpUseCase } from 'src/application/usecases/auth/sign-up';
 import { SignInDto } from 'src/http/dto/auth/sign-in.dto';
 import { SignUpDto } from 'src/http/dto/auth/sign-up.dto';
-
-import IsPublic from 'src/shared/decorators/isPublic.decorator';
+import { IsPublic } from 'src/shared/decorators/isPublic.decorator';
 
 @ApiTags('Auth')
 @Controller('auth')

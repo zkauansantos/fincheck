@@ -12,14 +12,6 @@ export class SubcategoryPrismaMapper {
     });
   }
 
-  static toPrisma(subcategory: Subcategory): PrismaSubcategory {
-    return {
-      id: subcategory.getId(),
-      categoryId: subcategory.getCategoryId(),
-      name: subcategory.getName(),
-    };
-  }
-
   static toPrismaCreate(subcategory: Subcategory) {
     return {
       id: subcategory.getId(),

@@ -15,15 +15,6 @@ export class UserPrismaMapper {
     });
   }
 
-  static toPrisma(user: User): PrismaUser {
-    return {
-      id: user.getId(),
-      name: user.getName(),
-      email: user.getEmail().getValue(),
-      password: user.getPassword().getValue(),
-    };
-  }
-
   static toPrismaCreate(user: User) {
     return {
       id: user.getId(),

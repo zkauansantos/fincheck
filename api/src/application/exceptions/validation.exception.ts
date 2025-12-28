@@ -15,6 +15,7 @@ export class ValidationException extends BaseException {
     return new ValidationException({
       message: `Formato de email inválido: ${email}`,
       code: ValidationErrorCode.INVALID_EMAIL,
+      internalMessage: `Invalid email format: ${email}`,
     });
   }
 
@@ -22,6 +23,7 @@ export class ValidationException extends BaseException {
     return new ValidationException({
       message: `Formato de UUID inválido para ${field}`,
       code: ValidationErrorCode.INVALID_UUID,
+      internalMessage: `Invalid UUID format for field "${field}".`,
     });
   }
 
@@ -29,6 +31,7 @@ export class ValidationException extends BaseException {
     return new ValidationException({
       message: `${field} é obrigatório`,
       code: ValidationErrorCode.REQUIRED_FIELD,
+      internalMessage: `The field "${field}" is required.`,
     });
   }
 
@@ -36,6 +39,7 @@ export class ValidationException extends BaseException {
     return new ValidationException({
       message: `${field} deve ter no mínimo ${minLength} caracteres`,
       code: ValidationErrorCode.MIN_LENGTH,
+      internalMessage: `The field "${field}" must have at least ${minLength} characters.`,
     });
   }
 
@@ -43,6 +47,7 @@ export class ValidationException extends BaseException {
     return new ValidationException({
       message: `${field} deve ter no máximo ${maxLength} caracteres`,
       code: ValidationErrorCode.MAX_LENGTH,
+      internalMessage: `The field "${field}" must have at most ${maxLength} characters.`,
     });
   }
 
@@ -50,6 +55,7 @@ export class ValidationException extends BaseException {
     return new ValidationException({
       message: `Formato de data inválido para ${field}`,
       code: ValidationErrorCode.INVALID_DATE,
+      internalMessage: `Invalid Date ${field}.`,
     });
   }
 
@@ -57,6 +63,7 @@ export class ValidationException extends BaseException {
     return new ValidationException({
       message: `${field} não pode ser negativo`,
       code: ValidationErrorCode.NEGATIVE_VALUE,
+      internalMessage: `The field "${field}" cannot be negative.`,
     });
   }
 
@@ -64,6 +71,7 @@ export class ValidationException extends BaseException {
     return new ValidationException({
       message: `O email '${email}' já está cadastrado`,
       code: ValidationErrorCode.EMAIL_ALREADY_EXISTS,
+      internalMessage: `The email "${email}" is already in use.`,
     });
   }
 }

@@ -15,16 +15,6 @@ export class CategoryPrismaMapper {
     });
   }
 
-  static toPrisma(category: Category): PrismaCategory {
-    return {
-      id: category.getId(),
-      userId: category.getUserId(),
-      name: category.getName(),
-      icon: category.getIcon(),
-      type: category.getType(),
-    };
-  }
-
   static toPrismaCreate(category: Category) {
     return {
       id: category.getId(),

@@ -18,18 +18,16 @@ export class GlobalExceptionFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-
     const errorResponse = this.buildErrorResponse(exception);
 
-    // Log da mensagem interna para debug (Sentry, etc)
     const internalMessage =
       exception instanceof BaseException
         ? exception.getInternalMessage()
         : errorResponse.message;
 
     this.logger.error(
-      `[${errorResponse.code}] Internal: ${internalMessage} | User: ${errorResponse.message}`,
-      exception instanceof Error ? exception.stack : '',
+      `[${errorResponse.code}] ${internalMessage}`,
+      exception instanceof Error && exception.stack,
     );
 
     response.status(errorResponse.statusCode).json(errorResponse);

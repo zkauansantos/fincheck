@@ -15,6 +15,7 @@ export class AuthenticationException extends BaseException {
     return new AuthenticationException({
       message: 'Credenciais Inválidas',
       code: AuthenticationErrorCode.INVALID_CREDENTIALS,
+      internalMessage: 'Invalid credentials',
     });
   }
 
@@ -22,6 +23,7 @@ export class AuthenticationException extends BaseException {
     return new AuthenticationException({
       message: 'Token de autenticação expirado',
       code: AuthenticationErrorCode.TOKEN_EXPIRED,
+      internalMessage: 'Authentication token expired',
     });
   }
 
@@ -29,6 +31,7 @@ export class AuthenticationException extends BaseException {
     return new AuthenticationException({
       message: 'Token de autenticação inválido',
       code: AuthenticationErrorCode.TOKEN_INVALID,
+      internalMessage: 'Authentication token invalid',
     });
   }
 
@@ -36,6 +39,7 @@ export class AuthenticationException extends BaseException {
     return new AuthenticationException({
       message: 'Acesso não autorizado',
       code: AuthenticationErrorCode.UNAUTHORIZED,
+      internalMessage: 'Unauthorized access',
     });
   }
 }

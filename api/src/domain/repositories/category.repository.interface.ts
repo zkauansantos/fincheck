@@ -8,11 +8,6 @@ export interface CategoryRepository {
 
   findAllByUserId(userId: string): Promise<Category[]>;
 
-  findAllByUserIdAndType(
-    userId: string,
-    type: TransactionType,
-  ): Promise<Category[]>;
-
   findAllAccessibleByUser(userId: string): Promise<Category[]>;
 
   findAllAccessibleByUserAndType(

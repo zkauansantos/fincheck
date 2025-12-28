@@ -1,17 +1,21 @@
 import { BankAccount } from '../entities/bank-account.entity';
+import { BankAccountType } from '../enums/bank-account-type.enum';
+
+export type BankAccountWithBalance = {
+  id: string;
+  userId: string;
+  name: string;
+  initialBalance: number;
+  type: BankAccountType;
+  color: string;
+  currentBalance: number;
+};
 
 export interface BankAccountRepository {
   findById(id: string): Promise<BankAccount | null>;
-
-  findByIdAndUserId(id: string, userId: string): Promise<BankAccount | null>;
-
-  findAllByUserId(userId: string): Promise<BankAccount[]>;
-
+  findAll(userId: string): Promise<BankAccount[]>;
+  findAllWithBalance(userId: string): Promise<BankAccountWithBalance[]>;
   save(bankAccount: BankAccount): Promise<BankAccount>;
-
   update(bankAccount: BankAccount): Promise<BankAccount>;
-
   delete(id: string): Promise<void>;
-
-  countByUserId(userId: string): Promise<number>;
 }

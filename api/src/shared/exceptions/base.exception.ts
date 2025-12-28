@@ -5,7 +5,7 @@ export interface BaseExceptionProps {
   message: string;
   code: ErrorCode;
   statusCode: number;
-  internalMessage?: string;
+  internalMessage: string;
 }
 
 export abstract class BaseException extends Error {

@@ -20,6 +20,9 @@ export class ResourceNotFoundException extends BaseException {
     return new ResourceNotFoundException({
       message,
       code: ResourceNotFoundErrorCode.RESOURCE_NOT_FOUND,
+      internalMessage: identifier
+        ? `${resourceName} with identifier '${identifier}' not found.`
+        : `${resourceName} not found.`,
     });
   }
 
