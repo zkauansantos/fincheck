@@ -17,8 +17,6 @@ export default function CategoryCard({
   onDelete,
   onManageSubcategories,
 }: CategoryCardProps) {
-  const isDefaultCategory = category.userId === null;
-
   return (
     <Card className='p-4 hover:shadow-md transition-shadow bg-white dark:bg-gray-100'>
       <div className='flex items-center justify-between'>
@@ -34,11 +32,6 @@ export default function CategoryCard({
             <h3 className='font-medium text-gray-800 dark:text-gray-700'>
               {category.name}
             </h3>
-            {isDefaultCategory && (
-              <span className='text-xs text-gray-500 dark:text-gray-400'>
-                Categoria padrão
-              </span>
-            )}
           </div>
         </div>
 

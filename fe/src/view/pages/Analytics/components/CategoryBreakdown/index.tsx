@@ -1,134 +1,91 @@
 import { MONTHS } from '@/app/config/constants';
 import { TransactionType } from '@/app/entities/Transaction';
 import useCategoryAnalytics from '@/app/services/categories/hooks/useCategoryAnalytics';
+import { CategoryAnalytics } from '@/app/services/transactions/getCategoryAnalytics';
+import cn from '@/app/utils/cn';
 import formatCurrency from '@/app/utils/formatCurrency';
 import { DataTable } from '@/view/components/DataTable';
 import { CategoryIcon } from '@/view/components/icons/categories/CategoryIcon';
 import { ColumnDef } from '@tanstack/react-table';
-import { useMemo } from 'react';
+
+const columns: ColumnDef<CategoryAnalytics>[] = [
+  {
+    accessorKey: 'categoryName',
+    header: 'Categoria',
+    cell: ({ row }) => (
+      <div className='flex items-center gap-2'>
+        <span>
+          <CategoryIcon
+            type={
+              row.original.type === TransactionType.INCOME
+                ? 'income'
+                : 'expense'
+            }
+            category={row.original.categoryIcon}
+          />
+        </span>
+        <span className='font-medium text-gray-900'>
+          {row.original.categoryName}
+        </span>
+      </div>
+    ),
+  },
+  ...MONTHS.map((month, index) => ({
+    accessorKey: `month_${index}`,
+    header: month,
+    cell: ({ row }: { row: { original: CategoryAnalytics } }) => {
+      const value = row.original.months[index];
+
+      const color =
+        value === 0
+          ? 'text-gray-700'
+          : row.original.type === TransactionType.INCOME
+          ? 'text-teal-800'
+          : 'text-red-800';
+
+      return <span className={color}>{formatCurrency(value ?? 0)}</span>;
+    },
+  })),
+  {
+    header: 'Total',
+    cell: ({ row }) => {
+      const bgcolor =
+        row.original.type === TransactionType.INCOME
+          ? 'text-teal-800'
+          : 'text-red-800';
+
+      return (
+        <span className={cn('font-semibold', bgcolor)}>
+          {formatCurrency(
+            row.original.type === TransactionType.EXPENSE
+              ? row.original.totalExpense
+              : row.original.totalIncome
+          )}
+        </span>
+      );
+    },
+  },
+  {
+    header: 'Média',
+    cell: ({ row }) => (
+      <span className='font-medium text-gray-700'>
+        {formatCurrency(
+          row.original.type === TransactionType.EXPENSE
+            ? row.original.averageExpense
+            : row.original.averageIncome
+        )}
+      </span>
+    ),
+  },
+];
 
 interface CategoryBreakdownProps {
   year: number;
 }
 
-interface CategoryAnalyticsRow {
-  categoryId: string;
-  categoryName: string;
-  categoryIcon: string;
-  months: number[];
-  totalExpense: number;
-  totalIncome: number;
-  averageExpense: number;
-  averageIncome: number;
-  type: TransactionType;
-}
-
 export function CategoryBreakdown({ year }: CategoryBreakdownProps) {
   const { incomingCategories, expenseCategories, isLoading } =
     useCategoryAnalytics({ year });
-
-  const expenseColumns = useMemo<ColumnDef<CategoryAnalyticsRow>[]>(
-    () => [
-      {
-        accessorKey: 'categoryName',
-        header: 'Categoria',
-        cell: ({ row }) => (
-          <div className='flex items-center gap-2'>
-            <span>
-              <CategoryIcon
-                type='expense'
-                category={row.original.categoryIcon}
-              />
-            </span>
-            <span className='font-medium text-gray-900'>
-              {row.original.categoryName}
-            </span>
-          </div>
-        ),
-      },
-      ...MONTHS.map((month, index) => ({
-        accessorKey: `month_${index}`,
-        header: month,
-        cell: ({ row }: { row: { original: CategoryAnalyticsRow } }) => {
-          const value = row.original.months[index];
-
-          return (
-            <span className='text-gray-700'>{formatCurrency(value ?? 0)}</span>
-          );
-        },
-      })),
-      {
-        accessorKey: 'totalExpense',
-        header: 'Total',
-        cell: ({ row }) => (
-          <span className='font-semibold text-red-800'>
-            {formatCurrency(row.original.totalExpense)}
-          </span>
-        ),
-      },
-      {
-        accessorKey: 'averageExpense',
-        header: 'Média',
-        cell: ({ row }) => (
-          <span className='font-medium text-gray-700'>
-            {formatCurrency(row.original.averageExpense)}
-          </span>
-        ),
-      },
-    ],
-    []
-  );
-
-  const incomeColumns = useMemo<ColumnDef<CategoryAnalyticsRow>[]>(
-    () => [
-      {
-        accessorKey: 'categoryName',
-        header: 'Categoria',
-        cell: ({ row }) => (
-          <div className='flex items-center gap-2'>
-            <span>
-              <CategoryIcon
-                type='income'
-                category={row.original.categoryIcon}
-              />
-            </span>
-            <span className='font-medium text-gray-900'>
-              {row.original.categoryName}
-            </span>
-          </div>
-        ),
-      },
-      ...MONTHS.map((month, index) => ({
-        accessorKey: `month_${index}`,
-        header: month,
-        cell: ({ row }: { row: { original: CategoryAnalyticsRow } }) => {
-          const value = row.original.months[index];
-          return (
-            <span className='text-gray-700'>{formatCurrency(value ?? 0)}</span>
-          );
-        },
-      })),
-      {
-        accessorKey: 'totalIncome',
-        header: 'Total',
-        cell: ({ row }) => (
-          <span className='font-semibold text-teal-800'>
-            {formatCurrency(row.original.totalIncome)}
-          </span>
-        ),
-      },
-      {
-        accessorKey: 'averageIncome',
-        header: 'Média',
-        cell: ({ row }) => (
-          <span className='font-medium text-gray-700'>
-            {formatCurrency(row.original.averageIncome)}
-          </span>
-        ),
-      },
-    ],
-    []
-  );
 
   if (isLoading) {
     return (
@@ -148,9 +105,10 @@ export function CategoryBreakdown({ year }: CategoryBreakdownProps) {
         <h3 className='text-lg font-semibold text-gray-900 mb-4 tracking-[-0.5px]'>
           Resumo Renda
         </h3>
+
         <DataTable.Root
           data={incomingCategories}
-          columns={incomeColumns}
+          columns={columns}
           isLoading={isLoading}
         >
           <DataTable.Content
@@ -169,9 +127,10 @@ export function CategoryBreakdown({ year }: CategoryBreakdownProps) {
         <h3 className='text-lg font-semibold text-gray-900 mb-4 tracking-[-0.5px]'>
           Resumo Despesas
         </h3>
+
         <DataTable.Root
           data={expenseCategories}
-          columns={expenseColumns}
+          columns={columns}
           isLoading={isLoading}
         >
           <DataTable.Content

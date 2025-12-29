@@ -1,11 +1,13 @@
-import { useState, useEffect } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "react-hot-toast";
 import { Category } from "@/app/entities/Category";
 import { SubCategory } from "@/app/entities/SubCategory";
-import useSubcategories from "@/app/services/categories/hooks/useSubcategories";
-import { subcategoriesService } from "@/app/services/subcategories";
 import { useErrorHandler } from "@/app/hooks/useErrorHandler";
+import useSubcategories from "@/app/services/categories/hooks/useSubcategories";
+import { useCreateSubcategoryMutation } from "@/app/services/subcategories/hooks/useCreateSubcategoryMutation";
+import { useDeleteSubcategoryMutation } from "@/app/services/subcategories/hooks/useDeleteSubcategoryMutation";
+import { useUpdateSubcategoryMutation } from "@/app/services/subcategories/hooks/useUpdateSubcategoryMutation";
+import { useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 
 interface UseSubcategoriesModalControllerParams {
   category: Category;
@@ -30,17 +32,10 @@ export default function useSubcategoriesModalController({
   const queryClient = useQueryClient();
   const { handleError } = useErrorHandler();
 
-  const { isPending: isCreating, mutateAsync: createSubcategory } = useMutation({
-    mutationFn: subcategoriesService.create,
-  });
+  const { createSubcategory, isCreating } = useCreateSubcategoryMutation()
+  const { updateSubcategory, isUpdating } = useUpdateSubcategoryMutation();
+  const { deleteSubcategory, isDeleting } = useDeleteSubcategoryMutation()
 
-  const { mutateAsync: updateSubcategory } = useMutation({
-    mutationFn: subcategoriesService.update,
-  });
-
-  const { isPending: isDeleting, mutateAsync: deleteSubcategory } = useMutation({
-    mutationFn: subcategoriesService.delete,
-  });
 
   // Reset form when modal closes
   useEffect(() => {
@@ -130,6 +125,7 @@ export default function useSubcategoriesModalController({
     subcategories: subCategories,
     isLoading: isFetching,
     isCreating,
+    isUpdating,
     isEditing,
     editingSubcategory,
     newSubcategoryName,

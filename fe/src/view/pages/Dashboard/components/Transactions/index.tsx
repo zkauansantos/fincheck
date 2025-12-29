@@ -10,8 +10,8 @@ import SliderOption from './SliderOption';
 import useTransactionsController from './useTransactionsController';
 
 import { TransactionType } from '@/app/entities/Transaction';
+import { EmptyState } from '@/view/components/EmptyState';
 import formatDate from '../../../../../app/utils/formatDate';
-import emptyStateImage from '../../../../../assets/empty-state.svg';
 import EditTransactionModal from '../../modals/EditTransactionModal';
 import FiltersModal from './FiltersModal';
 import TransactionTypeDropdown from './TransactionTypeDropdown';
@@ -60,7 +60,10 @@ export default function Transactions() {
                 selectedType={filters.type}
               />
 
-              <button onClick={handleOpenFiltersModal} className='text-gray-900'>
+              <button
+                onClick={handleOpenFiltersModal}
+                className='text-gray-900'
+              >
                 <FilterIcon />
               </button>
             </div>
@@ -102,14 +105,7 @@ export default function Transactions() {
               </div>
             )}
 
-            {!hasTransactions && !isLoading && (
-              <div className='flex flex-col h-full items-center justify-center gap-4'>
-                <img src={emptyStateImage} alt='empty-state' />
-                <p className='text-gray-700'>
-                  Não encontramos nenhuma transação
-                </p>
-              </div>
-            )}
+            {!hasTransactions && !isLoading && <EmptyState />}
 
             {hasTransactions && !isLoading && (
               <>

@@ -1,8 +1,9 @@
 import { useErrorHandler } from "@/app/hooks/useErrorHandler";
-import { bankAccountsService } from "@/app/services/bankAccounts";
+import { useDeleteBankAccountMutation } from "@/app/services/bankAccounts/hooks/useDeleteBankAccountMutation";
+import { useUpdateBankAccountMutation } from "@/app/services/bankAccounts/hooks/useUpdateBankAccountMutation";
 import currencyStringToNumber from "@/app/utils/currencyStringToNumber";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
@@ -44,14 +45,9 @@ export default function useEditAccountModalController() {
 
   const queryClient = useQueryClient();
 
-  const { isPending, mutateAsync: updateAccount } = useMutation({
-    mutationFn: bankAccountsService.update,
-  });
+  const { isUpdating, updateBankAccount } = useUpdateBankAccountMutation()
+  const { isDeleting, deleteBankAccount } = useDeleteBankAccountMutation()
 
-  const { isPending: isPendingDelete, mutateAsync: removeAccount } =
-    useMutation({
-      mutationFn: bankAccountsService.delete,
-    });
 
   const { handleError } = useErrorHandler();
 
@@ -59,7 +55,7 @@ export default function useEditAccountModalController() {
     const { color, initialBalance, name, type } = data;
 
     try {
-      await updateAccount({
+      await updateBankAccount({
         color,
         name,
         type,
@@ -85,7 +81,7 @@ export default function useEditAccountModalController() {
 
   async function handleDeleteAccount() {
     try {
-      await removeAccount(accountBeingEdited!.id);
+      await deleteBankAccount(accountBeingEdited!.id);
       toast.success("A Conta foi deletada com sucesso!");
       queryClient.invalidateQueries({ queryKey: ["bank-accounts"] });
       closeEditAccountModal();
@@ -97,7 +93,7 @@ export default function useEditAccountModalController() {
   return {
     register,
     handleSubmit,
-    isLoading: isPending,
+    isLoading: isUpdating,
     errors,
     handleOpenDeleteModal,
     handleCloseDeleteModal,
@@ -106,6 +102,6 @@ export default function useEditAccountModalController() {
     handleDeleteAccount,
     closeEditAccountModal,
     isDeleteModalOpen,
-    isLoadingDelete: isPendingDelete,
+    isLoadingDelete: isDeleting,
   };
 }

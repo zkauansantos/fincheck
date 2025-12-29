@@ -1,13 +1,13 @@
 
+import { TransactionType } from "@/app/entities/Transaction";
 import { useErrorHandler } from "@/app/hooks/useErrorHandler";
 import useBankAccounts from "@/app/services/bankAccounts/hooks/useBankAccounts";
 import useCategories from "@/app/services/categories/hooks/useCategories";
 import useSubcategories from "@/app/services/categories/hooks/useSubcategories";
-import { transactionsService } from "@/app/services/transactions";
+import { useCreateTransactionMutation } from "@/app/services/transactions/hooks/useCreateTransactionMutation";
 import currencyStringToNumber from "@/app/utils/currencyStringToNumber";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useMemo } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { z } from "zod";
@@ -44,28 +44,13 @@ export default function useNewTransactionModalController() {
 
   const categoryId = watch('categoryId');
 
-  const { accounts } = useBankAccounts();
-
-  const { categories: categoriesList } = useCategories({
-    type: newTransactionType
-  });
-
-  const { subCategories } = useSubcategories({
-    categoryId,
-  });
-
   const queryClient = useQueryClient();
+  const { accounts } = useBankAccounts();
+  const { categories } = useCategories({ type: newTransactionType });
+  const { subCategories } = useSubcategories({ categoryId });
 
-  const { isPending, mutateAsync: createTransaction } = useMutation({
-    mutationFn: transactionsService.create
-  });
 
-  const categories = useMemo(() => {
-    return categoriesList.filter(
-      (category) => category.type === newTransactionType
-    );
-  }, [categoriesList, newTransactionType]);
-
+  const { createTransaction, isPending } = useCreateTransactionMutation();
   const { handleError } = useErrorHandler();
 
   const handleSubmit = hookFormHandleSubmit(async (data) => {
@@ -83,7 +68,7 @@ export default function useNewTransactionModalController() {
       });
 
       toast.success(
-        newTransactionType === "EXPENSE"
+        newTransactionType === TransactionType.EXPENSE
           ? "Despesa cadastrada com sucesso!"
           : "Receita cadastrada com sucesso!"
       );

@@ -1,14 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 
-import { authService } from "@/app/services/authService";
-import { SignupParams } from "@/app/services/authService/signup";
 
 import { FormData, registerSchema } from "./schemas/registerSchema";
 
 import useAuth from "@/app/hooks/useAuth";
 import { useErrorHandler } from "@/app/hooks/useErrorHandler";
+import { useSignUpMutation } from "@/app/services/authService/hooks/useSignUpMutation";
 
 export default function useRegisterController() {
   const {
@@ -19,11 +17,7 @@ export default function useRegisterController() {
     resolver: zodResolver(registerSchema),
   });
 
-  const { isPending, mutateAsync } = useMutation({
-    mutationFn: ({ name, email, password }: SignupParams) => {
-      return authService.signup({ name, email, password });
-    },
-  });
+  const { isPending, signUp } = useSignUpMutation();
 
   const { signin } = useAuth();
   const { handleError } = useErrorHandler();
@@ -32,7 +26,7 @@ export default function useRegisterController() {
     try {
       const { name, email, password } = data;
 
-      const { accessToken } = await mutateAsync({ name, email, password });
+      const { accessToken } = await signUp({ name, email, password });
 
       signin(accessToken);
     } catch (error) {

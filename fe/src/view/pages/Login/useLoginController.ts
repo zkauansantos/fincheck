@@ -1,14 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 
-import { authService } from "@/app/services/authService";
-import { SigninParams } from "@/app/services/authService/signin";
 
 import { FormData, loginSchema } from "./schemas/loginSchema";
 
 import useAuth from "@/app/hooks/useAuth";
 import { useErrorHandler } from "@/app/hooks/useErrorHandler";
+import { useSignInMutation } from "@/app/services/authService/hooks/useSignInMutation";
 
 export default function useLoginController() {
   const {
@@ -23,12 +21,7 @@ export default function useLoginController() {
     }
   });
 
-  const { isPending, mutateAsync } = useMutation({
-    mutationFn: ({ email, password }: SigninParams) => {
-      return authService.signin({ email, password });
-    },
-  });
-
+  const { signIn, isPending } = useSignInMutation();
   const { signin } = useAuth();
   const { handleError } = useErrorHandler();
 
@@ -36,7 +29,7 @@ export default function useLoginController() {
     try {
       const { email, password } = data;
 
-      const { accessToken } = await mutateAsync({ email, password });
+      const { accessToken } = await signIn({ email, password });
 
       signin(accessToken);
     } catch (error) {

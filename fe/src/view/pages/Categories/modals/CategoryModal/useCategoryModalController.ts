@@ -1,12 +1,14 @@
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "react-hot-toast";
 import { Category } from "@/app/entities/Category";
 import { TransactionType } from "@/app/entities/Transaction";
-import { categoriesService } from "@/app/services/categories";
 import { useErrorHandler } from "@/app/hooks/useErrorHandler";
+import { useCreateCategoryMutation } from "@/app/services/categories/hooks/useCreateCategoryMutation";
+
+import { useUpdateCategoryMutation } from "@/app/services/categories/hooks/useUpdateCategoryMutation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
+import { z } from "zod";
 
 const schema = z.object({
   name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
@@ -39,15 +41,11 @@ export default function useCategoryModalController({
   });
 
   const queryClient = useQueryClient();
+
   const { handleError } = useErrorHandler();
 
-  const { isPending: isCreating, mutateAsync: createCategory } = useMutation({
-    mutationFn: categoriesService.create,
-  });
-
-  const { isPending: isUpdating, mutateAsync: updateCategory } = useMutation({
-    mutationFn: categoriesService.update,
-  });
+  const { createCategory, isCreating } = useCreateCategoryMutation()
+  const { updateCategory, isUpdating } = useUpdateCategoryMutation();
 
   const handleSubmit = hookFormHandleSubmit(async (data) => {
     try {

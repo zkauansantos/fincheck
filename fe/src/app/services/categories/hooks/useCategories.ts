@@ -1,12 +1,8 @@
-import { Category } from "@/app/entities/Category";
 import { useQuery } from "@tanstack/react-query";
 import { categoriesService } from "..";
+import { GetAllCategoriesParams } from "../getAll";
 
-interface IUseCategoriesParams {
-  type?: Category['type'] | null
-}
-
-export default function useCategories(filters?: IUseCategoriesParams) {
+export default function useCategories(filters?: GetAllCategoriesParams) {
   const { data, isFetching } = useQuery({
     queryKey: ["categories", filters],
     queryFn: () => categoriesService.getAll(filters),

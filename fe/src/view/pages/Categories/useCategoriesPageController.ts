@@ -1,9 +1,9 @@
 import { Category } from "@/app/entities/Category";
 import { TransactionType } from "@/app/entities/Transaction";
 import { useErrorHandler } from "@/app/hooks/useErrorHandler";
-import { categoriesService } from "@/app/services/categories";
 import useCategories from "@/app/services/categories/hooks/useCategories";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useDeleteCategoryMutation } from "@/app/services/categories/hooks/useDeleteCategoryMutation";
+import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
 
@@ -19,13 +19,11 @@ export default function useCategoriesPageController() {
   const { categories: categories, isFetching } = useCategories({
     type: selectedType,
   });
+
   const queryClient = useQueryClient();
   const { handleError } = useErrorHandler();
 
-
-  const { isPending: isDeleting, mutateAsync: deleteCategory } = useMutation({
-    mutationFn: categoriesService.delete,
-  });
+  const { deleteCategory, isDeleting } = useDeleteCategoryMutation()
 
   function handleOpenCreateCategory() {
     setIsCreatingCategory(true);
@@ -74,6 +72,8 @@ export default function useCategoriesPageController() {
     }
   }
 
+  const hasCategories = categories.length > 0;
+
   return {
     categories,
     isLoading: isFetching,
@@ -91,6 +91,7 @@ export default function useCategoriesPageController() {
     handleDeleteCategory,
     isDeleting,
     isDeleteModalOpen,
+    hasCategories,
     handleOpenDeleteModal,
     handleCloseDeleteModal,
   };

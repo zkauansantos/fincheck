@@ -62,5 +62,5 @@ export const errorMessages: ErrorMessages = {
 };
 
 export function getErrorMessage(code: ErrorCode): string {
-  return errorMessages[code] || 'Ocorreu um erro inesperado. Por favor, tente novamente.';
+  return errorMessages[code] || SystemErrorCode.INTERNAL_SERVER_ERROR;
 }

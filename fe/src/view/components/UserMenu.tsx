@@ -2,8 +2,8 @@ import { ExitIcon } from '@radix-ui/react-icons';
 
 import { DropdownMenu } from './DropdownMenu';
 
-import { useTheme } from '@/app/contexts/ThemeContext';
 import useAuth from '@/app/hooks/useAuth';
+import { useTheme } from '@/app/hooks/useTheme';
 import { Moon, Sun } from 'lucide-react';
 
 export default function UserMenu() {

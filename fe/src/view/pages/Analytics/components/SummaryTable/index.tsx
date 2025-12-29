@@ -18,6 +18,23 @@ interface SummaryRow {
   type: 'income' | 'expense' | 'net' | 'balance';
 }
 
+function getColorsRow(type: SummaryRow['type'], total: number) {
+  switch (type) {
+    case 'income':
+      return 'text-teal-800';
+    case 'expense':
+      return 'text-red-800';
+    case 'net':
+      return total > 0
+        ? 'text-teal-800'
+        : total === 0
+        ? 'text-gray-700'
+        : 'text-red-800';
+    default:
+      return 'text-gray-900';
+  }
+}
+
 export function SummaryTable({ summary, isLoading }: SummaryTableProps) {
   const data: SummaryRow[] = [
     {
@@ -48,7 +65,7 @@ export function SummaryTable({ summary, isLoading }: SummaryTableProps) {
       average: 0,
       type: 'balance',
     },
-  ];
+  ] as const;
 
   const columns = useMemo<ColumnDef<SummaryRow>[]>(
     () => [
@@ -56,7 +73,9 @@ export function SummaryTable({ summary, isLoading }: SummaryTableProps) {
         accessorKey: 'label',
         header: '',
         cell: ({ row }) => (
-          <span className='font-semibold text-gray-900'>{row.original.label}</span>
+          <span className='font-semibold text-gray-900'>
+            {row.original.label}
+          </span>
         ),
       },
       ...MONTHS.map((month, index) => ({
@@ -64,23 +83,9 @@ export function SummaryTable({ summary, isLoading }: SummaryTableProps) {
         header: month,
         cell: ({ row }: { row: { original: SummaryRow } }) => {
           const value = row.original.months[index];
-          let colorClass = 'text-gray-700';
+          const colorClass = getColorsRow(row.original.type, value);
 
-          if (row.original.type === 'income') {
-            colorClass = 'text-teal-800';
-          } else if (row.original.type === 'expense') {
-            colorClass = 'text-red-800';
-          } else if (row.original.type === 'net') {
-            colorClass = value >= 0 ? 'text-teal-800' : 'text-red-800';
-          } else if (row.original.type === 'balance') {
-            colorClass = value >= 0 ? 'text-teal-800' : 'text-red-800';
-          }
-
-          return (
-            <span className={colorClass}>
-              {formatCurrency(value)}
-            </span>
-          );
+          return <span className={colorClass}>{formatCurrency(value)}</span>;
         },
       })),
       {
@@ -91,14 +96,10 @@ export function SummaryTable({ summary, isLoading }: SummaryTableProps) {
             return <span className='text-gray-400'>-</span>;
           }
 
-          let colorClass = 'text-gray-900';
-          if (row.original.type === 'income') {
-            colorClass = 'text-teal-800';
-          } else if (row.original.type === 'expense') {
-            colorClass = 'text-red-800';
-          } else if (row.original.type === 'net') {
-            colorClass = row.original.total >= 0 ? 'text-teal-800' : 'text-red-800';
-          }
+          const colorClass = getColorsRow(
+            row.original.type,
+            row.original.total
+          );
 
           return (
             <span className={`font-semibold ${colorClass}`}>
@@ -115,14 +116,10 @@ export function SummaryTable({ summary, isLoading }: SummaryTableProps) {
             return <span className='text-gray-400'>-</span>;
           }
 
-          let colorClass = 'text-gray-700';
-          if (row.original.type === 'income') {
-            colorClass = 'text-teal-800';
-          } else if (row.original.type === 'expense') {
-            colorClass = 'text-red-800';
-          } else if (row.original.type === 'net') {
-            colorClass = row.original.average >= 0 ? 'text-teal-800' : 'text-red-800';
-          }
+          const colorClass = getColorsRow(
+            row.original.type,
+            row.original.average
+          );
 
           return (
             <span className={`font-medium ${colorClass}`}>

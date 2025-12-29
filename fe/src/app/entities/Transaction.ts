@@ -1,3 +1,5 @@
+import { Category } from "./Category";
+
 export interface Transaction {
   id: string;
   bankAccountId: string;
@@ -6,11 +8,7 @@ export interface Transaction {
   value: number;
   date: string;
   type: TransactionType;
-  category?: {
-    id: string;
-    name: string;
-    icon: string;
-  };
+  category?: Category;
 }
 
 export enum TransactionType {

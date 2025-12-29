@@ -6,7 +6,7 @@ interface DashboardContextValue {
   areValuesVisible: boolean;
   isNewAccountModalOpen: boolean;
   isNewTransactionModalOpen: boolean;
-  newTransactionType: TransactionType | null;
+  newTransactionType: TransactionType | undefined;
   toggleValuesVisibility: () => void;
   openNewAccountModal: () => void;
   closeNewAccountModal: () => void;
@@ -36,7 +36,7 @@ export default function DashboardProvider({
     useState<null | BankAccount>(null);
 
   const [newTransactionType, setNewTransactionType] =
-    useState<TransactionType | null>(null);
+    useState<TransactionType>();
 
   const toggleValuesVisibility = useCallback(() => {
     setAreValuesVisible((prev) => !prev);
@@ -66,7 +66,7 @@ export default function DashboardProvider({
   }, []);
 
   const closeNewTransactionModal = useCallback(() => {
-    setNewTransactionType(null);
+    setNewTransactionType(undefined);
     setIsNewTransactionModalOpen(false);
   }, []);
 

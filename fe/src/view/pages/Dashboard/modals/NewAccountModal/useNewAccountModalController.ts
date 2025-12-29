@@ -1,8 +1,8 @@
 import { useErrorHandler } from "@/app/hooks/useErrorHandler";
-import { bankAccountsService } from "@/app/services/bankAccounts";
+import { useCreateBankAccountMutation } from "@/app/services/bankAccounts/hooks/useCreateBankAccountMutation";
 import currencyStringToNumber from "@/app/utils/currencyStringToNumber";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { z } from "zod";
@@ -23,7 +23,7 @@ export default function useNewAccountModalController() {
   const {
     register,
     control,
-    handleSubmit: hookFormHandleSubmit,
+    handleSubmit,
     reset,
     formState: { errors },
   } = useForm<FormData>({
@@ -31,16 +31,15 @@ export default function useNewAccountModalController() {
   });
 
   const queryClient = useQueryClient();
-  const { isPending, mutateAsync } = useMutation({
-    mutationFn: bankAccountsService.create,
-  });
+  const { isPending, createBankAccount } = useCreateBankAccountMutation();
+
   const { handleError } = useErrorHandler();
 
-  const handleSubmit = hookFormHandleSubmit(async (data) => {
+  const onSubmit = handleSubmit(async (data) => {
     const { color, initialBalance, name, type } = data;
 
     try {
-      await mutateAsync({
+      await createBankAccount({
         color,
         name,
         type,
@@ -58,7 +57,7 @@ export default function useNewAccountModalController() {
 
   return {
     register,
-    handleSubmit,
+    handleSubmit: onSubmit,
     isLoading: isPending,
     errors,
     control,
