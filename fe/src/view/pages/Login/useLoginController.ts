@@ -6,7 +6,7 @@ import { FormData, loginSchema } from "./schemas/loginSchema";
 
 import useAuth from "@/app/hooks/useAuth";
 import { useErrorHandler } from "@/app/hooks/useErrorHandler";
-import { useSignInMutation } from "@/app/services/authService/hooks/useSignInMutation";
+import { useSignInMutation } from "@/app/services/auth/hooks/useSignInMutation";
 
 export default function useLoginController() {
   const {

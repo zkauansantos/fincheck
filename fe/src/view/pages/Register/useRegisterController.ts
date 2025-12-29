@@ -1,12 +1,11 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-
-
-import { FormData, registerSchema } from "./schemas/registerSchema";
-
 import useAuth from "@/app/hooks/useAuth";
 import { useErrorHandler } from "@/app/hooks/useErrorHandler";
-import { useSignUpMutation } from "@/app/services/authService/hooks/useSignUpMutation";
+import { useSignUpMutation } from "@/app/services/auth/hooks/useSignUpMutation";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { useForm } from "react-hook-form";
+
+import { FormData, registerSchema } from "./schemas/registerSchema";
 
 export default function useRegisterController() {
   const {

@@ -7,7 +7,7 @@ import { toast } from 'react-hot-toast';
 import { localStorageKeys } from '../config/localStorageKeys';
 import { User } from '../entities/User';
 import { queryClient } from '../lib/queryClient';
-import { usersService } from '../services/usersService';
+import { usersService } from '../services/users';
 
 interface AuthContextValue {
   isAuthenticated: boolean;
