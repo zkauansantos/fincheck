@@ -16,7 +16,7 @@ export default function NewTransactionModal() {
     errors,
     isLoading,
     categories,
-    subCategories,
+    subcategories,
     handleSubmit,
     accounts,
     register,
@@ -87,9 +87,9 @@ export default function NewTransactionModal() {
               <Select
                 error={errors.categoryId?.message}
                 onChange={onChange}
-                disabled={!subCategories.length}
+                disabled={!subcategories.length}
                 value={value}
-                options={subCategories.map((category) => ({
+                options={subcategories.map((category) => ({
                   value: category.id,
                   label: category.name,
                 }))}

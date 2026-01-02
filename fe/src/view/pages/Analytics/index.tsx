@@ -16,7 +16,7 @@ export default function Analytics() {
       <Header />
 
       <div className='flex items-center justify-between px-4'>
-        <h3 className='text-lg font-semibold text-gray-900 mb-4 tracking-[-0.5px]'>
+        <h3 className='text-2xl font-bold text-gray-900 dark:text-gray-700'>
           Evolução
         </h3>
 

@@ -10,7 +10,7 @@ export default function useSubcategories({ categoryId }: GetAllSubCategoriesPara
   });
 
   return {
-    subCategories: data ?? [],
+    subcategories: data ?? [],
     isFetching,
   };
 }

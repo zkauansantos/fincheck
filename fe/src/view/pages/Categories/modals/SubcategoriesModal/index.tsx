@@ -1,10 +1,12 @@
-import { Plus, Edit, Trash2 } from "lucide-react";
-import Button from "@/view/components/Button";
-import Input from "@/view/components/Input";
-import Modal from "@/view/components/Modal";
-import { Category } from "@/app/entities/Category";
-import useSubcategoriesModalController from "./useSubcategoriesModalController";
-import ConfirmDeleteModal from "@/view/components/ConfirmDeleteModal";
+import { Category } from '@/app/entities/Category';
+import Button from '@/view/components/Button';
+import ConfirmDeleteModal from '@/view/components/ConfirmDeleteModal';
+import { EmptyState } from '@/view/components/EmptyState';
+import Input from '@/view/components/Input';
+import Modal from '@/view/components/Modal';
+import Spinner from '@/view/components/Spinner';
+import { CheckCircle, Edit, Plus, Trash2, XCircle } from 'lucide-react';
+import useSubcategoriesModalController from './useSubcategoriesModalController';
 
 interface SubcategoriesModalProps {
   isOpen: boolean;
@@ -19,6 +21,7 @@ export default function SubcategoriesModal({
 }: SubcategoriesModalProps) {
   const {
     subcategories,
+    hasSubcategories,
     isLoading,
     isCreating,
     isEditing,
@@ -40,109 +43,100 @@ export default function SubcategoriesModal({
 
   return (
     <>
-      <Modal
-        title={`Subcategorias - ${category.name}`}
-        open={isOpen}
-        onClose={onClose}
-      >
-        <div className="space-y-4">
-          {/* Add new subcategory */}
-          <div className="flex gap-2">
+      <Modal title='Subcategorias' open={isOpen} onClose={onClose}>
+        <div className='space-y-8'>
+          <div className='flex w-full items-center gap-2'>
             <Input
-              name="newSubcategory"
-              type="text"
-              placeholder="Nova subcategoria"
+              name='newSubcategory'
+              type='text'
+              placeholder='Nova subcategoria'
               value={newSubcategoryName}
               onChange={(e) => setNewSubcategoryName(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === "Enter") {
+                if (e.key === 'Enter') {
                   e.preventDefault();
                   handleCreateSubcategory();
                 }
               }}
             />
+
             <Button
               onClick={handleCreateSubcategory}
-              disabled={!newSubcategoryName.trim() || isCreating}
+              disabled={!newSubcategoryName.trim()}
               isLoading={isCreating}
             >
-              <Plus className="w-4 h-4" />
+              <Plus className='w-4 h-4' />
             </Button>
           </div>
 
-          {/* Subcategories list */}
-          <div className="space-y-2 max-h-96 overflow-y-auto">
-            {isLoading ? (
-              <div className="flex items-center justify-center py-8">
-                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-teal-600" />
-              </div>
-            ) : subcategories.length === 0 ? (
-              <p className="text-center text-gray-500 dark:text-gray-400 py-8">
-                Nenhuma subcategoria cadastrada
-              </p>
-            ) : (
+          <div className='space-y-2 max-h-96  overflow-y-auto'>
+            {!hasSubcategories && !isLoading && (
+              <EmptyState message='Nenhuma subcategoria cadastrada.' />
+            )}
+
+            {isLoading && <Spinner classname='mx-auto' />}
+
+            {hasSubcategories &&
+              !isLoading &&
               subcategories.map((subcategory) => (
                 <div
                   key={subcategory.id}
-                  className="flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg"
+                  className='flex items-center gap-2 p-3 bg-gray-50 dark:bg-gray-100 rounded-lg'
                 >
                   {isEditing && editingSubcategory?.id === subcategory.id ? (
                     <>
                       <Input
-                        name="editSubcategory"
-                        type="text"
-                        placeholder="Nome da subcategoria"
+                        name='editSubcategory'
+                        type='text'
+                        placeholder='Nome da subcategoria'
                         value={editSubcategoryName}
                         onChange={(e) => setEditSubcategoryName(e.target.value)}
                         onKeyDown={(e) => {
-                          if (e.key === "Enter") {
+                          if (e.key === 'Enter') {
                             e.preventDefault();
                             handleUpdateSubcategory();
                           }
-                          if (e.key === "Escape") {
+                          if (e.key === 'Escape') {
                             handleCancelEdit();
                           }
                         }}
-                        className="flex-1"
+                        className='flex-1'
                         autoFocus
                       />
+
+                      <Button onClick={handleCancelEdit} variant='ghost'>
+                        <XCircle className='size-4' />
+                      </Button>
                       <Button
                         onClick={handleUpdateSubcategory}
                         disabled={!editSubcategoryName.trim()}
                       >
-                        Salvar
-                      </Button>
-                      <Button
-                        onClick={handleCancelEdit}
-                        variant="ghost"
-                      >
-                        Cancelar
+                        <CheckCircle className='size-4' />
                       </Button>
                     </>
                   ) : (
                     <>
-                      <span className="flex-1 text-gray-900 dark:text-gray-100">
+                      <span className='flex-1 text-gray-700'>
                         {subcategory.name}
                       </span>
                       <button
                         onClick={() => handleStartEdit(subcategory)}
-                        className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors"
-                        title="Editar"
+                        className='p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors'
+                        title='Editar'
                       >
-                        <Edit className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                        <Edit className='w-4 h-4 text-gray-600 dark:text-gray-400' />
                       </button>
                       <button
                         onClick={() => handleOpenDeleteModal(subcategory)}
-                        className="p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors"
-                        title="Excluir"
+                        className='p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors'
+                        title='Excluir'
                       >
-                        <Trash2 className="w-4 h-4 text-red-600 dark:text-red-400" />
+                        <Trash2 className='w-4 h-4 text-red-600 dark:text-red-400' />
                       </button>
                     </>
                   )}
                 </div>
-              ))
-            )}
+              ))}
           </div>
         </div>
       </Modal>
@@ -150,8 +144,8 @@ export default function SubcategoriesModal({
       <ConfirmDeleteModal
         isLoading={isDeleting}
         onConfirm={handleConfirmDelete}
-        title="Tem certeza que deseja excluir esta subcategoria?"
-        description="Esta ação não pode ser desfeita."
+        title='Tem certeza que deseja excluir esta subcategoria?'
+        description='Esta ação não pode ser desfeita.'
         onClose={handleCloseDeleteModal}
         isOpen={isDeleteModalOpen}
       />

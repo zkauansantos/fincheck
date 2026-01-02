@@ -1,7 +1,7 @@
 import { Transaction } from "@/app/entities/Transaction";
 import { GetAllTransactionsParams } from "@/app/services/transactions/getAll";
 import useTransactions from "@/app/services/transactions/hooks/useTransactions";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useDashboard from "../../useDashboard";
 
 export default function useTransactionsController() {
@@ -19,12 +19,10 @@ export default function useTransactionsController() {
     year: new Date().getFullYear(),
   });
 
-  const { transactions, isLoading, isInitialLoading, refetch } =
+  const { transactions, isLoading, isInitialLoading } =
     useTransactions(filters);
 
-  useEffect(() => {
-    refetch();
-  }, [filters, refetch]);
+
 
   function handleOpenFiltersModal() {
     setIsFiltersModalOpen(true);

@@ -47,7 +47,7 @@ export default function useNewTransactionModalController() {
   const queryClient = useQueryClient();
   const { accounts } = useBankAccounts();
   const { categories } = useCategories({ type: newTransactionType });
-  const { subCategories } = useSubcategories({ categoryId });
+  const { subcategories } = useSubcategories({ categoryId });
 
 
   const { createTransaction, isPending } = useCreateTransactionMutation();
@@ -88,7 +88,7 @@ export default function useNewTransactionModalController() {
     errors,
     control,
     categories,
-    subCategories,
+    subcategories,
     handleSubmit,
     newTransactionType,
     isNewTransactionModalOpen,

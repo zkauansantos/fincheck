@@ -25,7 +25,7 @@ export default function useSubcategoriesModalController({
   const [subcategoryToDelete, setSubcategoryToDelete] = useState<SubCategory | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const { subCategories, isFetching } = useSubcategories({
+  const { subcategories, isFetching } = useSubcategories({
     categoryId: category.id,
   });
 
@@ -57,7 +57,7 @@ export default function useSubcategoriesModalController({
       });
 
       toast.success("Subcategoria criada com sucesso!");
-      queryClient.invalidateQueries({ queryKey: ["subcategories", category.id] });
+      queryClient.invalidateQueries({ queryKey: ["sub-categories", category.id] });
       setNewSubcategoryName("");
     } catch (error) {
       handleError(error);
@@ -81,7 +81,9 @@ export default function useSubcategoriesModalController({
       });
 
       toast.success("Subcategoria atualizada com sucesso!");
-      queryClient.invalidateQueries({ queryKey: ["subcategories", category.id] });
+
+      queryClient.invalidateQueries({ queryKey: ["sub-categories", category.id] });
+
       handleCancelEdit();
     } catch (error) {
       handleError(error);
@@ -114,15 +116,19 @@ export default function useSubcategoriesModalController({
       });
 
       toast.success("Subcategoria excluída com sucesso!");
-      queryClient.invalidateQueries({ queryKey: ["subcategories", category.id] });
+      queryClient.invalidateQueries({ queryKey: ["sub-categories", category.id] });
       handleCloseDeleteModal();
     } catch (error) {
       handleError(error);
     }
   }
 
+
+  const hasSubcategories = subcategories.length > 0;
+
   return {
-    subcategories: subCategories,
+    subcategories,
+    hasSubcategories,
     isLoading: isFetching,
     isCreating,
     isUpdating,

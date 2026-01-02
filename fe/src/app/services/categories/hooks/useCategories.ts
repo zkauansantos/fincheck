@@ -6,6 +6,7 @@ export default function useCategories(filters?: GetAllCategoriesParams) {
   const { data, isFetching } = useQuery({
     queryKey: ["categories", filters],
     queryFn: () => categoriesService.getAll(filters),
+    enabled: filters ? !!filters.type : true
   });
 
   return {

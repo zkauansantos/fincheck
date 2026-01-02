@@ -12,7 +12,7 @@ interface InputProps extends ComponentProps<'input'> {
 const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ placeholder, id, name, error, className, ...props }, ref) => {
     return (
-      <div className='relative'>
+      <div className='relative w-full'>
         <input
           {...props}
           id={id ?? name}

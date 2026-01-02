@@ -5,14 +5,14 @@ import { GetAllTransactionsParams } from "../getAll";
 export default function useTransactions(
   filters: GetAllTransactionsParams,
 ) {
-  const { data, isFetching, isLoading, refetch } = useQuery({
+  const { data, isPending, isLoading, refetch } = useQuery({
     queryKey: ["transactions", filters],
     queryFn: () => transactionsService.getAll(filters),
   });
 
   return {
     transactions: data ?? [],
-    isLoading: isFetching,
+    isLoading: isPending,
     isInitialLoading: isLoading,
     refetch,
   };

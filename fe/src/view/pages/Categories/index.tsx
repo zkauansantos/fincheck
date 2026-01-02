@@ -4,6 +4,7 @@ import ConfirmDeleteModal from '@/view/components/ConfirmDeleteModal';
 import { EmptyState } from '@/view/components/EmptyState';
 import { Header } from '@/view/components/Header';
 import Spinner from '@/view/components/Spinner';
+import { Tabs, TabsList, TabsTrigger } from '@/view/components/Tabs';
 import { Plus } from 'lucide-react';
 import CategoryCard from './components/CategoryCard';
 import CategoryModal from './modals/CategoryModal';
@@ -37,49 +38,31 @@ export default function Categories() {
     <div className='h-full w-full p-4 md:pt-6 md:px-8 md:pb-8 flex flex-col gap-4'>
       <Header />
 
-      {/* Page Header */}
       <header className='flex items-center justify-between'>
         <div>
           <h1 className='text-2xl font-bold text-gray-900 dark:text-gray-700'>
-            Gerenciar Categorias
+            Categorias
           </h1>
           <p className='text-sm text-gray-600 dark:text-gray-400 mt-1'>
             Organize suas categorias de receitas e despesas
           </p>
         </div>
-
-        <Button onClick={handleOpenCreateCategory}>
-          <Plus className='w-4 h-4' />
-          Nova Categoria
-        </Button>
       </header>
 
-      {/* Type Filter */}
       <div className='flex gap-2 justify-end'>
-        <button
-          onClick={() => setSelectedType(TransactionType.INCOME)}
-          className={`px-4 py-2 rounded-lg font-medium transition-colors border ${
-            selectedType === TransactionType.INCOME
-              ? 'bg-teal-600 text-white border-teal-600'
-              : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50'
-          }`}
+        <Tabs
+          value={selectedType}
+          onValueChange={(v) => setSelectedType(v as TransactionType)}
         >
-          Receitas
-        </button>
-        <button
-          onClick={() => setSelectedType(TransactionType.EXPENSE)}
-          className={`px-4 py-2 rounded-lg font-medium transition-colors border ${
-            selectedType === TransactionType.EXPENSE
-              ? 'bg-red-600 text-white border-red-600'
-              : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50'
-          }`}
-        >
-          Despesas
-        </button>
+          <TabsList>
+            <TabsTrigger value={TransactionType.INCOME}>Receitas</TabsTrigger>
+            <TabsTrigger value={TransactionType.EXPENSE}>Despesas</TabsTrigger>
+          </TabsList>
+        </Tabs>
       </div>
 
       {/* Categories List */}
-      <main className='flex-1 overflow-y-auto'>
+      <main className='flex-1 overflow-y-auto dark:bg-gray-50 p-4 rounded-2xl'>
         {!hasCategories && !isLoading && (
           <EmptyState message='Não encontramos nenhuma categoria' />
         )}
@@ -127,6 +110,15 @@ export default function Categories() {
         onClose={handleCloseDeleteModal}
         isOpen={isDeleteModalOpen}
       />
+
+      <div className='fixed right-4 bottom-4'>
+        <Button
+          className='rounded-full h-12 w-12 px-0'
+          onClick={handleOpenCreateCategory}
+        >
+          <Plus className='w-4 h-4' />
+        </Button>
+      </div>
     </div>
   );
 }
